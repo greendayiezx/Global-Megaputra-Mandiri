@@ -1,0 +1,118 @@
+@import 'tailwindcss';
+
+/* Inter (SIL OFL 1.1, see /fonts/Inter-LICENSE.txt) — self-hosted, no third-party requests. */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/inter-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/*
+ * GMM design tokens — single source for colour, type, radius, and elevation.
+ * Blue is reserved for actions, links, active and selected states.
+ */
+@theme {
+  --font-sans:
+    'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial,
+    sans-serif;
+
+  /* Brand */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-dark: #0f3b82;
+  --color-primary-soft: #eff6ff;
+  --color-primary-border: #bfdbfe;
+  --color-navy: #0f172a;
+  --color-accent: #0ea5e9;
+
+  /* Surfaces */
+  --color-canvas: #f8fafc;
+  --color-surface: #ffffff;
+  --color-subtle: #f1f5f9;
+
+  /* Text */
+  --color-fg: #0f172a;
+  --color-fg-secondary: #334155;
+  --color-fg-muted: #64748b;
+
+  /* Lines */
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+
+  /* Status — `*-fg` variants meet 4.5:1 contrast on white and on their soft background */
+  --color-success: #16a34a;
+  --color-success-fg: #15803d;
+  --color-success-soft: #f0fdf4;
+  --color-warning: #f59e0b;
+  --color-warning-fg: #b45309;
+  --color-warning-soft: #fffbeb;
+  --color-danger: #ef4444;
+  --color-danger-fg: #b91c1c;
+  --color-danger-soft: #fef2f2;
+
+  /* Radius scale: 6 / 8 / 12 / 16 */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Elevation — intentionally subtle */
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-pop: 0 8px 24px rgba(15, 23, 42, 0.1);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas text-fg text-[15px] leading-relaxed antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-fg leading-tight tracking-tight text-balance;
+  }
+  :focus-visible {
+    @apply outline-primary outline-2 outline-offset-2;
+  }
+  ::selection {
+    @apply bg-primary-soft;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1240px] px-4 md:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-12 md:py-16;
+  }
+}
+
+/* Leaflet controls follow the design system */
+.leaflet-container {
+  font: inherit;
+}
+.gmm-pin {
+  background: transparent;
+  border: 0;
+}

@@ -1,0 +1,4 @@
+# Keep LF everywhere (Prettier enforces LF; avoids CRLF churn on Windows).
+* text=auto eol=lf
+*.docx binary
+*.woff2 binary

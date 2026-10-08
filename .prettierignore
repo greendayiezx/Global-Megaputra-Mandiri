@@ -1,0 +1,11 @@
+node_modules/
+.next/
+/coverage/
+dist/
+build/
+src/db/migrations/
+playwright-report/
+test-results/
+package-lock.json
+.claude/
+docs/06-rbac-matrix.md

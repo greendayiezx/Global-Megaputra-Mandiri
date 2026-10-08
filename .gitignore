@@ -1,0 +1,56 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+next-env.d.ts
+
+# production
+build/
+dist/
+
+# testing (root only — a bare 'coverage/' would also hide src/**/coverage from Tailwind)
+/coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# editor / os
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# local infra volumes
+.docker-data/
+
+# misc
+*.tsbuildinfo
+.turbo/
+
+# local embedded database (PGlite)
+.data/
+
+# per-user tool settings and Office lock files
+.claude/settings.local.json
+~$*
