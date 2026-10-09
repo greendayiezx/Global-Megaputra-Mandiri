@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
   // (Next 16 no longer runs ESLint during build; CI runs `npm run lint` separately.)
   typescript: { ignoreBuildErrors: false },
 
+  // PGlite locates its WASM/data files via import.meta.url; bundling it breaks those paths
+  // (notably on Windows), so load it with native Node.js require instead.
+  serverExternalPackages: ['@electric-sql/pglite'],
+
   experimental: {
     // Server Actions are only accepted from these origins (CSRF hardening).
     serverActions: {
