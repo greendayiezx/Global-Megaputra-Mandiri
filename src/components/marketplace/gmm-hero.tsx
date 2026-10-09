@@ -30,7 +30,7 @@ export function GmmHero() {
           <div className="w-full px-6 py-10 sm:px-8 md:px-10">
             <div className="max-w-[540px]">
               <p className="flex items-center gap-2.5">
-                <LogoMark className="size-8 ring-1 ring-white/25" />
+                <LogoMark className="size-10 ring-1 ring-white/25" />
                 <span className="text-base font-bold text-white md:text-lg">
                   GMM <span className="font-medium text-white/80">— Global Megaputra Mandiri</span>
                 </span>
