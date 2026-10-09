@@ -178,6 +178,12 @@ export function SiteHeader({ session }: { session: Session | null }) {
                 </ul>
                 <div className="border-line mt-2 border-t pt-2">
                   <Link
+                    href="/promo"
+                    className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
+                  >
+                    <TicketPercent className="size-4" aria-hidden="true" /> Promo
+                  </Link>
+                  <Link
                     href="/faq"
                     className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
                   >

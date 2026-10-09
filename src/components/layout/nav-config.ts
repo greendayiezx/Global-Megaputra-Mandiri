@@ -5,7 +5,6 @@ export const MAIN_NAV = [
   { href: '/packages', label: 'Paket' },
   { href: '/coverage', label: 'Cek Coverage' },
   { href: '/how-it-works', label: 'Cara Kerja' },
-  { href: '/promo', label: 'Promo' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'Tentang Kami' },
 ] as const;
