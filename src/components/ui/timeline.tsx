@@ -131,7 +131,7 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
   return (
     <section
       ref={sectionRef}
-      className={cn('bg-navy relative h-[320vh] text-white sm:h-[260vh]', className)}
+      className={cn('bg-surface text-fg relative h-[320vh] sm:h-[260vh]', className)}
     >
       {/* Sticky viewport, padded to clear the sticky site header. */}
       <div className="sticky top-0 flex h-dvh items-center overflow-hidden pt-16 md:pt-32">
@@ -144,7 +144,7 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
             src={imageUrl}
             alt={imageAlt}
             draggable={false}
-            className="h-[55%] w-[78vw] shrink-0 rounded-2xl object-cover ring-1 ring-white/10 sm:h-full sm:w-[34vw]"
+            className="ring-line h-[55%] w-[78vw] shrink-0 rounded-2xl object-cover ring-1 sm:h-full sm:w-[34vw]"
           />
 
           <div className="relative flex h-full shrink-0">
@@ -157,10 +157,10 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
 
             {/* Heading column */}
             <div className="flex w-[62vw] shrink-0 flex-col justify-between py-2 pr-[4vw] sm:w-[22vw]">
-              <h2 className="text-[32px] leading-[1.05] font-bold tracking-tight text-white lg:text-[44px]">
+              <h2 className="text-[32px] leading-[1.05] font-bold tracking-tight lg:text-[44px]">
                 {title}
               </h2>
-              {caption && <p className="text-sm text-slate-400 lg:text-base">{caption}</p>}
+              {caption && <p className="text-fg-muted text-sm lg:text-base">{caption}</p>}
             </div>
 
             {items.map((item, i) => {
@@ -190,26 +190,23 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
                       aria-hidden="true"
                       data-tl-dot
                       className={cn(
-                        'bg-primary ring-navy absolute left-0 size-3.5 -translate-x-1/2 rounded-full ring-4',
+                        'bg-primary ring-surface absolute left-0 size-3.5 -translate-x-1/2 rounded-full ring-4',
                         top ? 'top-0' : 'bottom-0',
                       )}
                     />
                     <div className={cn('max-w-[30ch] space-y-2', top ? '-mt-1' : '-mb-1')}>
                       <p
                         data-tl-text
-                        className="text-[13px] font-semibold tracking-wide text-blue-300 uppercase"
+                        className="text-primary text-[13px] font-semibold tracking-wide uppercase"
                       >
                         {item.label}
                       </p>
-                      <h3
-                        data-tl-text
-                        className="text-2xl leading-tight font-bold text-white lg:text-[28px]"
-                      >
+                      <h3 data-tl-text className="text-2xl leading-tight font-bold lg:text-[28px]">
                         {item.title}
                       </h3>
                       <p
                         data-tl-text
-                        className="text-[15px] leading-relaxed text-slate-300 lg:text-base"
+                        className="text-fg-muted text-[15px] leading-relaxed lg:text-base"
                       >
                         {item.body}
                       </p>
