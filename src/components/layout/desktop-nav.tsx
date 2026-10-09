@@ -1,17 +1,20 @@
 'use client';
 
-import { ArrowRight, ChevronDown, Handshake } from 'lucide-react';
+import { ArrowRight, ChevronDown, Handshake, LayoutGrid, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
 import { ProviderAvatar } from '@/components/marketplace/provider-avatar';
 import { NEEDS } from '@/content/needs';
 import { formatRupiah } from '@/lib/money';
+import { TECHNOLOGY_LABEL } from '@/modules/packages/application/catalog-repository';
 import { cn } from '@/lib/utils';
 import {
   MAIN_NAV,
-  MORE_LINKS,
+  MORE_GROUPS,
+  PROVIDER_TECH_LINKS,
   SPEED_LINKS,
+  TECHNOLOGY_ILLUSTRATION,
   TECHNOLOGY_LINKS,
   type NavItem,
   type NavMenu,
@@ -102,8 +105,8 @@ export function DesktopNav({ data }: { data: NavData }) {
           return (
             <li
               key={item.href}
-              // The mega menu anchors to the header (full width); small menus to their item.
-              className={cn('h-full', menu !== 'packages' && 'relative')}
+              // Not positioned: every panel anchors to the header and spans its full width.
+              className="h-full"
               onPointerEnter={(e) => e.pointerType === 'mouse' && hoverOpen(menu)}
               onPointerLeave={(e) => e.pointerType === 'mouse' && hoverClose()}
             >
@@ -130,12 +133,7 @@ export function DesktopNav({ data }: { data: NavData }) {
                 id={panelId}
                 hidden={!isOpen}
                 onClick={closeOnLink}
-                className={cn(
-                  'z-40',
-                  menu === 'packages'
-                    ? 'border-line bg-surface shadow-pop absolute inset-x-0 top-full border-t'
-                    : 'border-line bg-surface shadow-pop absolute top-full left-0 mt-1 rounded-lg border',
-                )}
+                className="border-line bg-surface shadow-pop absolute inset-x-0 top-full z-40 border-t"
               >
                 {menu === 'packages' && <PackagesMenu data={data} />}
                 {menu === 'providers' && <ProvidersMenu data={data} />}
@@ -243,46 +241,112 @@ function PackagesMenu({ data }: { data: NavData }) {
   );
 }
 
-function ProvidersMenu({ data }: { data: NavData }) {
+function SideLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <div className="w-80 p-2">
-      <MenuHeading>Provider terverifikasi</MenuHeading>
-      {data.providers.length === 0 ? (
-        <p className="text-fg-muted px-2 py-3 text-sm">Belum ada provider terverifikasi.</p>
-      ) : (
-        <ul className="max-h-80 overflow-y-auto">
-          {data.providers.map((p) => (
-            <li key={p.slug}>
-              <Link
-                href={`/provider/${p.slug}`}
-                className="hover:bg-subtle flex items-center gap-3 rounded-md px-2 py-2"
-              >
-                <ProviderAvatar name={p.name} size="sm" />
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-semibold">{p.name}</span>
-                  <span className="text-fg-muted block text-xs">
-                    {p.packageCount} paket
-                    {p.startingPrice !== null && ` · mulai ${formatRupiah(p.startingPrice)}`}
-                  </span>
-                </span>
-              </Link>
+    <Link
+      href={href}
+      className="text-fg-secondary hover:bg-subtle hover:text-primary flex items-center gap-2 rounded-md px-2 py-1.5 text-sm"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function ProvidersMenu({ data }: { data: NavData }) {
+  const featured = data.providers.slice(0, 4);
+  return (
+    <div className="container-header grid grid-cols-[220px_1fr] gap-8 py-6">
+      <div className="border-line space-y-6 border-r pr-6">
+        <div>
+          <MenuHeading>Teknologi</MenuHeading>
+          <ul className="space-y-0.5">
+            {PROVIDER_TECH_LINKS.map((l) => (
+              <li key={l.href}>
+                <SideLink href={l.href}>{l.label}</SideLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <MenuHeading>Jelajahi</MenuHeading>
+          <ul className="space-y-0.5">
+            <li>
+              <SideLink href="/coverage">
+                <MapPin className="size-4" aria-hidden="true" /> Provider di lokasi Anda
+              </SideLink>
             </li>
-          ))}
-        </ul>
-      )}
-      <div className="border-line mt-2 space-y-0.5 border-t pt-2">
-        <Link
-          href="/provider"
-          className="text-primary hover:bg-subtle flex items-center justify-between rounded-md px-2 py-2 text-sm font-semibold"
-        >
-          Semua provider <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
-        <Link
-          href="/mitra"
-          className="text-fg-secondary hover:bg-subtle flex items-center gap-2 rounded-md px-2 py-2 text-sm"
-        >
-          <Handshake className="size-4" aria-hidden="true" /> Jadi Mitra Provider
-        </Link>
+            <li>
+              <SideLink href="/provider">
+                <LayoutGrid className="size-4" aria-hidden="true" /> Semua provider
+              </SideLink>
+            </li>
+            <li>
+              <SideLink href="/mitra">
+                <Handshake className="size-4" aria-hidden="true" /> Jadi Mitra Provider
+              </SideLink>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div className="flex items-center justify-between">
+          <MenuHeading>Provider terverifikasi</MenuHeading>
+          <Link
+            href="/provider"
+            className="text-primary flex items-center gap-1 text-sm font-semibold hover:underline"
+          >
+            Lihat semua provider <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+        </div>
+        {featured.length === 0 ? (
+          <p className="border-line text-fg-muted mt-1 rounded-lg border border-dashed px-4 py-10 text-center text-sm">
+            Belum ada provider terverifikasi.
+          </p>
+        ) : (
+          <ul className="mt-1 grid grid-cols-4 gap-5">
+            {featured.map((p) => (
+              <li key={p.slug}>
+                <Link href={`/provider/${p.slug}`} className="group block">
+                  <span className="bg-subtle relative block aspect-[16/10] overflow-hidden rounded-lg">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- remote stock photo */}
+                    <img
+                      src={TECHNOLOGY_ILLUSTRATION[p.technologies[0] ?? 'FIBER']}
+                      alt=""
+                      loading="lazy"
+                      className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <span className="absolute bottom-2 left-2 rounded-md bg-white/95 shadow-sm">
+                      <ProviderAvatar name={p.name} size="sm" />
+                    </span>
+                  </span>
+                  <span className="group-hover:text-primary mt-3 block font-semibold">
+                    {p.name}
+                  </span>
+                  <span className="text-fg-muted mt-0.5 block text-sm">
+                    {p.packageCount} paket
+                    {p.startingPrice !== null && (
+                      <>
+                        {' · mulai '}
+                        <strong className="text-fg font-semibold">
+                          {formatRupiah(p.startingPrice)}
+                        </strong>
+                      </>
+                    )}
+                  </span>
+                  <span className="text-fg-muted mt-1 block text-[13px] leading-snug">
+                    {p.technologies.map((t) => TECHNOLOGY_LABEL[t]).join(', ')}
+                    {p.serviceAreas.length > 0 && ` · ${p.serviceAreas.join(', ')}`}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="text-fg-muted mt-4 text-xs">
+          Foto ilustrasi teknologi jaringan, bukan milik provider. Hanya provider yang dokumennya
+          sudah diverifikasi tim GMM yang tampil.
+        </p>
       </div>
     </div>
   );
@@ -290,19 +354,60 @@ function ProvidersMenu({ data }: { data: NavData }) {
 
 function MoreMenu({ pathname }: { pathname: string }) {
   return (
-    <ul className="w-72 p-2">
-      {MORE_LINKS.map((l) => (
-        <li key={l.href}>
-          <Link
-            href={l.href}
-            aria-current={pathname === l.href ? 'page' : undefined}
-            className="hover:bg-subtle aria-[current=page]:text-primary block rounded-md px-3 py-2"
-          >
-            <span className="block text-sm font-semibold">{l.label}</span>
-            <span className="text-fg-muted block text-xs">{l.body}</span>
-          </Link>
-        </li>
+    <div className="container-header grid grid-cols-[1fr_1fr_1fr_300px] gap-8 py-6">
+      {MORE_GROUPS.map((g) => (
+        <div key={g.title}>
+          <MenuHeading>{g.title}</MenuHeading>
+          <ul className="space-y-1">
+            {g.links.map(({ href, label, body, icon: Icon }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  aria-current={pathname === href ? 'page' : undefined}
+                  className="group hover:bg-subtle flex items-start gap-3 rounded-lg p-2"
+                >
+                  <span className="border-primary-border bg-primary-soft text-primary grid size-10 shrink-0 place-items-center rounded-md border">
+                    <Icon className="size-5" aria-hidden="true" />
+                  </span>
+                  <span>
+                    <span className="group-hover:text-primary group-aria-[current=page]:text-primary block text-sm font-semibold">
+                      {label}
+                    </span>
+                    <span className="text-fg-muted block text-xs leading-snug">{body}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
-    </ul>
+
+      {/* Highlight card: decorative SVG only, no photography. */}
+      <div className="bg-navy relative overflow-hidden rounded-xl p-5 text-white">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 200 200"
+          className="text-primary absolute -right-10 -bottom-10 size-48 opacity-40"
+        >
+          <circle cx="100" cy="100" r="30" fill="none" stroke="currentColor" strokeWidth="2" />
+          <circle cx="100" cy="100" r="55" fill="none" stroke="currentColor" strokeWidth="2" />
+          <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="2" />
+          <circle cx="100" cy="100" r="8" fill="currentColor" />
+        </svg>
+        <span className="bg-primary grid size-10 place-items-center rounded-md">
+          <MapPin className="size-5" aria-hidden="true" />
+        </span>
+        <p className="mt-4 text-[17px] leading-snug font-semibold">
+          Provider mana yang menjangkau rumah Anda?
+        </p>
+        <p className="mt-1 text-sm text-slate-300">Cek gratis dalam hitungan detik.</p>
+        <Link
+          href="/coverage"
+          className="bg-primary hover:bg-primary-hover relative mt-4 inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-semibold"
+        >
+          Cek Ketersediaan <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+      </div>
+    </div>
   );
 }

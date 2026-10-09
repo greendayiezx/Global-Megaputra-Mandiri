@@ -1,10 +1,13 @@
 import 'server-only';
 import { NEEDS } from '@/content/needs';
 import { listPublicPackages, listPublicProviders } from '@/modules/packages/application/catalog';
+import type { Technology } from '@/modules/packages/application/catalog-repository';
 
 export interface NavProvider {
   slug: string;
   name: string;
+  technologies: Technology[];
+  serviceAreas: string[];
   packageCount: number;
   startingPrice: number | null;
 }
@@ -37,16 +40,22 @@ export async function getNavData(): Promise<NavData> {
 
   return {
     needPrices,
-    providers: providers
+    // Same ordering intent as the directory: admin priority first, then name.
+    providers: [...providers]
+      .sort(
+        (a, b) =>
+          b.listingPriority - a.listingPriority || a.displayName.localeCompare(b.displayName),
+      )
       .map((p) => {
         const own = views.filter((v) => v.provider.id === p.id).map((v) => v.pkg.monthlyPrice);
         return {
           slug: p.slug,
           name: p.displayName,
+          technologies: p.technologies,
+          serviceAreas: p.serviceAreaNames,
           packageCount: own.length,
           startingPrice: min(own),
         };
-      })
-      .sort((a, b) => a.name.localeCompare(b.name)),
+      }),
   };
 }
