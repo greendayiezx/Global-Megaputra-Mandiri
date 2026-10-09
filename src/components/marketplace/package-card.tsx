@@ -77,9 +77,11 @@ export function PackageCard({ view, query = '' }: { view: PackageView; query?: s
         <p className="text-fg-muted text-xs">
           {pkg.taxIncluded ? 'Sudah termasuk pajak' : 'Belum termasuk pajak'}
         </p>
-        <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
-          <ButtonLink href={href}>Pilih Paket</ButtonLink>
-          <CompareToggle packageId={pkg.id} name={pkg.name} />
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <ButtonLink href={href} className="min-w-0 px-3">
+            Pilih Paket
+          </ButtonLink>
+          <CompareToggle packageId={pkg.id} name={pkg.name} className="min-w-0 px-3" />
         </div>
       </div>
     </Card>

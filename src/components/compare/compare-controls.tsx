@@ -2,6 +2,7 @@
 
 import { Check, GitCompareArrows, Plus, X } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { MAX_COMPARE, useCompareIds, writeCompareIds } from './compare-store';
@@ -36,7 +37,7 @@ export function CompareToggle({
     >
       {selected ? <Check aria-hidden="true" /> : <Plus aria-hidden="true" />}
       <span className="sr-only">{name}: </span>
-      {selected ? 'Dibandingkan' : full ? `Maks. ${MAX_COMPARE}` : 'Bandingkan'}
+      {selected ? 'Terpilih' : full ? `Maks. ${MAX_COMPARE}` : 'Bandingkan'}
     </button>
   );
 }
@@ -67,7 +68,9 @@ export function CompareHeaderLink() {
 
 export function CompareBar() {
   const ids = useCompareIds();
-  if (ids.length === 0) return null;
+  const pathname = usePathname();
+  // Already on the comparison page: the bar would only cover the table.
+  if (ids.length === 0 || pathname === '/compare') return null;
 
   return (
     <div

@@ -98,7 +98,7 @@ export default async function ComparePage({
       ) : (
         <>
           <div className="border-line bg-surface shadow-card mt-6 overflow-x-auto rounded-lg border">
-            <table className="w-full min-w-[680px] border-collapse text-sm">
+            <table className="w-full min-w-[680px] table-fixed border-collapse text-sm">
               <caption className="sr-only">Perbandingan paket internet</caption>
               <thead>
                 <tr className="align-top">
@@ -112,32 +112,36 @@ export default async function ComparePage({
                     <th
                       key={v.pkg.id}
                       scope="col"
-                      className="border-line border-b border-l p-4 text-left font-normal"
+                      // h-px lets the inner flex column fill the row height, so every
+                      // "Pilih Paket" button lines up regardless of badges or name length.
+                      className="border-line h-px border-b border-l p-4 text-left font-normal"
                     >
-                      <div className="flex items-center gap-2">
-                        <ProviderAvatar name={v.provider.displayName} size="sm" />
-                        {v.pkg.isDemo && <DemoBadge />}
+                      <div className="flex h-full flex-col">
+                        <div className="flex items-center gap-2">
+                          <ProviderAvatar name={v.provider.displayName} size="sm" />
+                          {v.pkg.isDemo && <DemoBadge />}
+                        </div>
+                        <Link
+                          href={`/packages/${v.pkg.slug}`}
+                          className="text-fg hover:text-primary mt-2 block text-base font-semibold"
+                        >
+                          {v.pkg.name}
+                        </Link>
+                        <div className="mt-2 mb-3 flex min-h-6 flex-wrap gap-1">
+                          {badges.get(v.pkg.id)?.map((b) => (
+                            <Badge key={b} tone="primary">
+                              {b}
+                            </Badge>
+                          ))}
+                        </div>
+                        <ButtonLink
+                          href={`/packages/${v.pkg.slug}`}
+                          size="sm"
+                          className="mt-auto w-full"
+                        >
+                          Pilih Paket
+                        </ButtonLink>
                       </div>
-                      <Link
-                        href={`/packages/${v.pkg.slug}`}
-                        className="text-fg hover:text-primary mt-2 block text-base font-semibold"
-                      >
-                        {v.pkg.name}
-                      </Link>
-                      <div className="mt-2 flex min-h-6 flex-wrap gap-1">
-                        {badges.get(v.pkg.id)?.map((b) => (
-                          <Badge key={b} tone="primary">
-                            {b}
-                          </Badge>
-                        ))}
-                      </div>
-                      <ButtonLink
-                        href={`/packages/${v.pkg.slug}`}
-                        size="sm"
-                        className="mt-3 w-full"
-                      >
-                        Pilih Paket
-                      </ButtonLink>
                     </th>
                   ))}
                 </tr>
