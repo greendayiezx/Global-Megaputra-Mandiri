@@ -17,7 +17,6 @@ import { ProviderCard } from '@/components/marketplace/provider-card';
 import { ButtonLink } from '@/components/ui/button';
 import { Card, EmptyState, SectionHeader } from '@/components/ui/primitives';
 import { Faq } from '@/components/ui/faq';
-import { Timeline } from '@/components/ui/timeline';
 import { FAQ } from '@/content/faq';
 import { formatRupiah } from '@/lib/format';
 import { searchPackages, searchProviders } from '@/modules/packages/application/catalog';
@@ -69,29 +68,6 @@ const NEEDS = [
     title: 'Untuk Gaming',
     body: 'Kecepatan tinggi untuk unduh dan main daring.',
     href: '/packages?minDownload=100',
-  },
-];
-
-const STEPS = [
-  {
-    n: '01',
-    title: 'Cek Lokasi',
-    body: 'Tandai titik pemasangan untuk melihat provider yang menjangkau lokasi Anda.',
-  },
-  {
-    n: '02',
-    title: 'Pilih Paket',
-    body: 'Bandingkan harga, kecepatan, dan biaya pemasangan hingga 4 paket sekaligus.',
-  },
-  {
-    n: '03',
-    title: 'Lakukan Pemesanan',
-    body: 'Provider mengonfirmasi kelayakan lokasi dulu, baru Anda membayar.',
-  },
-  {
-    n: '04',
-    title: 'Instalasi & Aktif',
-    body: 'Pilih jadwal teknisi dan pantau status sampai internet aktif.',
   },
 ];
 
@@ -283,22 +259,6 @@ export default async function HomePage() {
           )}
         </div>
       </section>
-
-      {/* 7. How it works — pinned horizontal timeline */}
-      <div id="cara-kerja" className="mt-4">
-        <Timeline
-          title="Cara Kerja GMM"
-          caption="Dari cek lokasi sampai internet aktif"
-          items={STEPS.map((s) => ({
-            id: `step-${s.n}`,
-            label: `Langkah ${s.n}`,
-            title: s.title,
-            body: s.body,
-          }))}
-          imageUrl="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
-          imageAlt="Jaringan internet yang menghubungkan kota-kota di seluruh dunia"
-        />
-      </div>
 
       {/* 8. Reviews — real reviews only */}
       <section className="container-page pt-12 md:pt-16" aria-labelledby="rev-title">
