@@ -25,6 +25,9 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+// Demo-data notice bar, hidden for now. Set to true to show it again.
+const SHOW_DEMO_BANNER = false;
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
 
@@ -38,7 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           Lewati ke konten
         </a>
         <SiteHeader session={session} />
-        {appConfig.showDemoData && (
+        {SHOW_DEMO_BANNER && appConfig.showDemoData && (
           <div className="border-warning/30 bg-warning-soft border-b">
             <p className="container-page text-warning-fg py-2 text-[13px]">
               <strong>Mode demo:</strong> provider, paket, harga, dan area layanan yang tampil

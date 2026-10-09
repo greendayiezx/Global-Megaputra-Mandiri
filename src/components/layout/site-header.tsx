@@ -61,8 +61,7 @@ export function SiteHeader({ session }: { session: Session | null }) {
     <header className="bg-surface sticky top-0 z-30">
       {/* Utility bar */}
       <div className="bg-navy hidden text-[13px] text-white/80 md:block">
-        <div className="container-header flex h-9 items-center justify-between">
-          <p>Selamat datang di Global Megaputra Mandiri</p>
+        <div className="container-header flex h-9 items-center justify-end">
           <ul className="flex items-center divide-x divide-white/20">
             <li className="px-3">
               <Link href="/promo" className="flex items-center gap-1.5 hover:text-white">
