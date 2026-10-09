@@ -5,7 +5,8 @@ import { CoverageNotice } from '@/components/coverage/coverage-status';
 import { FilterPanel } from '@/components/marketplace/filter-panel';
 import { ProviderCard } from '@/components/marketplace/provider-card';
 import { Button, ButtonLink } from '@/components/ui/button';
-import { Checkbox, FieldHint, Input, Label, Select } from '@/components/ui/field';
+import { Checkbox, FieldHint, Input, Label } from '@/components/ui/field';
+import { SelectMenu } from '@/components/ui/select-menu';
 import { Breadcrumb, EmptyState } from '@/components/ui/primitives';
 import { bool, int, oneOf, point, qs, str, type RawSearchParams } from '@/lib/search-params';
 import { searchProviders } from '@/modules/packages/application/catalog';
@@ -99,17 +100,15 @@ export default async function ProvidersPage({
               </fieldset>
               <fieldset className="border-line space-y-3 border-t pt-4">
                 <legend className="mb-2 text-sm font-semibold">Layanan</legend>
-                <div>
-                  <Label htmlFor="pf-tech">Teknologi</Label>
-                  <Select id="pf-tech" name="technology" defaultValue={f.technology ?? ''}>
-                    <option value="">Semua teknologi</option>
-                    {TECHNOLOGIES.map((t) => (
-                      <option key={t} value={t}>
-                        {TECHNOLOGY_LABEL[t]}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
+                <SelectMenu
+                  label="Teknologi"
+                  name="technology"
+                  defaultValue={f.technology ?? ''}
+                  options={[
+                    { value: '', label: 'Semua teknologi' },
+                    ...TECHNOLOGIES.map((t) => ({ value: t, label: TECHNOLOGY_LABEL[t] })),
+                  ]}
+                />
                 <div>
                   <Label htmlFor="pf-price">Harga mulai maks. (Rp/bulan)</Label>
                   <Input
@@ -120,26 +119,21 @@ export default async function ProvidersPage({
                     placeholder="250000"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="pf-speed">Kecepatan hingga minimal</Label>
-                  <Select id="pf-speed" name="minSpeed" defaultValue={f.minSpeed ?? ''}>
-                    <option value="">Semua</option>
-                    {[20, 50, 100, 150].map((n) => (
-                      <option key={n} value={n}>
-                        {n} Mbps
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="pf-rating">Rating</Label>
-                  <Select id="pf-rating" disabled aria-describedby="pf-rating-hint">
-                    <option>Belum ada data ulasan</option>
-                  </Select>
-                  <FieldHint id="pf-rating-hint">
-                    Filter rating aktif setelah ada ulasan terverifikasi.
-                  </FieldHint>
-                </div>
+                <SelectMenu
+                  label="Kecepatan hingga minimal"
+                  name="minSpeed"
+                  defaultValue={f.minSpeed === null ? '' : String(f.minSpeed)}
+                  options={[
+                    { value: '', label: 'Semua kecepatan' },
+                    ...[20, 50, 100, 150].map((n) => ({ value: String(n), label: `${n} Mbps` })),
+                  ]}
+                />
+                <SelectMenu
+                  label="Rating"
+                  disabled
+                  options={[{ value: '', label: 'Belum ada data ulasan' }]}
+                  hint="Filter rating aktif setelah ada ulasan terverifikasi."
+                />
                 <Checkbox
                   name="sla"
                   value="1"

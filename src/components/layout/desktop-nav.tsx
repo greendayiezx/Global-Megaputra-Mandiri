@@ -38,14 +38,13 @@ const itemClass = (active: boolean) =>
 
 /**
  * Desktop main navigation. "Paket" opens a full-width mega menu, "Provider" and "Lainnya"
- * open small dropdowns. Menus open on hover (pointer) or click, close on Escape, outside
- * click, leaving, or following a link.
+ * open dropdowns. Menus open on click only and close on Escape, outside click, a second
+ * click, or following a link.
  */
 export function DesktopNav({ data }: { data: NavData }) {
   const pathname = usePathname();
   const [open, setOpen] = useState<NavMenu | null>(null);
   const navRef = useRef<HTMLElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => setOpen(null), [pathname]);
 
@@ -67,14 +66,6 @@ export function DesktopNav({ data }: { data: NavData }) {
     };
   }, [open]);
 
-  const hoverOpen = (menu: NavMenu) => {
-    clearTimeout(closeTimer.current);
-    setOpen(menu);
-  };
-  const hoverClose = () => {
-    clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpen(null), 150);
-  };
   // Following any link inside a panel closes it (also covers same-page links).
   const closeOnLink = (e: MouseEvent) => {
     if ((e.target as HTMLElement).closest('a')) setOpen(null);
@@ -107,8 +98,6 @@ export function DesktopNav({ data }: { data: NavData }) {
               key={item.href}
               // Not positioned: every panel anchors to the header and spans its full width.
               className="h-full"
-              onPointerEnter={(e) => e.pointerType === 'mouse' && hoverOpen(menu)}
-              onPointerLeave={(e) => e.pointerType === 'mouse' && hoverClose()}
             >
               <button
                 type="button"

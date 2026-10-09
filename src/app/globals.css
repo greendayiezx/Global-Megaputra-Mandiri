@@ -79,6 +79,20 @@
   /* Accordion open/close (Radix exposes the content height as a CSS variable) */
   --animate-accordion-down: accordion-open 200ms ease-out;
   --animate-accordion-up: accordion-close 200ms ease-out;
+  /* Dropdown list entrance */
+  --animate-select-in: select-in 140ms ease-out;
+
+  @keyframes select-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
   /* Header "Masuk/Akun" icon: a small hop with a wave */
   --animate-nav-wave: nav-wave 600ms ease-in-out;
 
