@@ -1,7 +1,6 @@
 import { ArrowRight, Wifi } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LogoMark } from '@/components/brand/logo';
 import { HeroLocationForm } from '@/components/coverage/coverage-search-form';
 
 /**
@@ -29,14 +28,7 @@ export function GmmHero() {
 
           <div className="w-full px-6 py-10 sm:px-8 md:px-10">
             <div className="max-w-[540px]">
-              <p className="flex items-center gap-2.5">
-                <LogoMark className="size-10 ring-1 ring-white/25" />
-                <span className="text-base font-bold text-white md:text-lg">
-                  GMM <span className="font-medium text-white/80">— Global Megaputra Mandiri</span>
-                </span>
-              </p>
-
-              <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
+              <p className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200">
                 <Wifi className="size-3.5 text-cyan-300" aria-hidden="true" />
                 Marketplace Internet &amp; Provider
               </p>
