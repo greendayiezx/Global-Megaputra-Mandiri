@@ -20,12 +20,14 @@ export function LogoMark({ className }: { className?: string }) {
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <span className="flex items-center gap-2.5">
-      <LogoMark className="size-11" />
+    <span className="flex items-center gap-3">
+      <LogoMark className="size-12 lg:size-14" />
       <span className="leading-none">
-        <span className="text-navy block text-[19px] font-bold tracking-tight">GMM</span>
+        <span className="text-navy block text-[22px] font-bold tracking-tight lg:text-[26px]">
+          GMM
+        </span>
         {!compact && (
-          <span className="text-fg-muted mt-0.5 hidden text-[10.5px] font-medium tracking-wide sm:block">
+          <span className="text-fg-muted mt-1 hidden text-[11.5px] font-medium tracking-wide sm:block lg:text-[13px]">
             Global Megaputra Mandiri
           </span>
         )}
