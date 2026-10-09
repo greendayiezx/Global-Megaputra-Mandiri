@@ -4,6 +4,7 @@ export const MAIN_NAV = [
   { href: '/provider', label: 'Provider' },
   { href: '/packages', label: 'Paket' },
   { href: '/coverage', label: 'Cek Coverage' },
+  { href: '/#cara-kerja', label: 'Cara Kerja' },
   { href: '/promo', label: 'Promo' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'Tentang Kami' },

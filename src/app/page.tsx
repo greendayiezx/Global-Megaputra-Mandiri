@@ -17,6 +17,7 @@ import { PackageCard } from '@/components/marketplace/package-card';
 import { ProviderCard } from '@/components/marketplace/provider-card';
 import { ButtonLink } from '@/components/ui/button';
 import { Card, EmptyState, SectionHeader } from '@/components/ui/primitives';
+import { Timeline } from '@/components/ui/timeline';
 import { FAQ } from '@/content/faq';
 import { formatRupiah } from '@/lib/format';
 import { searchPackages, searchProviders } from '@/modules/packages/application/catalog';
@@ -283,35 +284,24 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 7. How it works */}
-      <section className="section container-page" aria-labelledby="how-title">
-        <SectionHeader id="how-title" title="Cara Kerja GMM" />
-        <ol className="mt-8 grid gap-0 lg:grid-cols-4 lg:gap-6">
-          {STEPS.map((s, i) => (
-            <li
-              key={s.n}
-              className="relative flex gap-4 pb-8 last:pb-0 lg:flex-col lg:gap-3 lg:pb-0"
-            >
-              {i < STEPS.length - 1 && (
-                <span
-                  aria-hidden="true"
-                  className="bg-line absolute top-10 bottom-0 left-5 w-px lg:top-5 lg:right-0 lg:bottom-auto lg:left-14 lg:h-px lg:w-auto"
-                />
-              )}
-              <span className="border-primary-border bg-primary-soft text-primary relative z-10 grid size-10 shrink-0 place-items-center rounded-md border text-sm font-bold">
-                {s.n}
-              </span>
-              <div>
-                <h3 className="text-[17px] font-semibold">{s.title}</h3>
-                <p className="text-fg-muted mt-1 text-sm">{s.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {/* 7. How it works — pinned horizontal timeline */}
+      <div id="cara-kerja" className="mt-4">
+        <Timeline
+          title="Cara Kerja GMM"
+          caption="Dari cek lokasi sampai internet aktif"
+          items={STEPS.map((s) => ({
+            id: `step-${s.n}`,
+            label: `Langkah ${s.n}`,
+            title: s.title,
+            body: s.body,
+          }))}
+          imageUrl="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80"
+          imageAlt="Jaringan internet yang menghubungkan kota-kota di seluruh dunia"
+        />
+      </div>
 
       {/* 8. Reviews — real reviews only */}
-      <section className="container-page" aria-labelledby="rev-title">
+      <section className="container-page pt-12 md:pt-16" aria-labelledby="rev-title">
         <SectionHeader id="rev-title" title="Ulasan Pelanggan" />
         <EmptyState
           className="mt-6"

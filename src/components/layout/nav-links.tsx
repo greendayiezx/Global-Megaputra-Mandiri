@@ -21,7 +21,7 @@ export function DesktopNav() {
   const pathname = usePathname();
   return (
     <nav aria-label="Navigasi utama" className="mt-1 hidden lg:block">
-      <ul className="-mx-3 flex h-10 items-center gap-1">
+      <ul className="-mx-2 flex h-10 [scrollbar-width:none] items-center overflow-x-auto xl:-mx-3">
         {MAIN_NAV.map((item) => {
           const active = isActive(pathname, item.href);
           return (
@@ -30,10 +30,10 @@ export function DesktopNav() {
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'relative flex h-full items-center px-3 text-sm font-medium transition-colors',
+                  'relative flex h-full items-center px-2 text-sm font-medium whitespace-nowrap transition-colors xl:px-3',
                   active ? 'text-primary' : 'text-fg-secondary hover:text-fg',
                   active &&
-                    'after:bg-primary after:absolute after:inset-x-3 after:bottom-0 after:h-0.5',
+                    'after:bg-primary after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 xl:after:inset-x-3',
                 )}
               >
                 {item.label}

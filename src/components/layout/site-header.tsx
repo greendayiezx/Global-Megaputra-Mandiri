@@ -105,13 +105,13 @@ export function SiteHeader({ session }: { session: Session | null }) {
 
       {/* Main bar */}
       <div className="border-line border-b">
-        <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-8 lg:pt-3">
+        <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-6 lg:pt-3 xl:gap-8">
           <Link href="/" aria-label="GMM — Beranda" className="shrink-0">
             <Logo />
           </Link>
           {/* Search with the main navigation directly beneath it */}
-          <div className="hidden flex-1 md:block lg:max-w-2xl">
-            <SearchForm id="header-search" />
+          <div className="hidden min-w-0 flex-1 md:block lg:max-w-3xl">
+            <SearchForm id="header-search" className="lg:max-w-2xl" />
             <DesktopNav />
           </div>
 
