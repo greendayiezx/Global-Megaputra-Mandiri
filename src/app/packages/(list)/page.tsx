@@ -5,15 +5,29 @@ import { CoverageNotice } from '@/components/coverage/coverage-status';
 import { FilterPanel } from '@/components/marketplace/filter-panel';
 import { SortSelect } from '@/components/marketplace/sort-select';
 import { PackageCard } from '@/components/marketplace/package-card';
+import { PriceRange } from '@/components/marketplace/price-range';
 import { Button, ButtonLink } from '@/components/ui/button';
-import { Checkbox, Input, Label, Select } from '@/components/ui/field';
+import { Checkbox } from '@/components/ui/field';
 import { Alert, Breadcrumb, EmptyState, Pagination } from '@/components/ui/primitives';
-import { bool, int, oneOf, point, qs, str, type RawSearchParams } from '@/lib/search-params';
 import {
+  all,
+  allOf,
+  bool,
+  int,
+  oneOf,
+  point,
+  qs,
+  str,
+  type RawSearchParams,
+} from '@/lib/search-params';
+import {
+  PRICE_RANGE,
   searchPackages,
   searchProviders,
   SORT_LABEL,
   SORTS,
+  SPEED_RANGE_KEYS,
+  SPEED_RANGES,
 } from '@/modules/packages/application/catalog';
 import { TECHNOLOGIES, TECHNOLOGY_LABEL } from '@/modules/packages/application/catalog-repository';
 
@@ -22,6 +36,12 @@ export const metadata: Metadata = {
   description:
     'Temukan paket internet terbaik sesuai kebutuhan Anda. Filter harga, kecepatan, provider, dan teknologi.',
 };
+
+/** A slider value sitting at (or beyond) its bound is no limit at all. */
+function atBound(n: number | null, bound: number, side: 'min' | 'max'): number | null {
+  if (n === null) return null;
+  return (side === 'min' ? n <= bound : n >= bound) ? null : n;
+}
 
 export default async function PackagesPage({
   searchParams,
@@ -32,13 +52,17 @@ export default async function PackagesPage({
   const pt = point(params);
   const f = {
     q: str(params, 'q'),
-    technology: oneOf(params, 'technology', TECHNOLOGIES),
-    providerSlug: str(params, 'provider'),
+    technologies: allOf(params, 'technology', TECHNOLOGIES),
+    providerSlugs: all(params, 'provider'),
+    speedRanges: allOf(params, 'speed', SPEED_RANGE_KEYS),
     minDownload: int(params, 'minDownload'),
     minUpload: int(params, 'minUpload'),
-    maxMonthly: int(params, 'maxMonthly'),
+    minMonthly: atBound(int(params, 'minMonthly'), PRICE_RANGE.min, 'min'),
+    maxMonthly: atBound(int(params, 'maxMonthly'), PRICE_RANGE.max, 'max'),
     maxInstallation: int(params, 'maxInstallation'),
     routerIncluded: bool(params, 'router'),
+    freeInstallation: bool(params, 'freeInstall'),
+    contract12: bool(params, 'contract12'),
     noContract: bool(params, 'noContract'),
     promoOnly: bool(params, 'promo'),
     sort: oneOf(params, 'sort', SORTS) ?? 'recommended',
@@ -59,30 +83,38 @@ export default async function PackagesPage({
     lat: pt?.lat,
     lng: pt?.lng,
     q: f.q,
-    technology: f.technology,
-    provider: f.providerSlug,
+    technology: f.technologies,
+    provider: f.providerSlugs,
+    speed: f.speedRanges,
     minDownload: f.minDownload,
     minUpload: f.minUpload,
+    minMonthly: f.minMonthly,
     maxMonthly: f.maxMonthly,
     maxInstallation: f.maxInstallation,
     router: f.routerIncluded ? 1 : null,
+    freeInstall: f.freeInstallation ? 1 : null,
+    contract12: f.contract12 ? 1 : null,
     noContract: f.noContract ? 1 : null,
     promo: f.promoOnly ? 1 : null,
     sort: f.sort === 'recommended' ? null : f.sort,
   };
   const locationQuery = pt ? qs({ lat: pt.lat, lng: pt.lng }) : '';
-  const activeCount = [
-    f.q,
-    f.technology,
-    f.providerSlug,
-    f.minDownload,
-    f.minUpload,
-    f.maxMonthly,
-    f.maxInstallation,
-    f.routerIncluded || null,
-    f.noContract || null,
-    f.promoOnly || null,
-  ].filter((v) => v !== null).length;
+  const activeCount =
+    [
+      f.q,
+      f.minDownload,
+      f.minUpload,
+      f.minMonthly ?? f.maxMonthly,
+      f.maxInstallation,
+      f.routerIncluded || null,
+      f.freeInstallation || null,
+      f.contract12 || null,
+      f.noContract || null,
+      f.promoOnly || null,
+    ].filter((v) => v !== null).length +
+    f.technologies.length +
+    f.providerSlugs.length +
+    f.speedRanges.length;
 
   return (
     <div className="container-page py-6 md:py-8">
@@ -135,107 +167,87 @@ export default async function PackagesPage({
                   <input type="hidden" name="lng" value={pt.lng} />
                 </>
               )}
-              <div>
-                <Label htmlFor="f-q">Kata kunci</Label>
-                <Input
-                  id="f-q"
-                  name="q"
-                  defaultValue={f.q ?? ''}
-                  placeholder="Provider, paket, area"
+              {/* Filters set elsewhere (header search, homepage shortcuts) carry over. */}
+              {(
+                [
+                  ['q', f.q],
+                  ['minDownload', f.minDownload],
+                  ['minUpload', f.minUpload],
+                  ['maxInstallation', f.maxInstallation],
+                  ['noContract', f.noContract ? 1 : null],
+                  ['promo', f.promoOnly ? 1 : null],
+                ] as const
+              ).map(([name, value]) =>
+                value === null ? null : (
+                  <input key={name} type="hidden" name={name} value={value} />
+                ),
+              )}
+              <p className="text-lg font-bold">Filter</p>
+              <fieldset className="space-y-3">
+                <legend className="mb-3 text-sm font-semibold">Harga Bulanan</legend>
+                <PriceRange
+                  min={PRICE_RANGE.min}
+                  max={PRICE_RANGE.max}
+                  step={PRICE_RANGE.step}
+                  defaultLow={f.minMonthly}
+                  defaultHigh={f.maxMonthly}
                 />
-              </div>
+              </fieldset>
               <fieldset className="border-line space-y-3 border-t pt-4">
-                <legend className="mb-2 text-sm font-semibold">Harga</legend>
-                <div>
-                  <Label htmlFor="f-maxMonthly">Maks. per bulan (Rp)</Label>
-                  <Input
-                    id="f-maxMonthly"
-                    name="maxMonthly"
-                    inputMode="numeric"
-                    defaultValue={f.maxMonthly ?? ''}
-                    placeholder="300000"
+                <legend className="mb-3 text-sm font-semibold">Kecepatan Download</legend>
+                {SPEED_RANGES.map((r) => (
+                  <Checkbox
+                    key={r.key}
+                    name="speed"
+                    value={r.key}
+                    defaultChecked={f.speedRanges.includes(r.key)}
+                    label={`${r.min} Mbps - ${r.max} Mbps`}
                   />
-                </div>
-                <div>
-                  <Label htmlFor="f-maxInstallation">Maks. biaya instalasi (Rp)</Label>
-                  <Input
-                    id="f-maxInstallation"
-                    name="maxInstallation"
-                    inputMode="numeric"
-                    defaultValue={f.maxInstallation ?? ''}
-                    placeholder="0"
+                ))}
+              </fieldset>
+              <fieldset className="border-line space-y-3 border-t pt-4">
+                <legend className="mb-3 text-sm font-semibold">Provider</legend>
+                {providers.map((s) => (
+                  <Checkbox
+                    key={s.provider.id}
+                    name="provider"
+                    value={s.provider.slug}
+                    defaultChecked={f.providerSlugs.includes(s.provider.slug)}
+                    label={s.provider.displayName}
                   />
-                </div>
+                ))}
               </fieldset>
               <fieldset className="border-line space-y-3 border-t pt-4">
-                <legend className="mb-2 text-sm font-semibold">Kecepatan</legend>
-                <div>
-                  <Label htmlFor="f-minDownload">Unduh minimal</Label>
-                  <Select id="f-minDownload" name="minDownload" defaultValue={f.minDownload ?? ''}>
-                    <option value="">Semua</option>
-                    {[10, 20, 30, 50, 75, 100, 150].map((n) => (
-                      <option key={n} value={n}>
-                        {n} Mbps
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="f-minUpload">Unggah minimal</Label>
-                  <Select id="f-minUpload" name="minUpload" defaultValue={f.minUpload ?? ''}>
-                    <option value="">Semua</option>
-                    {[5, 10, 25, 50, 100].map((n) => (
-                      <option key={n} value={n}>
-                        {n} Mbps
-                      </option>
-                    ))}
-                  </Select>
-                </div>
+                <legend className="mb-3 text-sm font-semibold">Teknologi</legend>
+                {TECHNOLOGIES.map((t) => (
+                  <Checkbox
+                    key={t}
+                    name="technology"
+                    value={t}
+                    defaultChecked={f.technologies.includes(t)}
+                    label={TECHNOLOGY_LABEL[t]}
+                  />
+                ))}
               </fieldset>
               <fieldset className="border-line space-y-3 border-t pt-4">
-                <legend className="mb-2 text-sm font-semibold">Provider & teknologi</legend>
-                <div>
-                  <Label htmlFor="f-provider">Provider</Label>
-                  <Select id="f-provider" name="provider" defaultValue={f.providerSlug ?? ''}>
-                    <option value="">Semua provider</option>
-                    {providers.map((s) => (
-                      <option key={s.provider.id} value={s.provider.slug}>
-                        {s.provider.displayName}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="f-technology">Teknologi</Label>
-                  <Select id="f-technology" name="technology" defaultValue={f.technology ?? ''}>
-                    <option value="">Semua teknologi</option>
-                    {TECHNOLOGIES.map((t) => (
-                      <option key={t} value={t}>
-                        {TECHNOLOGY_LABEL[t]}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-              </fieldset>
-              <fieldset className="border-line space-y-3 border-t pt-4">
-                <legend className="mb-2 text-sm font-semibold">Ketentuan</legend>
+                <legend className="mb-3 text-sm font-semibold">Fitur</legend>
                 <Checkbox
                   name="router"
                   value="1"
                   defaultChecked={f.routerIncluded}
-                  label="Termasuk router"
+                  label="Router Gratis"
                 />
                 <Checkbox
-                  name="noContract"
+                  name="freeInstall"
                   value="1"
-                  defaultChecked={f.noContract}
-                  label="Tanpa kontrak"
+                  defaultChecked={f.freeInstallation}
+                  label="Instalasi Gratis"
                 />
                 <Checkbox
-                  name="promo"
+                  name="contract12"
                   value="1"
-                  defaultChecked={f.promoOnly}
-                  label="Sedang promo"
+                  defaultChecked={f.contract12}
+                  label="Kontrak 12 Bulan"
                 />
               </fieldset>
               <div className="border-line flex gap-2 border-t pt-4">

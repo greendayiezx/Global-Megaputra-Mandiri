@@ -144,16 +144,36 @@ export const SORT_LABEL: Record<Sort, string> = {
   best_value: 'Nilai Terbaik (Rp/Mbps)',
 };
 
+/** Download-speed buckets offered as checkboxes; a package matches any selected bucket. */
+export const SPEED_RANGES = [
+  { key: '10-50', min: 10, max: 50 },
+  { key: '51-100', min: 51, max: 100 },
+  { key: '101-200', min: 101, max: 200 },
+  { key: '201-500', min: 201, max: 500 },
+] as const;
+export type SpeedRangeKey = (typeof SPEED_RANGES)[number]['key'];
+export const SPEED_RANGE_KEYS = SPEED_RANGES.map((r) => r.key);
+
+/** Bounds of the monthly-price slider; a value at a bound means "no limit on that side". */
+export const PRICE_RANGE = { min: 0, max: 1_000_000, step: 25_000 } as const;
+
 export interface SearchParams {
   point: GeoPoint | null;
   q: string | null;
-  technology: Technology | null;
-  providerSlug: string | null;
+  /** Empty = any. */
+  technologies: Technology[];
+  /** Empty = any. */
+  providerSlugs: string[];
+  /** Empty = any. */
+  speedRanges: SpeedRangeKey[];
   minDownload: number | null;
   minUpload: number | null;
+  minMonthly: number | null;
   maxMonthly: number | null;
   maxInstallation: number | null;
   routerIncluded: boolean;
+  freeInstallation: boolean;
+  contract12: boolean;
   noContract: boolean;
   promoOnly: boolean;
   sort: Sort;
@@ -203,13 +223,23 @@ export async function searchPackages(params: SearchParams) {
   views = views.filter(
     (v) =>
       (!params.q || matchesQuery(v, params.q)) &&
-      (!params.technology || v.pkg.technology === params.technology) &&
-      (!params.providerSlug || v.provider.slug === params.providerSlug) &&
+      (params.technologies.length === 0 || params.technologies.includes(v.pkg.technology)) &&
+      (params.providerSlugs.length === 0 || params.providerSlugs.includes(v.provider.slug)) &&
+      (params.speedRanges.length === 0 ||
+        SPEED_RANGES.some(
+          (r) =>
+            params.speedRanges.includes(r.key) &&
+            v.pkg.downloadMbps >= r.min &&
+            v.pkg.downloadMbps <= r.max,
+        )) &&
       (params.minDownload === null || v.pkg.downloadMbps >= params.minDownload) &&
       (params.minUpload === null || v.pkg.uploadMbps >= params.minUpload) &&
+      (params.minMonthly === null || v.pkg.monthlyPrice >= params.minMonthly) &&
       (params.maxMonthly === null || v.pkg.monthlyPrice <= params.maxMonthly) &&
       (params.maxInstallation === null || v.pkg.installationFee <= params.maxInstallation) &&
       (!params.routerIncluded || v.pkg.routerIncluded) &&
+      (!params.freeInstallation || v.pkg.installationFee === 0) &&
+      (!params.contract12 || v.pkg.contractMonths === 12) &&
       (!params.noContract || v.pkg.contractMonths === 0) &&
       // No promotion data exists yet (Phase 2), so "promo only" honestly returns nothing.
       !params.promoOnly,

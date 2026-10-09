@@ -21,6 +21,24 @@ export function bool(params: RawSearchParams, key: string): boolean {
   return s === '1' || s === 'on' || s === 'true';
 }
 
+/** Every non-empty value of a repeated key (e.g. `?provider=a&provider=b`), de-duplicated. */
+export function all(params: RawSearchParams, key: string): string[] {
+  const v = params[key];
+  const list = (Array.isArray(v) ? v : v === undefined ? [] : [v])
+    .map((s) => s.trim().slice(0, 200))
+    .filter(Boolean);
+  return [...new Set(list)].slice(0, 50);
+}
+
+/** Like `all`, keeping only allowed values. */
+export function allOf<T extends string>(
+  params: RawSearchParams,
+  key: string,
+  allowed: readonly T[],
+): T[] {
+  return all(params, key).filter((s): s is T => (allowed as readonly string[]).includes(s));
+}
+
 export function oneOf<T extends string>(
   params: RawSearchParams,
   key: string,
@@ -39,11 +57,15 @@ export function point(params: RawSearchParams): GeoPoint | null {
   return isValidPoint(p) ? p : null;
 }
 
-/** Builds a query string from defined values only. */
-export function qs(values: Record<string, string | number | null | undefined>): string {
+type QueryValue = string | number | null | undefined;
+
+/** Builds a query string from defined values only; arrays become repeated keys. */
+export function qs(values: Record<string, QueryValue | readonly QueryValue[]>): string {
   const sp = new URLSearchParams();
-  for (const [k, v] of Object.entries(values)) {
-    if (v !== null && v !== undefined && v !== '') sp.set(k, String(v));
+  for (const [k, raw] of Object.entries(values)) {
+    for (const v of Array.isArray(raw) ? raw : [raw]) {
+      if (v !== null && v !== undefined && v !== '') sp.append(k, String(v));
+    }
   }
   const s = sp.toString();
   return s ? `?${s}` : '';
