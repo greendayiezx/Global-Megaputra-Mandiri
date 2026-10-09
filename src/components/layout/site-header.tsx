@@ -1,4 +1,14 @@
-import { LifeBuoy, LogOut, Menu, Search, UserRound } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  Globe,
+  LifeBuoy,
+  LogOut,
+  Menu,
+  Search,
+  TicketPercent,
+  UserRound,
+} from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from '@/components/brand/logo';
 import { CompareHeaderLink } from '@/components/compare/compare-controls';
@@ -51,9 +61,14 @@ export function SiteHeader({ session }: { session: Session | null }) {
     <header className="bg-surface sticky top-0 z-30">
       {/* Utility bar */}
       <div className="bg-navy hidden text-[13px] text-white/80 md:block">
-        <div className="container-page flex h-9 items-center justify-between">
+        <div className="container-header flex h-9 items-center justify-between">
           <p>Selamat datang di Global Megaputra Mandiri</p>
           <ul className="flex items-center divide-x divide-white/20">
+            <li className="px-3">
+              <Link href="/promo" className="flex items-center gap-1.5 hover:text-white">
+                <TicketPercent className="size-4" aria-hidden="true" /> Promo
+              </Link>
+            </li>
             <li className="px-3">
               <Link href="/faq" className="hover:text-white">
                 Bantuan
@@ -64,42 +79,34 @@ export function SiteHeader({ session }: { session: Session | null }) {
                 Jadi Mitra
               </Link>
             </li>
-            {session ? (
-              <>
-                <li className="px-3">
-                  <Link href={home!.href} className="font-medium text-white hover:underline">
-                    {session.user.fullName}
-                  </Link>
-                </li>
-                <li className="pl-3">
-                  <form action={logoutAction}>
-                    <button type="submit" className="hover:text-white">
-                      Keluar
-                    </button>
-                  </form>
-                </li>
-              </>
-            ) : (
-              <>
-                <li className="px-3">
-                  <Link href="/login" className="hover:text-white">
-                    Masuk
-                  </Link>
-                </li>
-                <li className="pl-3">
-                  <Link href="/register" className="font-medium text-white hover:underline">
-                    Daftar
-                  </Link>
-                </li>
-              </>
-            )}
+            <li className="pl-3">
+              <details className="group relative">
+                <summary className="flex cursor-pointer list-none items-center gap-1 hover:text-white [&::-webkit-details-marker]:hidden">
+                  <Globe className="size-4" aria-hidden="true" />
+                  <span>ID | IDR</span>
+                  <ChevronDown
+                    className="size-3.5 transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
+                </summary>
+                <ul className="border-line bg-surface text-fg shadow-pop absolute right-0 z-40 mt-2 w-48 rounded-md border p-1 text-sm">
+                  <li className="flex items-center justify-between rounded-sm px-3 py-2 font-medium">
+                    Bahasa Indonesia
+                    <Check className="text-primary size-4" aria-hidden="true" />
+                  </li>
+                  <li className="text-fg-muted flex items-center justify-between px-3 py-2">
+                    English <span className="text-[11px]">Segera hadir</span>
+                  </li>
+                </ul>
+              </details>
+            </li>
           </ul>
         </div>
       </div>
 
       {/* Main bar */}
       <div className="border-line border-b lg:border-b-0">
-        <div className="container-page flex h-16 items-center gap-4 lg:h-[72px] lg:gap-8">
+        <div className="container-header flex h-16 items-center gap-4 lg:h-[72px] lg:gap-8">
           <Link href="/" aria-label="GMM — Beranda" className="shrink-0">
             <Logo />
           </Link>
@@ -107,13 +114,41 @@ export function SiteHeader({ session }: { session: Session | null }) {
 
           <div className="ml-auto flex items-center gap-1">
             <CompareHeaderLink />
-            <Link
-              href={home?.href ?? '/login'}
-              className="text-fg-secondary hover:bg-subtle hover:text-fg hidden flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 sm:flex"
-            >
-              <UserRound className="size-5" aria-hidden="true" />
-              <span className="text-[11px] font-medium">{session ? 'Akun' : 'Masuk'}</span>
-            </Link>
+            {session ? (
+              <details className="group relative hidden sm:block">
+                <summary className="text-fg-secondary hover:bg-subtle hover:text-fg flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden">
+                  <UserRound className="size-5" aria-hidden="true" />
+                  <span className="text-[11px] font-medium">Akun</span>
+                </summary>
+                <div className="border-line bg-surface shadow-pop absolute right-0 z-40 mt-2 w-56 rounded-lg border p-1.5">
+                  <p className="text-fg-muted truncate px-3 py-2 text-xs">
+                    {session.user.fullName}
+                  </p>
+                  <Link
+                    href={home!.href}
+                    className="hover:bg-subtle block rounded-md px-3 py-2 text-sm font-medium"
+                  >
+                    {home!.label}
+                  </Link>
+                  <form action={logoutAction}>
+                    <button
+                      type="submit"
+                      className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
+                    >
+                      <LogOut className="size-4" aria-hidden="true" /> Keluar
+                    </button>
+                  </form>
+                </div>
+              </details>
+            ) : (
+              <Link
+                href="/login"
+                className="text-fg-secondary hover:bg-subtle hover:text-fg hidden flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 sm:flex"
+              >
+                <UserRound className="size-5" aria-hidden="true" />
+                <span className="text-[11px] font-medium">Masuk</span>
+              </Link>
+            )}
 
             {/* Mobile / tablet menu (no-JS) */}
             <details className="group relative lg:hidden">

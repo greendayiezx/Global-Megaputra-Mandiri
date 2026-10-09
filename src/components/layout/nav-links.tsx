@@ -21,7 +21,7 @@ export function DesktopNav() {
   const pathname = usePathname();
   return (
     <nav aria-label="Navigasi utama" className="border-line hidden border-t lg:block">
-      <ul className="container-page flex h-11 items-center gap-1">
+      <ul className="container-header flex h-11 items-center gap-1">
         {MAIN_NAV.map((item) => {
           const active = isActive(pathname, item.href);
           return (
