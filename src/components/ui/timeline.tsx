@@ -144,7 +144,7 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
             src={imageUrl}
             alt={imageAlt}
             draggable={false}
-            className="ring-line h-[55%] w-[78vw] shrink-0 rounded-2xl object-cover ring-1 sm:h-full sm:w-[34vw]"
+            className="ring-line aspect-[1685/934] h-auto w-[86vw] shrink-0 rounded-2xl object-cover ring-1 sm:w-[46vw] lg:w-[42vw]"
           />
 
           <div className="relative flex h-full shrink-0">
