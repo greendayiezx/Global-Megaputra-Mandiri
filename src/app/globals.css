@@ -168,6 +168,9 @@
 /* Leaflet controls follow the design system */
 .leaflet-container {
   font: inherit;
+  /* Leaflet panes use z-index 400+; keep them inside the map so the sticky header stays on top. */
+  isolation: isolate;
+  z-index: 0;
 }
 .gmm-pin {
   background: transparent;

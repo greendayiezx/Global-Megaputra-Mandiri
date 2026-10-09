@@ -28,12 +28,17 @@ function isActive(pathname: string, item: NavItem) {
   );
 }
 
-const itemClass = (active: boolean) =>
+/**
+ * Underline grows in under the highlighted item and shrinks out of the previous one, so it
+ * appears to move with the user's choice.
+ */
+const itemClass = (highlighted: boolean) =>
   cn(
     'relative flex h-full items-center gap-1 px-2 text-sm font-medium whitespace-nowrap transition-colors xl:px-3',
-    active ? 'text-primary' : 'text-fg-secondary hover:text-fg',
-    active &&
-      'after:bg-primary after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 xl:after:inset-x-3',
+    'after:bg-primary after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:origin-center after:transition-transform after:duration-300 after:ease-out xl:after:inset-x-3',
+    highlighted
+      ? 'text-primary after:scale-x-100'
+      : 'text-fg-secondary hover:text-fg after:scale-x-0',
   );
 
 /**
@@ -82,7 +87,7 @@ export function DesktopNav({ data }: { data: NavData }) {
                 <Link
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
-                  className={itemClass(active)}
+                  className={itemClass(open ? false : active)}
                 >
                   {item.label}
                 </Link>
@@ -106,9 +111,9 @@ export function DesktopNav({ data }: { data: NavData }) {
                 aria-controls={panelId}
                 onClick={() => setOpen(isOpen ? null : menu)}
                 className={cn(
-                  itemClass(active),
+                  // While a menu is open the underline follows it; otherwise it marks the page.
+                  itemClass(open ? isOpen : active),
                   'focus-visible:ring-primary/40 cursor-pointer rounded-sm outline-none focus-visible:ring-2',
-                  isOpen && 'text-fg',
                 )}
               >
                 {item.label}
