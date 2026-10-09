@@ -77,9 +77,11 @@ export function ProviderCard({
         )}
       </div>
 
-      <ButtonLink href={href} variant="outline" className="mt-4">
-        Lihat Paket
-      </ButtonLink>
+      <div className="mt-auto pt-4">
+        <ButtonLink href={href} variant="outline" className="w-full">
+          Lihat Paket
+        </ButtonLink>
+      </div>
     </Card>
   );
 }

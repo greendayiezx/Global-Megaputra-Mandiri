@@ -12,18 +12,14 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import Link from 'next/link';
-import { CoverageNotice, CoverageStatusBadge } from '@/components/coverage/coverage-status';
-import { HeroLocationForm } from '@/components/coverage/coverage-search-form';
+import { GmmHero } from '@/components/marketplace/gmm-hero';
 import { PackageCard } from '@/components/marketplace/package-card';
-import { ProviderAvatar } from '@/components/marketplace/provider-avatar';
 import { ProviderCard } from '@/components/marketplace/provider-card';
 import { ButtonLink } from '@/components/ui/button';
-import { Card, DemoBadge, EmptyState, SectionHeader } from '@/components/ui/primitives';
+import { Card, EmptyState, SectionHeader } from '@/components/ui/primitives';
 import { FAQ } from '@/content/faq';
 import { formatRupiah } from '@/lib/format';
 import { searchPackages, searchProviders } from '@/modules/packages/application/catalog';
-import { DEMO_LOCATIONS } from '@/modules/packages/infrastructure/demo-catalog';
-import { appConfig } from '@/config/app';
 
 const TRUST = [
   {
@@ -115,8 +111,7 @@ const emptySearch = {
 };
 
 export default async function HomePage() {
-  const example = DEMO_LOCATIONS[0];
-  const [providers, packages, preview] = await Promise.all([
+  const [providers, packages] = await Promise.all([
     searchProviders({
       point: null,
       q: null,
@@ -126,97 +121,25 @@ export default async function HomePage() {
       slaStated: false,
     }),
     searchPackages(emptySearch),
-    appConfig.showDemoData
-      ? searchProviders({
-          point: { lat: example.lat, lng: example.lng },
-          q: null,
-          technology: null,
-          maxStartingPrice: null,
-          minSpeed: null,
-          slaStated: false,
-        })
-      : Promise.resolve([]),
   ]);
   const comparePreview = packages.items.slice(0, 3);
 
   return (
     <>
-      {/* 1. Hero */}
-      <section className="border-line bg-surface border-b">
-        <div className="container-page grid gap-10 py-10 md:py-14 lg:grid-cols-12 lg:items-center lg:gap-12 lg:py-16">
-          <div className="lg:col-span-7">
-            <p className="text-primary text-sm font-semibold">Marketplace Internet & Provider</p>
-            <h1 className="mt-3 text-[36px] font-bold md:text-[48px] lg:text-[52px]">
-              Temukan Internet Terbaik di Lokasimu
-            </h1>
-            <p className="text-fg-secondary mt-4 max-w-xl text-[17px]">
-              Bandingkan berbagai provider internet, pilih paket yang sesuai kebutuhan, dan nikmati
-              proses pemesanan yang lebih mudah.
-            </p>
-            <div className="mt-7 max-w-xl">
-              <HeroLocationForm />
-              <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-                <Link href="/coverage" className="text-primary font-medium hover:underline">
-                  Tandai lokasi di peta
-                </Link>
-                <Link
-                  href="/packages"
-                  className="text-fg-secondary hover:text-fg inline-flex items-center gap-1 font-medium"
-                >
-                  Bandingkan Paket <ArrowRight className="size-4" aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Product preview: a real result for a demo location, rendered with production components. */}
-          {preview.length > 0 && (
-            <div className="lg:col-span-5">
-              <Card className="overflow-hidden">
-                <div className="border-line bg-canvas flex items-center justify-between gap-3 border-b px-4 py-3">
-                  <div>
-                    <p className="text-fg-muted text-xs">Contoh hasil cek lokasi</p>
-                    <p className="text-sm font-semibold">{example.label.replace('Contoh: ', '')}</p>
-                  </div>
-                  <DemoBadge />
-                </div>
-                <ul className="divide-line divide-y">
-                  {preview.map((s) => (
-                    <li key={s.provider.id} className="flex items-center gap-3 px-4 py-3.5">
-                      <ProviderAvatar name={s.provider.displayName} size="sm" />
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-semibold">{s.provider.displayName}</p>
-                        <p className="text-fg-muted text-[13px]">
-                          {s.packageCount} paket · mulai{' '}
-                          {s.startingPrice !== null ? formatRupiah(s.startingPrice) : '—'}/bln
-                        </p>
-                      </div>
-                      {s.coverage && <CoverageStatusBadge status={s.coverage.status} />}
-                    </li>
-                  ))}
-                </ul>
-                <div className="border-line border-t px-4 py-3">
-                  <CoverageNotice />
-                </div>
-              </Card>
-            </div>
-          )}
-        </div>
-      </section>
+      {/* 1. Hero banner */}
+      <GmmHero />
 
       {/* 2. Trust indicators */}
-      <section aria-label="Keunggulan GMM" className="border-line bg-surface border-b">
-        <ul className="container-page grid grid-cols-2 gap-x-6 gap-y-5 py-6 lg:grid-cols-4">
+      <section aria-label="Keunggulan GMM" className="border-line bg-surface border-y">
+        <ul className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-x-6 gap-y-5 px-4 py-7 min-[420px]:grid-cols-2 sm:px-6 md:px-8 lg:grid-cols-4">
           {TRUST.map(({ icon: Icon, title, body }) => (
             <li key={title} className="flex items-start gap-3">
-              <Icon
-                className="text-primary mt-0.5 size-5 shrink-0"
-                strokeWidth={1.75}
-                aria-hidden="true"
-              />
+              <span className="bg-primary-soft text-primary grid size-9 shrink-0 place-items-center rounded-md">
+                <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
+              </span>
               <div>
                 <p className="text-sm font-semibold">{title}</p>
-                <p className="text-fg-muted mt-0.5 hidden text-[13px] sm:block">{body}</p>
+                <p className="text-fg-muted mt-0.5 text-[13px] leading-snug">{body}</p>
               </div>
             </li>
           ))}

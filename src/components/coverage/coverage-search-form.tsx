@@ -1,7 +1,8 @@
 'use client';
 
-import { Crosshair, MapPin, Search } from 'lucide-react';
+import { Crosshair, Search } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FieldError, FieldHint, Input, Label } from '@/components/ui/field';
@@ -14,29 +15,44 @@ const LocationMap = dynamic(() => import('./location-map').then((m) => m.Locatio
   loading: () => <Skeleton className="h-full w-full rounded-none" />,
 });
 
-/** Homepage hero: address first, then the pin is confirmed on the coverage page map. */
-export function HeroLocationForm() {
+/**
+ * Homepage hero: address first, then the pin is confirmed on the coverage page map.
+ * Works without JavaScript (plain GET form); with JS the address is normalised first.
+ */
+export function HeroLocationForm({ className }: { className?: string }) {
+  const router = useRouter();
+
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const raw = new FormData(e.currentTarget).get('address');
+    const address = typeof raw === 'string' ? raw.trim().replace(/\s+/g, ' ').slice(0, 200) : '';
+    router.push(address ? `/coverage?address=${encodeURIComponent(address)}` : '/coverage');
+  }
+
   return (
-    <form action="/coverage" method="get" className="w-full">
+    <form action="/coverage" method="get" onSubmit={onSubmit} className={cn('w-full', className)}>
       <label htmlFor="hero-address" className="sr-only">
-        Masukkan alamat pemasangan Anda
+        Masukkan alamat lengkap Anda
       </label>
-      <div className="border-line-strong bg-surface shadow-card flex flex-col gap-2 rounded-lg border p-2 sm:flex-row">
-        <div className="relative flex-1">
-          <MapPin
+      <div className="bg-surface focus-within:ring-primary/25 flex flex-col gap-2 rounded-xl p-2 shadow-[0_8px_24px_rgba(5,18,43,0.18)] transition-shadow focus-within:ring-3 sm:h-[60px] sm:flex-row sm:items-center sm:gap-0 sm:p-1.5 sm:pl-2">
+        <div className="relative flex-1 self-stretch">
+          <Search
             aria-hidden="true"
-            className="text-primary pointer-events-none absolute top-1/2 left-3 size-5 -translate-y-1/2"
+            className="text-fg-muted pointer-events-none absolute top-1/2 left-3 size-[18px] -translate-y-1/2"
           />
           <input
             id="hero-address"
             name="address"
             autoComplete="street-address"
-            placeholder="Masukkan alamat pemasangan Anda"
-            className="placeholder:text-fg-muted h-12 w-full rounded-md bg-transparent pr-3 pl-10 text-[15px] focus:outline-none"
+            maxLength={200}
+            placeholder="Masukkan alamat lengkap Anda"
+            className="placeholder:text-fg-muted h-12 w-full rounded-lg bg-transparent pr-3 pl-10 text-[15px] focus:outline-none sm:h-full"
           />
         </div>
-        <Button type="submit" size="lg">
-          <Search aria-hidden="true" />
+        <Button
+          type="submit"
+          className="h-11 w-full rounded-lg transition-colors duration-150 sm:w-auto sm:px-6"
+        >
           Cek Ketersediaan
         </Button>
       </div>

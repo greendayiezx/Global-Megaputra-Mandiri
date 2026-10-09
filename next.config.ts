@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
   // Fail the production build on type errors instead of shipping them.
   // (Next 16 no longer runs ESLint during build; CI runs `npm run lint` separately.)
   typescript: { ignoreBuildErrors: false },
+  serverExternalPackages: ['@electric-sql/pglite'],
 
   experimental: {
     // Server Actions are only accepted from these origins (CSRF hardening).
