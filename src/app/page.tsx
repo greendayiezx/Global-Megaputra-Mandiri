@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   Building2,
-  ChevronDown,
   Gamepad2,
   GraduationCap,
   Headset,
@@ -17,6 +16,7 @@ import { PackageCard } from '@/components/marketplace/package-card';
 import { ProviderCard } from '@/components/marketplace/provider-card';
 import { ButtonLink } from '@/components/ui/button';
 import { Card, EmptyState, SectionHeader } from '@/components/ui/primitives';
+import { Faq } from '@/components/ui/faq';
 import { Timeline } from '@/components/ui/timeline';
 import { FAQ } from '@/content/faq';
 import { formatRupiah } from '@/lib/format';
@@ -312,34 +312,21 @@ export default async function HomePage() {
       </section>
 
       {/* 9. FAQ */}
-      <section className="section container-page" aria-labelledby="faq-title">
-        <div className="grid gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <SectionHeader
-              id="faq-title"
-              title="Pertanyaan Umum"
-              description="Jawaban singkat sebelum Anda memesan."
-            />
-            <ButtonLink href="/faq" variant="secondary" className="mt-5">
+      <Faq
+        id="faq"
+        title="Pertanyaan Umum"
+        description="Jawaban singkat sebelum Anda memesan."
+        items={FAQ.slice(0, 6).map((f, i) => ({ id: `faq-${i}`, question: f.q, answer: f.a }))}
+        defaultValue="faq-0"
+        footer={
+          <>
+            <p>Masih ada pertanyaan?</p>
+            <ButtonLink href="/faq" variant="secondary" className="mt-3">
               Semua pertanyaan
             </ButtonLink>
-          </div>
-          <div className="divide-line border-line bg-surface divide-y rounded-lg border lg:col-span-8">
-            {FAQ.slice(0, 5).map((f) => (
-              <details key={f.q} className="group px-5 py-4">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-medium [&::-webkit-details-marker]:hidden">
-                  {f.q}
-                  <ChevronDown
-                    className="text-fg-muted size-4 shrink-0 transition-transform group-open:rotate-180"
-                    aria-hidden="true"
-                  />
-                </summary>
-                <p className="text-fg-secondary mt-2 text-sm">{f.a}</p>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
+          </>
+        }
+      />
 
       {/* 10. Final CTA */}
       <section className="container-page">

@@ -75,6 +75,27 @@
   /* Elevation — intentionally subtle */
   --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06);
   --shadow-pop: 0 8px 24px rgba(15, 23, 42, 0.1);
+
+  /* Accordion open/close (Radix exposes the content height as a CSS variable) */
+  --animate-accordion-down: accordion-open 200ms ease-out;
+  --animate-accordion-up: accordion-close 200ms ease-out;
+
+  @keyframes accordion-open {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-close {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
 }
 
 @layer base {

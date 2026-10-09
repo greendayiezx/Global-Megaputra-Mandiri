@@ -38,6 +38,7 @@
     "@aws-sdk/s3-request-presigner": "^3.954.0",
     "@electric-sql/pglite": "^0.5.8",
     "@node-rs/argon2": "^2.2.2",
+    "@radix-ui/react-accordion": "^1.2.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
