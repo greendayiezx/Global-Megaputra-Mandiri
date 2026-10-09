@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { CoverageStatusBadge } from '@/components/coverage/coverage-status';
 import { Prose } from '@/components/layout/content-page';
 import { ButtonLink } from '@/components/ui/button';
-import { Breadcrumb, Card } from '@/components/ui/primitives';
+import { Card } from '@/components/ui/primitives';
 import { Timeline } from '@/components/ui/timeline';
 import { STEPS } from '@/content/how-it-works';
 import type { CoverageStatus } from '@/modules/coverage/domain/coverage';
@@ -23,16 +23,9 @@ const STATUS: [CoverageStatus, string][] = [
 export default function HowItWorksPage() {
   return (
     <div className="bg-surface">
-      <div className="container-page pt-6 md:pt-8">
-        <Breadcrumb items={[{ label: 'Beranda', href: '/' }, { label: 'Cara Kerja' }]} />
-        <h1 className="mt-4 text-[28px] font-bold md:text-[32px]">Cara Kerja GMM</h1>
-        <p className="text-fg-muted mt-2 max-w-3xl text-[17px]">
-          Empat langkah dari cek lokasi sampai internet aktif. Scroll untuk melihat tiap langkah.
-        </p>
-      </div>
-
       <Timeline
-        title="4 Langkah Mudah"
+        title="Cara Kerja GMM"
+        titleAs="h1"
         caption="Dari cek lokasi sampai internet aktif"
         items={STEPS.map((s) => ({
           id: `step-${s.n}`,

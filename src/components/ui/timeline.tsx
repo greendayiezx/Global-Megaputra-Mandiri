@@ -27,6 +27,8 @@ export interface TimelineItem {
 export interface TimelineProps {
   items: readonly TimelineItem[];
   title: string;
+  /** Use "h1" when the timeline is the page's main heading. */
+  titleAs?: 'h1' | 'h2';
   /** Caption under the axis, left of the first step. */
   caption?: string;
   imageUrl: string;
@@ -50,7 +52,15 @@ function usePrefersReducedMotion() {
   );
 }
 
-export function Timeline({ items, title, caption, imageUrl, imageAlt, className }: TimelineProps) {
+export function Timeline({
+  items,
+  title,
+  titleAs: Title = 'h2',
+  caption,
+  imageUrl,
+  imageAlt,
+  className,
+}: TimelineProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const reducedMotion = usePrefersReducedMotion();
@@ -60,15 +70,23 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
     const track = trackRef.current;
     if (!section || !track) return;
 
+    // The sticky site header covers the top of the viewport; pin below it.
+    const header = () =>
+      document.querySelector('body > header')?.getBoundingClientRect().height ?? 0;
+    const syncHeader = () => section.style.setProperty('--tl-header', `${header()}px`);
+    syncHeader();
+
     const splits: SplitText[] = [];
     const ctx = gsap.context(() => {
+      const range = () => section.offsetHeight - (window.innerHeight - header());
+      const overflow = () => Math.max(1, track.scrollWidth - window.innerWidth);
       // The track slides by exactly its overflow, so the last step ends in view.
-      const slide = gsap.to(track, {
+      gsap.to(track, {
         x: () => -(track.scrollWidth - window.innerWidth),
         ease: 'none',
         scrollTrigger: {
           trigger: section,
-          start: 'top top',
+          start: () => `top ${header()}px`,
           end: 'bottom bottom',
           scrub: true,
           invalidateOnRefresh: true,
@@ -83,7 +101,12 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
           ease: 'none',
           scrollTrigger: reducedMotion
             ? undefined
-            : { trigger: section, start: 'top top', end: 'bottom bottom', scrub: true },
+            : {
+                trigger: section,
+                start: () => `top ${header()}px`,
+                end: 'bottom bottom',
+                scrub: true,
+              },
         },
       );
 
@@ -98,28 +121,40 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
           return split.lines;
         });
 
+        // Slide progress (0–1) at which this step's left edge reaches `frac` of the viewport.
+        // Clamped above 0 so nothing is revealed before the visitor starts scrolling.
+        const progressAt = (frac: number) => {
+          const left = item.getBoundingClientRect().left - track.getBoundingClientRect().left;
+          return gsap.utils.clamp(0.04, 0.98, (left - frac * window.innerWidth) / overflow());
+        };
+        const startP = () => progressAt(0.85);
+        const endP = () => Math.min(1, Math.max(progressAt(0.5), startP() + 0.08));
+
+        // Hidden until the visitor scrolls to this step.
+        gsap.set(stem, { scaleY: 0 });
+        gsap.set(dot, { scale: 0 });
+        gsap.set(lines, { yPercent: 110 });
+
         gsap
           .timeline({
             scrollTrigger: {
-              trigger: item,
-              containerAnimation: slide,
-              start: 'left 90%',
-              end: 'left 55%',
+              trigger: section,
+              start: () => `top+=${startP() * range()} ${header()}px`,
+              end: () => `top+=${endP() * range()} ${header()}px`,
               scrub: true,
+              invalidateOnRefresh: true,
             },
           })
-          .fromTo(stem, { scaleY: 0 }, { scaleY: 1, duration: 0.4 })
-          .fromTo(dot, { scale: 0 }, { scale: 1, duration: 0.4 }, '<')
-          .fromTo(
-            lines,
-            { yPercent: 110 },
-            { yPercent: 0, duration: 1, stagger: 0.08, ease: 'power2.out' },
-            '-=0.2',
-          );
+          .to(stem, { scaleY: 1, duration: 0.4 })
+          .to(dot, { scale: 1, duration: 0.4 }, '<')
+          .to(lines, { yPercent: 0, duration: 1, stagger: 0.08, ease: 'power2.out' }, '-=0.2');
       });
     }, section);
 
-    const onResize = () => ScrollTrigger.refresh();
+    const onResize = () => {
+      syncHeader();
+      ScrollTrigger.refresh();
+    };
     window.addEventListener('resize', onResize);
     return () => {
       window.removeEventListener('resize', onResize);
@@ -133,8 +168,8 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
       ref={sectionRef}
       className={cn('bg-surface text-fg relative h-[320vh] sm:h-[260vh]', className)}
     >
-      {/* Sticky viewport, padded to clear the sticky site header. */}
-      <div className="sticky top-0 flex h-dvh items-center overflow-hidden pt-16 md:pt-32">
+      {/* Sticky viewport, pinned just below the sticky site header. */}
+      <div className="sticky top-(--tl-header,0px) flex h-[calc(100dvh-var(--tl-header,0px))] items-start overflow-hidden pt-6 md:pt-10">
         <div
           ref={trackRef}
           className="flex h-[min(72vh,560px)] w-max items-center gap-[6vw] pr-[24vw] pl-[6vw] will-change-transform sm:h-[min(60vh,520px)]"
@@ -157,9 +192,9 @@ export function Timeline({ items, title, caption, imageUrl, imageAlt, className 
 
             {/* Heading column */}
             <div className="flex w-[62vw] shrink-0 flex-col justify-between py-2 pr-[4vw] sm:w-[22vw]">
-              <h2 className="text-[32px] leading-[1.05] font-bold tracking-tight lg:text-[44px]">
+              <Title className="text-[32px] leading-[1.05] font-bold tracking-tight lg:text-[44px]">
                 {title}
-              </h2>
+              </Title>
               {caption && <p className="text-fg-muted text-sm lg:text-base">{caption}</p>}
             </div>
 
