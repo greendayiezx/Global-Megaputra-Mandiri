@@ -81,8 +81,8 @@ export function DesktopNav({ data }: { data: NavData }) {
   };
 
   return (
-    <nav ref={navRef} aria-label="Navigasi utama" className="hidden lg:block">
-      <ul className="-mr-2 flex h-10 items-center xl:-mr-3">
+    <nav ref={navRef} aria-label="Navigasi utama" className="mt-1 hidden lg:block">
+      <ul className="-mx-2 flex h-10 items-center xl:-mx-3">
         {MAIN_NAV.map((item) => {
           const active = isActive(pathname, item);
           if (!item.menu) {

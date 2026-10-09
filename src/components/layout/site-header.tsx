@@ -77,7 +77,7 @@ export async function SiteHeader({ session }: { session: Session | null }) {
     <header className="bg-surface sticky top-0 z-30">
       {/* Utility bar */}
       <div className="bg-navy hidden text-[13px] text-white/80 md:block">
-        <div className="container-header flex h-9 items-center justify-end">
+        <div className="flex h-9 w-full items-center justify-end px-4 md:px-6 lg:px-8">
           <ul className="flex items-center divide-x divide-white/20">
             <li className="px-3">
               <Link href="/promo" className="flex items-center gap-1.5 hover:text-white">
@@ -121,159 +121,154 @@ export async function SiteHeader({ session }: { session: Session | null }) {
 
       {/* Main bar */}
       <div className="border-line border-b">
-        <div className="container-header">
-          <div className="flex h-16 items-center gap-4 lg:h-[72px] lg:gap-6 xl:gap-8">
-            <Link href="/" aria-label="GMM — Beranda" className="shrink-0">
-              <Logo />
-            </Link>
-            <SearchForm
-              id="header-search"
-              className="hidden min-w-0 flex-1 md:block lg:max-w-2xl"
-            />
+        <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-6 lg:pt-3 xl:gap-8">
+          <Link href="/" aria-label="GMM — Beranda" className="shrink-0">
+            <Logo />
+          </Link>
+          {/* Search with the main navigation directly beneath it */}
+          <div className="hidden min-w-0 flex-1 md:block lg:max-w-3xl">
+            <SearchForm id="header-search" className="lg:max-w-2xl" />
+            <DesktopNav data={navData} />
+          </div>
 
-            <div className="ml-auto flex items-center gap-1">
-              <CompareHeaderLink />
-              {session ? (
-                <details className="group relative hidden sm:block">
-                  <summary className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden">
-                    <UserRound
-                      className="group-hover/acct:motion-safe:animate-nav-wave size-5"
-                      aria-hidden="true"
-                    />
-                    <span className="text-[11px] font-medium">Akun</span>
-                  </summary>
-                  <div className="border-line bg-surface shadow-pop absolute right-0 z-40 mt-2 w-56 rounded-lg border p-1.5">
-                    <p className="text-fg-muted truncate px-3 py-2 text-xs">
-                      {session.user.fullName}
-                    </p>
-                    <Link
-                      href={home!.href}
-                      className="hover:bg-subtle block rounded-md px-3 py-2 text-sm font-medium"
-                    >
-                      {home!.label}
-                    </Link>
-                    <form action={logoutAction}>
-                      <button
-                        type="submit"
-                        className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
-                      >
-                        <LogOut className="size-4" aria-hidden="true" /> Keluar
-                      </button>
-                    </form>
-                  </div>
-                </details>
-              ) : (
-                <Link
-                  href="/login"
-                  className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg hidden flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 sm:flex"
-                >
+          <div className="ml-auto flex items-center gap-1">
+            <CompareHeaderLink />
+            {session ? (
+              <details className="group relative hidden sm:block">
+                <summary className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden">
                   <UserRound
                     className="group-hover/acct:motion-safe:animate-nav-wave size-5"
                     aria-hidden="true"
                   />
-                  <span className="text-[11px] font-medium">Masuk</span>
-                </Link>
-              )}
-
-              {/* Mobile / tablet menu (no-JS) */}
-              <details className="group relative lg:hidden">
-                <summary
-                  className="text-fg-secondary hover:bg-subtle flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden"
-                  aria-label="Menu"
-                >
-                  <Menu className="size-5" aria-hidden="true" />
-                  <span className="text-[11px] font-medium">Menu</span>
+                  <span className="text-[11px] font-medium">Akun</span>
                 </summary>
-                <div className="border-line bg-surface shadow-pop absolute right-0 mt-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border p-3">
-                  <SearchForm id="mobile-search" className="mb-3 md:hidden" />
-                  <ul className="space-y-0.5">
-                    {MAIN_NAV.map((item) => (
-                      <li key={item.href}>
-                        {item.menu ? (
-                          <details className="group/sub">
-                            <summary className="hover:bg-subtle flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
-                              {item.label}
-                              <ChevronDown
-                                className="text-fg-muted size-4 transition-transform group-open/sub:rotate-180"
-                                aria-hidden="true"
-                              />
-                            </summary>
-                            <ul className="border-line mb-1 ml-3 border-l pl-2">
-                              {MOBILE_SUBLINKS[item.menu].map((sub) => (
-                                <li key={sub.href}>
-                                  <Link
-                                    href={sub.href}
-                                    className="text-fg-secondary hover:bg-subtle block rounded-md px-3 py-2 text-sm"
-                                  >
-                                    {sub.label}
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </details>
-                        ) : (
-                          <Link
-                            href={item.href}
-                            className="hover:bg-subtle block rounded-md px-3 py-2.5 text-[15px] font-medium"
-                          >
-                            {item.label}
-                          </Link>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="border-line mt-2 border-t pt-2">
-                    <Link
-                      href="/promo"
-                      className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
+                <div className="border-line bg-surface shadow-pop absolute right-0 z-40 mt-2 w-56 rounded-lg border p-1.5">
+                  <p className="text-fg-muted truncate px-3 py-2 text-xs">
+                    {session.user.fullName}
+                  </p>
+                  <Link
+                    href={home!.href}
+                    className="hover:bg-subtle block rounded-md px-3 py-2 text-sm font-medium"
+                  >
+                    {home!.label}
+                  </Link>
+                  <form action={logoutAction}>
+                    <button
+                      type="submit"
+                      className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
                     >
-                      <TicketPercent className="size-4" aria-hidden="true" /> Promo
-                    </Link>
-                    <Link
-                      href="/faq"
-                      className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
-                    >
-                      <LifeBuoy className="size-4" aria-hidden="true" /> Bantuan
-                    </Link>
-                    <Link
-                      href="/mitra"
-                      className="hover:bg-subtle block rounded-md px-3 py-2.5 text-sm"
-                    >
-                      Jadi Mitra
-                    </Link>
-                    {session ? (
-                      <form action={logoutAction}>
-                        <button
-                          type="submit"
-                          className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm"
-                        >
-                          <LogOut className="size-4" aria-hidden="true" /> Keluar
-                        </button>
-                      </form>
-                    ) : (
-                      <div className="grid grid-cols-2 gap-2 px-1 pt-2">
-                        <Link
-                          href="/login"
-                          className="border-line-strong rounded-md border py-2 text-center text-sm font-semibold"
-                        >
-                          Masuk
-                        </Link>
-                        <Link
-                          href="/register"
-                          className="bg-primary rounded-md py-2 text-center text-sm font-semibold text-white"
-                        >
-                          Daftar
-                        </Link>
-                      </div>
-                    )}
-                  </div>
+                      <LogOut className="size-4" aria-hidden="true" /> Keluar
+                    </button>
+                  </form>
                 </div>
               </details>
-            </div>
-          </div>
-          {/* Main navigation, right-aligned on its own row */}
-          <div className="hidden justify-end lg:flex">
-            <DesktopNav data={navData} />
+            ) : (
+              <Link
+                href="/login"
+                className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg hidden flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 sm:flex"
+              >
+                <UserRound
+                  className="group-hover/acct:motion-safe:animate-nav-wave size-5"
+                  aria-hidden="true"
+                />
+                <span className="text-[11px] font-medium">Masuk</span>
+              </Link>
+            )}
+
+            {/* Mobile / tablet menu (no-JS) */}
+            <details className="group relative lg:hidden">
+              <summary
+                className="text-fg-secondary hover:bg-subtle flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden"
+                aria-label="Menu"
+              >
+                <Menu className="size-5" aria-hidden="true" />
+                <span className="text-[11px] font-medium">Menu</span>
+              </summary>
+              <div className="border-line bg-surface shadow-pop absolute right-0 mt-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border p-3">
+                <SearchForm id="mobile-search" className="mb-3 md:hidden" />
+                <ul className="space-y-0.5">
+                  {MAIN_NAV.map((item) => (
+                    <li key={item.href}>
+                      {item.menu ? (
+                        <details className="group/sub">
+                          <summary className="hover:bg-subtle flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+                            {item.label}
+                            <ChevronDown
+                              className="text-fg-muted size-4 transition-transform group-open/sub:rotate-180"
+                              aria-hidden="true"
+                            />
+                          </summary>
+                          <ul className="border-line mb-1 ml-3 border-l pl-2">
+                            {MOBILE_SUBLINKS[item.menu].map((sub) => (
+                              <li key={sub.href}>
+                                <Link
+                                  href={sub.href}
+                                  className="text-fg-secondary hover:bg-subtle block rounded-md px-3 py-2 text-sm"
+                                >
+                                  {sub.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className="hover:bg-subtle block rounded-md px-3 py-2.5 text-[15px] font-medium"
+                        >
+                          {item.label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <div className="border-line mt-2 border-t pt-2">
+                  <Link
+                    href="/promo"
+                    className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
+                  >
+                    <TicketPercent className="size-4" aria-hidden="true" /> Promo
+                  </Link>
+                  <Link
+                    href="/faq"
+                    className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
+                  >
+                    <LifeBuoy className="size-4" aria-hidden="true" /> Bantuan
+                  </Link>
+                  <Link
+                    href="/mitra"
+                    className="hover:bg-subtle block rounded-md px-3 py-2.5 text-sm"
+                  >
+                    Jadi Mitra
+                  </Link>
+                  {session ? (
+                    <form action={logoutAction}>
+                      <button
+                        type="submit"
+                        className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm"
+                      >
+                        <LogOut className="size-4" aria-hidden="true" /> Keluar
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2 px-1 pt-2">
+                      <Link
+                        href="/login"
+                        className="border-line-strong rounded-md border py-2 text-center text-sm font-semibold"
+                      >
+                        Masuk
+                      </Link>
+                      <Link
+                        href="/register"
+                        className="bg-primary rounded-md py-2 text-center text-sm font-semibold text-white"
+                      >
+                        Daftar
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </div>
