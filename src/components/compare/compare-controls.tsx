@@ -47,9 +47,13 @@ export function CompareHeaderLink() {
   return (
     <Link
       href={ids.length ? `/compare?ids=${encodeURIComponent(ids.join(','))}` : '/compare'}
-      className="text-fg-secondary hover:bg-subtle hover:text-fg relative flex flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5"
+      className="group/cmp text-fg-secondary hover:bg-subtle hover:text-fg relative flex flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5"
     >
-      <GitCompareArrows className="size-5" aria-hidden="true" />
+      {/* Half-turn with a slight overshoot on hover: the two arrows swap places. */}
+      <GitCompareArrows
+        className="size-5 motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover/cmp:motion-safe:rotate-180"
+        aria-hidden="true"
+      />
       <span className="text-[11px] font-medium">Bandingkan</span>
       {ids.length > 0 && (
         <span className="bg-primary absolute top-0.5 right-2 grid min-w-4.5 place-items-center rounded-full px-1 text-[10px] leading-4.5 font-bold text-white">
