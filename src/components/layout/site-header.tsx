@@ -105,12 +105,16 @@ export function SiteHeader({ session }: { session: Session | null }) {
       </div>
 
       {/* Main bar */}
-      <div className="border-line border-b lg:border-b-0">
-        <div className="container-header flex h-16 items-center gap-4 lg:h-[72px] lg:gap-8">
+      <div className="border-line border-b">
+        <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-8 lg:pt-3">
           <Link href="/" aria-label="GMM — Beranda" className="shrink-0">
             <Logo />
           </Link>
-          <SearchForm id="header-search" className="hidden flex-1 md:block lg:max-w-2xl" />
+          {/* Search with the main navigation directly beneath it */}
+          <div className="hidden flex-1 md:block lg:max-w-2xl">
+            <SearchForm id="header-search" />
+            <DesktopNav />
+          </div>
 
           <div className="ml-auto flex items-center gap-1">
             <CompareHeaderLink />
@@ -217,9 +221,6 @@ export function SiteHeader({ session }: { session: Session | null }) {
           </div>
         </div>
       </div>
-
-      <DesktopNav />
-      <div className="border-line hidden border-b lg:block" />
     </header>
   );
 }

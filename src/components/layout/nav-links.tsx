@@ -20,8 +20,8 @@ function isActive(pathname: string, href: string) {
 export function DesktopNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Navigasi utama" className="border-line hidden border-t lg:block">
-      <ul className="container-header flex h-11 items-center gap-1">
+    <nav aria-label="Navigasi utama" className="mt-1 hidden lg:block">
+      <ul className="-mx-3 flex h-10 items-center gap-1">
         {MAIN_NAV.map((item) => {
           const active = isActive(pathname, item.href);
           return (
