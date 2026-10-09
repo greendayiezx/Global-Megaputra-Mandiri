@@ -305,42 +305,47 @@ function ProvidersMenu({ data }: { data: NavData }) {
           </p>
         ) : (
           <ul className="mt-1 grid grid-cols-4 gap-5">
-            {featured.map((p) => (
-              <li key={p.slug}>
-                <Link href={`/provider/${p.slug}`} className="group block">
-                  <span className="bg-subtle relative block aspect-[16/10] overflow-hidden rounded-lg">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- remote stock photo */}
-                    <img
-                      src={TECHNOLOGY_ILLUSTRATION[p.technologies[0] ?? 'FIBER']}
-                      alt=""
-                      loading="lazy"
-                      className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <span className="absolute bottom-2 left-2 rounded-md bg-white/95 shadow-sm">
-                      <ProviderAvatar name={p.name} size="sm" />
+            {featured.map((p) => {
+              // Tolerate a stale server payload during dev hot reloads.
+              const technologies = p.technologies ?? [];
+              const serviceAreas = p.serviceAreas ?? [];
+              return (
+                <li key={p.slug}>
+                  <Link href={`/provider/${p.slug}`} className="group block">
+                    <span className="bg-subtle relative block aspect-[16/10] overflow-hidden rounded-lg">
+                      {/* eslint-disable-next-line @next/next/no-img-element -- remote stock photo */}
+                      <img
+                        src={TECHNOLOGY_ILLUSTRATION[technologies[0] ?? 'FIBER']}
+                        alt=""
+                        loading="lazy"
+                        className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <span className="absolute bottom-2 left-2 rounded-md bg-white/95 shadow-sm">
+                        <ProviderAvatar name={p.name} size="sm" />
+                      </span>
                     </span>
-                  </span>
-                  <span className="group-hover:text-primary mt-3 block font-semibold">
-                    {p.name}
-                  </span>
-                  <span className="text-fg-muted mt-0.5 block text-sm">
-                    {p.packageCount} paket
-                    {p.startingPrice !== null && (
-                      <>
-                        {' · mulai '}
-                        <strong className="text-fg font-semibold">
-                          {formatRupiah(p.startingPrice)}
-                        </strong>
-                      </>
-                    )}
-                  </span>
-                  <span className="text-fg-muted mt-1 block text-[13px] leading-snug">
-                    {p.technologies.map((t) => TECHNOLOGY_LABEL[t]).join(', ')}
-                    {p.serviceAreas.length > 0 && ` · ${p.serviceAreas.join(', ')}`}
-                  </span>
-                </Link>
-              </li>
-            ))}
+                    <span className="group-hover:text-primary mt-3 block font-semibold">
+                      {p.name}
+                    </span>
+                    <span className="text-fg-muted mt-0.5 block text-sm">
+                      {p.packageCount} paket
+                      {p.startingPrice !== null && (
+                        <>
+                          {' · mulai '}
+                          <strong className="text-fg font-semibold">
+                            {formatRupiah(p.startingPrice)}
+                          </strong>
+                        </>
+                      )}
+                    </span>
+                    <span className="text-fg-muted mt-1 block text-[13px] leading-snug">
+                      {technologies.map((t) => TECHNOLOGY_LABEL[t]).join(', ')}
+                      {serviceAreas.length > 0 && ` · ${serviceAreas.join(', ')}`}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         )}
         <p className="text-fg-muted mt-4 text-xs">
