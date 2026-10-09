@@ -1,10 +1,6 @@
 import {
   ArrowRight,
-  Building2,
-  Gamepad2,
-  GraduationCap,
   Headset,
-  House,
   MessageSquareText,
   MousePointerClick,
   ReceiptText,
@@ -18,6 +14,7 @@ import { ButtonLink } from '@/components/ui/button';
 import { Card, EmptyState, SectionHeader } from '@/components/ui/primitives';
 import { Faq } from '@/components/ui/faq';
 import { FAQ } from '@/content/faq';
+import { NEEDS } from '@/content/needs';
 import { formatRupiah } from '@/lib/format';
 import { searchPackages, searchProviders } from '@/modules/packages/application/catalog';
 
@@ -44,32 +41,6 @@ const TRUST = [
   },
 ];
 
-const NEEDS = [
-  {
-    icon: House,
-    title: 'Untuk Rumah',
-    body: 'Streaming, belajar, dan banyak perangkat.',
-    href: '/packages?minDownload=30',
-  },
-  {
-    icon: Building2,
-    title: 'Untuk Bisnis',
-    body: 'Unggah stabil untuk kasir, CCTV, dan rapat.',
-    href: '/packages?minUpload=50',
-  },
-  {
-    icon: GraduationCap,
-    title: 'Untuk Sekolah',
-    body: 'Kelas daring dan lab komputer.',
-    href: '/packages?minDownload=50',
-  },
-  {
-    icon: Gamepad2,
-    title: 'Untuk Gaming',
-    body: 'Kecepatan tinggi untuk unduh dan main daring.',
-    href: '/packages?minDownload=100',
-  },
-];
 
 const emptySearch = {
   point: null,

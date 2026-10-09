@@ -15,8 +15,10 @@ import { CompareHeaderLink } from '@/components/compare/compare-controls';
 import type { Session } from '@/lib/auth/session';
 import { logoutAction } from '@/modules/auth/api/actions';
 import { isPlatformStaff, isProviderMember } from '@/modules/auth/domain/rbac';
-import { MAIN_NAV } from './nav-config';
-import { DesktopNav } from './nav-links';
+import { NEEDS } from '@/content/needs';
+import { DesktopNav } from './desktop-nav';
+import { MAIN_NAV, MORE_LINKS, type NavMenu } from './nav-config';
+import { getNavData } from './nav-data';
 
 function homeFor(session: Session) {
   if (isPlatformStaff(session.actor)) return { href: '/admin', label: 'Portal Admin' };
@@ -54,8 +56,22 @@ function SearchForm({ id, className }: { id: string; className?: string }) {
   );
 }
 
-export function SiteHeader({ session }: { session: Session | null }) {
+/** Second-level links shown under each dropdown item in the mobile menu. */
+const MOBILE_SUBLINKS: Record<NavMenu, readonly { href: string; label: string }[]> = {
+  packages: [
+    ...NEEDS.map((n) => ({ href: n.href, label: n.title })),
+    { href: '/packages', label: 'Semua paket' },
+  ],
+  providers: [
+    { href: '/provider', label: 'Semua provider' },
+    { href: '/mitra', label: 'Jadi Mitra Provider' },
+  ],
+  more: MORE_LINKS,
+};
+
+export async function SiteHeader({ session }: { session: Session | null }) {
   const home = session ? homeFor(session) : null;
+  const navData = await getNavData();
 
   return (
     <header className="bg-surface sticky top-0 z-30">
@@ -112,7 +128,7 @@ export function SiteHeader({ session }: { session: Session | null }) {
           {/* Search with the main navigation directly beneath it */}
           <div className="hidden min-w-0 flex-1 md:block lg:max-w-3xl">
             <SearchForm id="header-search" className="lg:max-w-2xl" />
-            <DesktopNav />
+            <DesktopNav data={navData} />
           </div>
 
           <div className="ml-auto flex items-center gap-1">
@@ -162,17 +178,41 @@ export function SiteHeader({ session }: { session: Session | null }) {
                 <Menu className="size-5" aria-hidden="true" />
                 <span className="text-[11px] font-medium">Menu</span>
               </summary>
-              <div className="border-line bg-surface shadow-pop absolute right-0 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-lg border p-3">
+              <div className="border-line bg-surface shadow-pop absolute right-0 mt-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border p-3">
                 <SearchForm id="mobile-search" className="mb-3 md:hidden" />
                 <ul className="space-y-0.5">
                   {MAIN_NAV.map((item) => (
                     <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className="hover:bg-subtle block rounded-md px-3 py-2.5 text-[15px] font-medium"
-                      >
-                        {item.label}
-                      </Link>
+                      {item.menu ? (
+                        <details className="group/sub">
+                          <summary className="hover:bg-subtle flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+                            {item.label}
+                            <ChevronDown
+                              className="text-fg-muted size-4 transition-transform group-open/sub:rotate-180"
+                              aria-hidden="true"
+                            />
+                          </summary>
+                          <ul className="border-line mb-1 ml-3 border-l pl-2">
+                            {MOBILE_SUBLINKS[item.menu].map((sub) => (
+                              <li key={sub.href}>
+                                <Link
+                                  href={sub.href}
+                                  className="text-fg-secondary hover:bg-subtle block rounded-md px-3 py-2 text-sm"
+                                >
+                                  {sub.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </details>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className="hover:bg-subtle block rounded-md px-3 py-2.5 text-[15px] font-medium"
+                        >
+                          {item.label}
+                        </Link>
+                      )}
                     </li>
                   ))}
                 </ul>
