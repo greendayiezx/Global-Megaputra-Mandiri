@@ -16,3 +16,17 @@ export function Logo({ className }: { className?: string }) {
     />
   );
 }
+
+/** Small logo for tight spots (badges, banners); same artwork as `Logo`. */
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <Image
+      src={LOGO_SRC}
+      alt=""
+      aria-hidden="true"
+      width={120}
+      height={36}
+      className={cn('h-8 w-auto object-contain', className)}
+    />
+  );
+}
