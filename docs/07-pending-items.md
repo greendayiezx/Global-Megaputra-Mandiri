@@ -85,6 +85,28 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - **Alamat belum di-geocode**: titik pin di peta yang menentukan coverage.
 - **Lingkungan produksi**: `RATE_LIMIT_SECRET`, `APP_URL`, `APP_ALLOWED_ORIGINS` wajib diisi.
 
+### E1. Rencana lingkungan Dev → Staging → Production (ditunda, menunggu keputusan hosting)
+
+| Lingkungan     | Tempat                 | Database                | Data                      | Akses                                 |
+| -------------- | ---------------------- | ----------------------- | ------------------------- | ------------------------------------- |
+| **Dev**        | Laptop (`npm run dev`) | PGlite lokal (`.data/`) | Akun & paket demo         | Developer                             |
+| **Staging**    | Server online          | PostgreSQL terpisah     | Data uji + data pra-rilis | Tim & mitra uji (password, `noindex`) |
+| **Production** | Server online publik   | PostgreSQL + PostGIS    | Data asli                 | Publik                                |
+
+- **Alur branch**: branch kerja → `staging` (deploy otomatis ke staging) → `main` (production).
+- **Kredensial terpisah per lingkungan**: `APP_URL`, `RATE_LIMIT_SECRET`, `APP_ALLOWED_ORIGINS`,
+  Google OAuth (redirect URI staging didaftarkan terpisah), payment gateway mode sandbox di staging.
+- **Pekerjaan sebelum staging bisa jalan**:
+  - [ ] PostgreSQL asli (PGlite tidak bisa di server; `DATABASE_URL` sudah didukung `src/db/client.ts`).
+  - [ ] Penanda `APP_ENV=staging` agar data uji bisa di-seed (bootstrap demo & `db:seed` sengaja
+        menolak jalan saat `NODE_ENV=production`).
+  - [ ] Redis untuk rate limit (wajib bila multi-instance/serverless; opsional untuk staging 1 server).
+  - [ ] `docker-compose` staging (Postgres + PostGIS) dan panduan deploy di `docs/`.
+- **Pilihan hosting (belum diputuskan)**:
+  - _VPS Indonesia + Docker_ (rekomendasi): paling mirip arsitektur akhir (PostGIS, Redis, MinIO).
+  - _Vercel + Postgres terkelola (Neon/Supabase)_: paling cepat online; perlu Redis & storage
+    dokumen eksternal lebih awal.
+
 ---
 
 ## Sudah selesai (sesi ini)
