@@ -1,4 +1,5 @@
 import {
+  BookOpenCheck,
   Building2,
   ChartColumn,
   ClipboardList,
@@ -28,6 +29,7 @@ const NAV = [
   { href: '/provider-dashboard/analytics', label: 'Analitik', icon: ChartColumn },
   { href: '/provider-dashboard/profile', label: 'Profil Perusahaan', icon: Building2 },
   { href: '/provider-dashboard/settings', label: 'Pengaturan', icon: Settings },
+  { href: '/provider-dashboard/guide', label: 'Panduan Provider', icon: BookOpenCheck },
 ];
 
 export default async function ProviderDashboardLayout({ children }: { children: React.ReactNode }) {
