@@ -5,11 +5,12 @@ import { cn } from '@/lib/utils';
 
 /** CSS url() list trying common extensions, so a photo works whichever format it was saved in. */
 function imageLayers(baseName: string) {
-  const name = encodeURIComponent(baseName);
+  // Encode per segment so subfolders ("SuperAdmin/…") keep their slash.
+  const name = baseName.split('/').map(encodeURIComponent).join('/');
   return ['png', 'jpg', 'jpeg', 'webp'].map((ext) => `url('/images/${name}.${ext}')`).join(', ');
 }
 
-/** Blue welcome banner with a photo on the right (from public/images/<image>.*). */
+/** Blue welcome banner over a full-width illustration (public/images/<image>.*, subfolders allowed). */
 export function WelcomeBanner({
   title,
   body,
@@ -41,16 +42,18 @@ export function WelcomeBanner({
           />
         ))}
       </svg>
+      {/* The banners are drawn with the subject on the right and open space on the left. */}
       <div
         aria-hidden="true"
-        className="absolute inset-y-0 right-0 -z-10 hidden w-1/2 bg-cover bg-center sm:block"
+        className="absolute inset-0 -z-10 bg-cover bg-[center_right]"
         style={{ backgroundImage: imageLayers(image) }}
       />
+      {/* Keeps the white copy readable on the left; stronger on phones where the photo is behind it. */}
       <div
         aria-hidden="true"
-        className="from-primary via-primary/80 absolute inset-y-0 right-0 -z-10 hidden w-1/2 bg-gradient-to-r to-transparent sm:block"
+        className="from-primary via-primary/85 to-primary/55 sm:from-primary/90 sm:via-primary/60 absolute inset-0 -z-10 bg-gradient-to-r sm:to-transparent"
       />
-      <div className="max-w-xl px-6 py-8 md:px-8 md:py-10">
+      <div className="max-w-xl px-6 py-8 md:px-8 md:py-12">
         <h1 className="text-2xl leading-tight font-bold text-white md:text-3xl">{title}</h1>
         <p className="mt-3 text-sm leading-relaxed text-blue-100 md:text-base">{body}</p>
         <Link

@@ -60,7 +60,7 @@ export default async function AdminDashboard() {
         }
         body="Kelola seluruh sistem, pantau provider dan pengguna, serta atur platform GMM Global Megaputra Mandiri."
         cta={{ href: '/how-it-works', label: 'Lihat Panduan Sistem' }}
-        image="Super Admin at a Modern Tech Workspace"
+        image="SuperAdmin/Super Admin at a Modern Tech Workspace"
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
