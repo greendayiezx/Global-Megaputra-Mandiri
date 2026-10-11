@@ -23,6 +23,7 @@ export interface FormState {
 const loginSchema = z.object({
   email: z.email({ error: 'Masukkan email yang valid.' }).max(254),
   password: z.string().min(1, { error: 'Kata sandi wajib diisi.' }).max(128),
+  remember: z.literal('1').optional(),
   next: z.string().max(500).optional(),
 });
 
@@ -74,7 +75,7 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   }
   try {
     const s = await login(await authDeps(), parsed.data, await requestContext());
-    await setSessionCookie(s.token, s.expiresAt);
+    await setSessionCookie(s.token, s.expiresAt, parsed.data.remember === '1');
   } catch (err) {
     return toState(err, values);
   }

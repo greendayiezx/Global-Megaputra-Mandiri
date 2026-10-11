@@ -7,15 +7,24 @@ import { getSession } from '@/lib/auth/session';
 import { str, type RawSearchParams } from '@/lib/search-params';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/modules/auth/application/bootstrap';
 import { safeRedirectPath } from '@/modules/auth/domain/credentials';
+import { isGoogleLoginEnabled } from '@/modules/auth/infrastructure/google-oauth';
 
 export const metadata: Metadata = { title: 'Masuk', robots: { index: false } };
+
+const GOOGLE_ERRORS: Record<string, string> = {
+  google_unavailable: 'Login dengan Google belum diaktifkan.',
+  google_failed: 'Login dengan Google gagal. Silakan coba lagi.',
+  google_staff: 'Akun ini harus masuk dengan email dan kata sandi.',
+};
 
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<RawSearchParams>;
 }) {
-  const next = safeRedirectPath(str(await searchParams, 'next'));
+  const params = await searchParams;
+  const next = safeRedirectPath(str(params, 'next'));
+  const errorMessage = GOOGLE_ERRORS[str(params, 'error') ?? ''];
   if (await getSession()) redirect(next);
   const showDemo =
     process.env.NODE_ENV !== 'production' && process.env.APP_SHOW_DEMO_DATA !== 'false';
@@ -35,7 +44,12 @@ export default async function LoginPage({
         title="Masuk ke Akun Anda"
         description="Akses pesanan, pemasangan, dan layanan GMM Anda."
       >
-        <LoginForm next={next} />
+        {errorMessage && (
+          <Alert tone="danger" className="mb-4">
+            {errorMessage}
+          </Alert>
+        )}
+        <LoginForm next={next} googleEnabled={isGoogleLoginEnabled()} />
       </AuthCard>
       {showDemo && (
         <Alert tone="warning" className="mt-4" title="Akun demo (hanya lingkungan pengembangan)">

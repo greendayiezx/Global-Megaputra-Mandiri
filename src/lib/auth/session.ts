@@ -33,13 +33,18 @@ export async function requestContext(): Promise<RequestContext> {
   return { ip, userAgent: h.get('user-agent') };
 }
 
-export async function setSessionCookie(token: string, expiresAt: Date) {
+/**
+ * `persistent` = "Ingat saya": the cookie survives browser restarts until the session
+ * expires. Otherwise it is a browser-session cookie, cleared when the browser closes
+ * (the server-side session still expires on its own schedule).
+ */
+export async function setSessionCookie(token: string, expiresAt: Date, persistent = true) {
   (await cookies()).set(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: isProd,
     sameSite: 'lax',
     path: '/',
-    expires: expiresAt,
+    ...(persistent ? { expires: expiresAt } : {}),
   });
 }
 

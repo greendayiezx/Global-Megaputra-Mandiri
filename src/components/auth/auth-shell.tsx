@@ -40,10 +40,11 @@ export function AuthShell({
         className="absolute inset-0 -z-10 bg-gradient-to-b from-white/85 via-white/55 to-white/10 lg:bg-gradient-to-r lg:from-white/85 lg:via-white/50 lg:to-white/0"
       />
 
-      <div className="container-header grid min-h-dvh items-center gap-10 py-8 lg:grid-cols-[1fr_minmax(0,460px)] lg:gap-16 lg:py-12">
-        <section className="max-w-xl">
+      <div className="container-header grid min-h-dvh items-center gap-8 py-6 lg:grid-cols-[1fr_minmax(0,460px)] lg:gap-16 lg:py-10">
+        <section className="max-w-xl lg:self-start lg:pt-6">
           <Link href="/" className="inline-flex items-center gap-3" aria-label="GMM — Beranda">
-            <LogoMark className="size-12" />
+            {/* multiply drops the logo file's white backdrop onto the light background */}
+            <LogoMark className="size-14 rounded-none bg-transparent mix-blend-multiply" />
             <span className="leading-tight">
               <span className="text-navy block text-lg font-bold">Global Megaputra Mandiri</span>
               <span className="text-fg-muted block text-xs font-medium">
@@ -51,11 +52,11 @@ export function AuthShell({
               </span>
             </span>
           </Link>
-          <h1 className="text-navy mt-10 text-3xl leading-tight font-bold tracking-tight md:text-4xl">
+          <h1 className="text-navy mt-8 text-3xl leading-tight font-bold tracking-tight md:text-4xl">
             {heading}
           </h1>
           <p className="text-fg-secondary mt-4 max-w-md text-base leading-relaxed">{intro}</p>
-          <ul className="mt-8 hidden space-y-4 sm:block">
+          <ul className="mt-7 hidden grid-cols-2 gap-x-6 gap-y-5 sm:grid">
             {FEATURES.map(({ icon: Icon, title, body }) => (
               <li key={title} className="flex items-center gap-3">
                 <span className="border-primary-border text-primary grid size-10 shrink-0 place-items-center rounded-lg border bg-white/80 shadow-sm">

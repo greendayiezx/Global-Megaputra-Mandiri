@@ -5,6 +5,7 @@ import { auditLogs, rolePermissions, roles, users } from '@/db/schema';
 import { createMemoryRateLimiter } from '@/lib/rate-limit';
 import {
   login,
+  loginWithGoogle,
   logout,
   registerCustomer,
   resolveSession,
@@ -225,5 +226,33 @@ describe('roles', () => {
       after: { roles: ['CUSTOMER', 'CUSTOMER_SUPPORT'] },
       actorId: superAdmin.userId,
     });
+  });
+});
+
+describe('Google sign-in', () => {
+  it('creates a verified customer account for a new email and signs in again later', async () => {
+    const d = deps();
+    const first = await loginWithGoogle(
+      d,
+      { email: 'Sari@Gmail.com', fullName: ' Sari  Dewi ' },
+      ctx,
+    );
+    const [u] = await db.select().from(users).where(eq(users.id, first.userId));
+    expect(u).toMatchObject({ email: 'sari@gmail.com', fullName: 'Sari Dewi', phone: null });
+    expect(u!.emailVerifiedAt).not.toBeNull();
+    const session = await resolveSession(d, first.token);
+    expect(session?.actor.roles).toEqual(['CUSTOMER']);
+
+    const again = await loginWithGoogle(d, { email: 'sari@gmail.com', fullName: 'Sari' }, ctx);
+    expect(again.userId).toBe(first.userId);
+  });
+
+  it('refuses staff and provider accounts, which must use email + password', async () => {
+    await seedDemoAccounts(db);
+    for (const email of ['admin@demo.gmm.invalid', 'provider@demo.gmm.invalid']) {
+      await expect(loginWithGoogle(deps(), { email, fullName: 'x' }, ctx)).rejects.toMatchObject({
+        code: 'FORBIDDEN',
+      });
+    }
   });
 });

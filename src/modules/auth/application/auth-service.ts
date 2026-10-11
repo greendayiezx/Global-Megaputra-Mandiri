@@ -142,6 +142,115 @@ export async function registerCustomer(
   });
 }
 
+export interface GoogleProfile {
+  /** Must already be verified by Google (email_verified = true). */
+  email: string;
+  fullName: string;
+}
+
+/**
+ * Sign in (or sign up) with a Google-verified email.
+ * - New email: creates a CUSTOMER account. It gets an unguessable random password, so it can
+ *   only sign in with Google until the user sets a password.
+ * - Existing customer: signs in (Google has proven ownership of the email).
+ * - Existing staff/provider account: refused, those must use email + password, so an
+ *   external identity can never open a privileged account.
+ */
+export async function loginWithGoogle(
+  deps: AuthDeps,
+  profile: GoogleProfile,
+  ctx: RequestContext,
+): Promise<SessionIssued> {
+  const { db } = deps;
+  const now = nowOf(deps);
+  const email = normalizeEmail(profile.email);
+  const ipHash = ctx.ip ? hmacIdentifier(ctx.ip) : null;
+
+  const rl = await deps.limiter.hit(`login:ip:${ipHash ?? 'unknown'}`, 30, 900);
+  if (!rl.allowed) throw new AppError('RATE_LIMITED', TOO_MANY, { retryAfter: rl.retryAfter });
+
+  const [user] = await db
+    .select()
+    .from(users)
+    .where(and(eq(users.email, email), isNull(users.deletedAt)))
+    .limit(1);
+
+  if (user) {
+    if (user.status === 'DISABLED') throw new AppError('AUTH_REQUIRED', BAD_CREDENTIALS);
+    const roleRows = await db
+      .select({ key: roles.key })
+      .from(userRoles)
+      .innerJoin(roles, eq(roles.id, userRoles.roleId))
+      .where(eq(userRoles.userId, user.id));
+    const isCustomerOnly = roleRows.every((r) => r.key === 'CUSTOMER');
+    const ownsProvider = (
+      await db
+        .select({ id: providerUsers.userId })
+        .from(providerUsers)
+        .where(eq(providerUsers.userId, user.id))
+        .limit(1)
+    ).length;
+    if (!isCustomerOnly || ownsProvider) {
+      throw new AppError('FORBIDDEN', 'Akun ini harus masuk dengan email dan kata sandi.');
+    }
+    return db.transaction(async (tx) => {
+      await tx
+        .update(users)
+        .set({
+          failedLoginCount: 0,
+          lockedUntil: null,
+          lastLoginAt: now,
+          emailVerifiedAt: user.emailVerifiedAt ?? now,
+        })
+        .where(eq(users.id, user.id));
+      await audit(tx, {
+        actorId: user.id,
+        actorKind: 'CUSTOMER',
+        action: 'login_succeeded',
+        entity: 'user',
+        entityId: user.id,
+        after: { method: 'google' },
+        ipHash,
+        userAgent: ctx.userAgent,
+      });
+      return issueSession(deps, tx, user.id, ctx);
+    });
+  }
+
+  const fullName = profile.fullName.trim().replace(/\s+/g, ' ').slice(0, 120) || email;
+  const passwordHash = await hashPassword(newSessionToken());
+  return db.transaction(async (tx) => {
+    const [created] = await tx
+      .insert(users)
+      .values({
+        email,
+        phone: null,
+        fullName,
+        passwordHash,
+        emailVerifiedAt: now,
+        lastLoginAt: now,
+      })
+      .returning({ id: users.id });
+    const [customerRole] = await tx
+      .select({ id: roles.id })
+      .from(roles)
+      .where(eq(roles.key, 'CUSTOMER'));
+    if (!customerRole) throw new AppError('CONFIGURATION_MISSING', 'Roles are not initialised.');
+    await tx.insert(userRoles).values({ userId: created!.id, roleId: customerRole.id });
+    await audit(tx, {
+      actorId: created!.id,
+      actorKind: 'CUSTOMER',
+      action: 'user_registered',
+      entity: 'user',
+      entityId: created!.id,
+      after: { roles: ['CUSTOMER'], method: 'google' },
+      ipHash,
+      userAgent: ctx.userAgent,
+    });
+    return issueSession(deps, tx, created!.id, ctx);
+  });
+}
+
 export async function login(
   deps: AuthDeps,
   input: { email: string; password: string },
