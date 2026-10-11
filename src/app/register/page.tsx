@@ -6,6 +6,7 @@ import { AuthCard, AuthShell } from '@/components/auth/auth-shell';
 import { getSession } from '@/lib/auth/session';
 import { str, type RawSearchParams } from '@/lib/search-params';
 import { safeRedirectPath } from '@/modules/auth/domain/credentials';
+import { homePathFor } from '@/modules/auth/domain/rbac';
 
 export const metadata: Metadata = { title: 'Daftar Akun', robots: { index: false } };
 
@@ -14,8 +15,9 @@ export default async function RegisterPage({
 }: {
   searchParams: Promise<RawSearchParams>;
 }) {
-  const next = safeRedirectPath(str(await searchParams, 'next'));
-  if (await getSession()) redirect(next);
+  const next = safeRedirectPath(str(await searchParams, 'next'), '');
+  const session = await getSession();
+  if (session) redirect(next || homePathFor(session.actor));
 
   return (
     <AuthShell

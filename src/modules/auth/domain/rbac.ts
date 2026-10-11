@@ -337,3 +337,10 @@ export function isPlatformStaff(actor: Actor | null): boolean {
 export function isProviderMember(actor: Actor | null): boolean {
   return can(actor, 'dashboard.provider');
 }
+
+/** Where a signed-in user lands by default: their work portal, or the customer dashboard. */
+export function homePathFor(actor: Actor | null): string {
+  if (isPlatformStaff(actor)) return '/admin';
+  if (isProviderMember(actor)) return '/provider-dashboard';
+  return '/dashboard';
+}

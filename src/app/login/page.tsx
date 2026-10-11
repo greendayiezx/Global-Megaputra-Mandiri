@@ -8,6 +8,7 @@ import { str, type RawSearchParams } from '@/lib/search-params';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/modules/auth/application/bootstrap';
 import { safeRedirectPath } from '@/modules/auth/domain/credentials';
 import { isGoogleLoginEnabled } from '@/modules/auth/infrastructure/google-oauth';
+import { homePathFor } from '@/modules/auth/domain/rbac';
 
 export const metadata: Metadata = { title: 'Masuk', robots: { index: false } };
 
@@ -23,9 +24,11 @@ export default async function LoginPage({
   searchParams: Promise<RawSearchParams>;
 }) {
   const params = await searchParams;
-  const next = safeRedirectPath(str(params, 'next'));
+  // Empty when no `next` was asked for: the login action then sends the user to their own area.
+  const next = safeRedirectPath(str(params, 'next'), '');
   const errorMessage = GOOGLE_ERRORS[str(params, 'error') ?? ''];
-  if (await getSession()) redirect(next);
+  const session = await getSession();
+  if (session) redirect(next || homePathFor(session.actor));
   const showDemo =
     process.env.NODE_ENV !== 'production' && process.env.APP_SHOW_DEMO_DATA !== 'false';
 

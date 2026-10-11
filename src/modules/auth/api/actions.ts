@@ -10,8 +10,14 @@ import {
   setSessionCookie,
 } from '@/lib/auth/session';
 import { isAppError } from '@/lib/errors';
-import { login, logout, registerCustomer } from '@/modules/auth/application/auth-service';
+import {
+  login,
+  logout,
+  registerCustomer,
+  resolveSession,
+} from '@/modules/auth/application/auth-service';
 import { safeRedirectPath } from '@/modules/auth/domain/credentials';
+import { homePathFor } from '@/modules/auth/domain/rbac';
 
 export interface FormState {
   status: 'idle' | 'error';
@@ -73,13 +79,18 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
   if (!parsed.success) {
     return { status: 'error', fieldErrors: fieldErrorsOf(parsed.error), values };
   }
+  let home: string;
   try {
-    const s = await login(await authDeps(), parsed.data, await requestContext());
+    const deps = await authDeps();
+    const s = await login(deps, parsed.data, await requestContext());
     await setSessionCookie(s.token, s.expiresAt, parsed.data.remember === '1');
+    // Go straight to the user's own area. Landing on /dashboard first and bouncing to a
+    // portal from there flashed the public header and footer in between.
+    home = homePathFor((await resolveSession(deps, s.token))?.actor ?? null);
   } catch (err) {
     return toState(err, values);
   }
-  redirect(safeRedirectPath(parsed.data.next));
+  redirect(safeRedirectPath(parsed.data.next, home));
 }
 
 export async function registerAction(_prev: FormState, formData: FormData): Promise<FormState> {

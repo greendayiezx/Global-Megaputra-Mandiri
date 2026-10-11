@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   authorize,
   can,
+  homePathFor,
   PERMISSIONS,
   ROLE_PERMISSIONS,
   ROLES,
@@ -122,5 +123,14 @@ describe('scoped authorization', () => {
 
   it('internal ticket notes are not available to customers', () => {
     expect(can(actor(['CUSTOMER']), 'ticket.internal_note')).toBe(false);
+  });
+});
+
+describe('homePathFor', () => {
+  it('sends each role straight to its own area', () => {
+    expect(homePathFor(actor(['SUPER_ADMIN']))).toBe('/admin');
+    expect(homePathFor(actor(['PROVIDER_OWNER'], 'p1'))).toBe('/provider-dashboard');
+    expect(homePathFor(actor(['CUSTOMER']))).toBe('/dashboard');
+    expect(homePathFor(null)).toBe('/dashboard');
   });
 });
