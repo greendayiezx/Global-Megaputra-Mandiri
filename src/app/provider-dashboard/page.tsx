@@ -35,7 +35,7 @@ export default async function ProviderOverview() {
           </>
         }
         body="Kelola layanan internet Anda, pantau pesanan dan pemasangan dengan mudah melalui platform GMM Global Megaputra Mandiri."
-        cta={{ href: '/mitra', label: 'Lihat Panduan Provider' }}
+        cta={{ href: '/provider-dashboard/guide', label: 'Lihat Panduan Provider' }}
         image="Provider/Biznet Telecom Office Banner"
       />
 

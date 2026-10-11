@@ -40,7 +40,7 @@ Auth: `public`, `customer`, `provider:<perm>`, `platform:<perm>`. Phase in brack
 
 ## Provider portal (`provider:*`)
 
-`/provider-dashboard` (+ `/profile`, `/packages`, `/coverage`, `/orders`, `/installations`,
+`/provider-dashboard` (+ `/guide`, `/profile`, `/packages`, `/coverage`, `/orders`, `/installations`,
 `/customers`, `/tickets`, `/leads`, `/commissions`, `/analytics`, `/users`, `/documents`).
 Phase 1 minimum: profile, documents, packages, coverage, orders, installations. Rest Phase 2/3.
 

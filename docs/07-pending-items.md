@@ -103,3 +103,4 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Halaman Masuk & Daftar terpisah, "Ingat saya", konfirmasi password, kode Login Google
 - [x] Portal kerja Provider & Admin terpisah dari tampilan publik (sidebar, topbar, dashboard baru)
 - [x] Banner sambutan portal memakai gambar dari folder `SuperAdmin/` & `Provider/`
+- [x] Halaman Panduan Provider di portal (`/provider-dashboard/guide`): checklist dari data asli + alur pesanan
