@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { LoginForm } from '@/components/auth/auth-forms';
-import { Alert, Card } from '@/components/ui/primitives';
+import { AuthCard, AuthShell } from '@/components/auth/auth-shell';
+import { Alert } from '@/components/ui/primitives';
 import { getSession } from '@/lib/auth/session';
 import { str, type RawSearchParams } from '@/lib/search-params';
 import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/modules/auth/application/bootstrap';
@@ -20,30 +21,36 @@ export default async function LoginPage({
     process.env.NODE_ENV !== 'production' && process.env.APP_SHOW_DEMO_DATA !== 'false';
 
   return (
-    <div className="container-page grid place-items-center py-10 md:py-16">
-      <div className="w-full max-w-md space-y-4">
-        <Card className="p-6 md:p-8">
-          <h1 className="text-2xl font-bold">Masuk ke GMM</h1>
-          <p className="text-fg-muted mt-1 mb-6 text-sm">
-            Pantau pesanan, pemasangan, dan tagihan Anda.
+    <AuthShell
+      heading={
+        <>
+          Selamat Datang di
+          <br />
+          Global Megaputra Mandiri
+        </>
+      }
+      intro="Temukan internet terbaik di lokasimu. Bandingkan provider, pilih paket yang sesuai, dan nikmati proses pemesanan yang lebih mudah."
+    >
+      <AuthCard
+        title="Masuk ke Akun Anda"
+        description="Akses pesanan, pemasangan, dan layanan GMM Anda."
+      >
+        <LoginForm next={next} />
+      </AuthCard>
+      {showDemo && (
+        <Alert tone="warning" className="mt-4" title="Akun demo (hanya lingkungan pengembangan)">
+          <p>
+            Kata sandi semua akun: <code className="font-semibold">{DEMO_PASSWORD}</code>
           </p>
-          <LoginForm next={next} />
-        </Card>
-        {showDemo && (
-          <Alert tone="warning" title="Akun demo (hanya lingkungan pengembangan)">
-            <p>
-              Kata sandi semua akun: <code className="font-semibold">{DEMO_PASSWORD}</code>
-            </p>
-            <ul className="mt-1 list-disc pl-4">
-              {DEMO_ACCOUNTS.map((a) => (
-                <li key={a.email}>
-                  <code>{a.email}</code> — {a.role}
-                </li>
-              ))}
-            </ul>
-          </Alert>
-        )}
-      </div>
-    </div>
+          <ul className="mt-1 list-disc pl-4">
+            {DEMO_ACCOUNTS.map((a) => (
+              <li key={a.email}>
+                <code>{a.email}</code> — {a.role}
+              </li>
+            ))}
+          </ul>
+        </Alert>
+      )}
+    </AuthShell>
   );
 }

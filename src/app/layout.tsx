@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from 'next';
 import { CompareBar } from '@/components/compare/compare-controls';
 import { MobileBottomNav } from '@/components/layout/nav-links';
 import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteChrome } from '@/components/layout/site-chrome';
 import { SiteHeader } from '@/components/layout/site-header';
 import { appConfig } from '@/config/app';
 import { getSession } from '@/lib/auth/session';
@@ -40,7 +41,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Lewati ke konten
         </a>
-        <SiteHeader session={session} />
+        <SiteChrome>
+          <SiteHeader session={session} />
+        </SiteChrome>
         {SHOW_DEMO_BANNER && appConfig.showDemoData && (
           <div className="border-warning/30 bg-warning-soft border-b">
             <p className="container-page text-warning-fg py-2 text-[13px]">
@@ -49,12 +52,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </p>
           </div>
         )}
-        <main id="konten" className="flex-1 pb-20 lg:pb-0">
+        <main id="konten" className="flex-1">
           {children}
         </main>
-        <SiteFooter />
-        <CompareBar />
-        <MobileBottomNav />
+        <SiteChrome>
+          {/* Room for the fixed mobile bottom nav. */}
+          <div aria-hidden="true" className="h-20 lg:hidden" />
+          <SiteFooter />
+          <CompareBar />
+          <MobileBottomNav />
+        </SiteChrome>
       </body>
     </html>
   );

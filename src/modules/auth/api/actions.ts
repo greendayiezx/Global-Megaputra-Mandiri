@@ -26,14 +26,20 @@ const loginSchema = z.object({
   next: z.string().max(500).optional(),
 });
 
-const registerSchema = z.object({
-  fullName: z.string().trim().min(2, { error: 'Nama lengkap wajib diisi.' }).max(120),
-  email: z.email({ error: 'Masukkan email yang valid.' }).max(254),
-  phone: z.string().trim().min(8, { error: 'Nomor ponsel wajib diisi.' }).max(20),
-  password: z.string().max(128),
-  terms: z.literal('on', { error: 'Anda perlu menyetujui syarat & kebijakan privasi.' }),
-  next: z.string().max(500).optional(),
-});
+const registerSchema = z
+  .object({
+    fullName: z.string().trim().min(2, { error: 'Nama lengkap wajib diisi.' }).max(120),
+    email: z.email({ error: 'Masukkan email yang valid.' }).max(254),
+    phone: z.string().trim().min(8, { error: 'Nomor ponsel wajib diisi.' }).max(20),
+    password: z.string().max(128),
+    passwordConfirm: z.string().max(128),
+    terms: z.literal('on', { error: 'Anda perlu menyetujui syarat & kebijakan privasi.' }),
+    next: z.string().max(500).optional(),
+  })
+  .refine((d) => d.password === d.passwordConfirm, {
+    path: ['passwordConfirm'],
+    error: 'Konfirmasi password tidak sama.',
+  });
 
 function fieldErrorsOf(error: z.ZodError): Record<string, string> {
   const out: Record<string, string> = {};
