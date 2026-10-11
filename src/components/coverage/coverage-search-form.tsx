@@ -3,16 +3,25 @@
 import { Crosshair, Search } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FieldError, FieldHint, Input, Label } from '@/components/ui/field';
 import { Skeleton } from '@/components/ui/primitives';
+import { SpinningCircle } from '@/components/ui/spinning-circle';
 import { cn } from '@/lib/utils';
 import type { GeoPoint } from '@/modules/coverage/domain/coverage';
 
 const LocationMap = dynamic(() => import('./location-map').then((m) => m.LocationMap), {
   ssr: false,
-  loading: () => <Skeleton className="h-full w-full rounded-none" />,
+  // Skeleton fills the map's box (no layout shift); the spinner says the map itself is coming.
+  loading: () => (
+    <div className="relative h-full w-full">
+      <Skeleton className="absolute inset-0 rounded-none" />
+      <div className="absolute inset-0 grid place-items-center">
+        <SpinningCircle message="Memuat peta…" />
+      </div>
+    </div>
+  ),
 });
 
 /**
@@ -75,6 +84,14 @@ export function CoverageLocator({
   const [point, setPoint] = useState<GeoPoint | null>(defaultPoint);
   const [geo, setGeo] = useState<GeoState>({ kind: 'idle' });
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Coming back via the browser's back button restores this page from cache; clear the spinner.
+  useEffect(() => {
+    const reset = () => setSubmitting(false);
+    window.addEventListener('pageshow', reset);
+    return () => window.removeEventListener('pageshow', reset);
+  }, []);
   const formRef = useRef<HTMLFormElement>(null);
 
   function locate() {
@@ -111,7 +128,9 @@ export function CoverageLocator({
         if (!point) {
           e.preventDefault();
           setSubmitError('Tandai titik pemasangan di peta atau gunakan lokasi Anda.');
+          return;
         }
+        setSubmitting(true);
       }}
       className="space-y-4"
     >
@@ -180,9 +199,9 @@ export function CoverageLocator({
         <FieldError>{geo.kind === 'error' ? geo.message : submitError}</FieldError>
       </div>
 
-      <Button type="submit" size="lg" className="w-full">
-        <Search aria-hidden="true" />
-        Cek Ketersediaan
+      <Button type="submit" size="lg" className="w-full" loading={submitting}>
+        {!submitting && <Search aria-hidden="true" />}
+        {submitting ? 'Mengecek ketersediaan…' : 'Cek Ketersediaan'}
       </Button>
     </form>
   );

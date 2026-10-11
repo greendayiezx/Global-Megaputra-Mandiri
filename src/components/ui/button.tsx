@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import type { ComponentProps } from 'react';
+import { SpinningCircle } from '@/components/ui/spinning-circle';
 import { cn } from '@/lib/utils';
 
 export const buttonVariants = cva(
@@ -49,7 +49,12 @@ export function Button({
       aria-busy={loading || undefined}
       {...props}
     >
-      {loading && <Loader2 className="animate-spin" aria-hidden="true" />}
+      {loading && (
+        <SpinningCircle
+          label="Memproses"
+          className="size-4 border-2 border-current/30 border-t-current"
+        />
+      )}
       {children}
     </button>
   );
