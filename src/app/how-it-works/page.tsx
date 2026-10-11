@@ -49,7 +49,7 @@ export default function HowItWorksPage() {
                 Arti status ketersediaan
               </h2>
               <Card className="mt-4 border-0">
-                <dl className="divide-line divide-y">
+                <dl>
                   {STATUS.map(([s, text]) => (
                     <div
                       key={s}
