@@ -16,7 +16,7 @@ const unsplash = (id: string) =>
 
 const STEPS: TimelineEntry[] = [
   {
-    icon: FileCheck2,
+    icon: <FileCheck2 aria-hidden="true" />,
     date: 'Langkah 01',
     title: 'Daftar & unggah dokumen',
     description:
@@ -25,7 +25,7 @@ const STEPS: TimelineEntry[] = [
     imageAlt: 'Ilustrasi: menandatangani dokumen pendaftaran',
   },
   {
-    icon: BadgeCheck,
+    icon: <BadgeCheck aria-hidden="true" />,
     date: 'Langkah 02',
     title: 'Verifikasi oleh GMM',
     description:
@@ -34,7 +34,7 @@ const STEPS: TimelineEntry[] = [
     imageAlt: 'Ilustrasi: jabat tangan tanda kemitraan',
   },
   {
-    icon: MapPinned,
+    icon: <MapPinned aria-hidden="true" />,
     date: 'Langkah 03',
     title: 'Atur area layanan',
     description:
@@ -43,7 +43,7 @@ const STEPS: TimelineEntry[] = [
     imageAlt: 'Ilustrasi: peta untuk menentukan wilayah layanan',
   },
   {
-    icon: Package,
+    icon: <Package aria-hidden="true" />,
     date: 'Langkah 04',
     title: 'Publikasikan paket',
     description:
@@ -61,6 +61,16 @@ export default function MitraPage() {
       description="Terima pesanan dari pelanggan yang lokasinya berada di area layanan Anda."
       wide
     >
+      <Alert tone="info" className="max-w-3xl" title="Pendaftaran online segera dibuka">
+        Formulir pendaftaran provider dan unggah dokumen aktif pada tahap pengembangan berikutnya.
+        Ketentuan komisi kemitraan sedang difinalisasi.
+      </Alert>
+      <div className="mt-4 mb-8 flex flex-wrap gap-3">
+        <ButtonLink href="/register">Buat akun terlebih dahulu</ButtonLink>
+        <ButtonLink href="/how-it-works#verifikasi" variant="secondary">
+          Proses verifikasi
+        </ButtonLink>
+      </div>
       <TimelineBlock01
         badge="Langkah kemitraan"
         title="Empat langkah sampai paket Anda tayang"
@@ -77,16 +87,6 @@ export default function MitraPage() {
           </div>
         }
       />
-      <Alert tone="info" className="mt-6 max-w-3xl" title="Pendaftaran online segera dibuka">
-        Formulir pendaftaran provider dan unggah dokumen aktif pada tahap pengembangan berikutnya.
-        Ketentuan komisi kemitraan sedang difinalisasi.
-      </Alert>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <ButtonLink href="/register">Buat akun terlebih dahulu</ButtonLink>
-        <ButtonLink href="/how-it-works#verifikasi" variant="secondary">
-          Proses verifikasi
-        </ButtonLink>
-      </div>
     </ContentPage>
   );
 }
