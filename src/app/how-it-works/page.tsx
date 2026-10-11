@@ -48,7 +48,7 @@ export default function HowItWorksPage() {
               <h2 id="status" className="text-xl font-semibold">
                 Arti status ketersediaan
               </h2>
-              <Card className="mt-4">
+              <Card className="mt-4 border-0">
                 <dl className="divide-line divide-y">
                   {STATUS.map(([s, text]) => (
                     <div
