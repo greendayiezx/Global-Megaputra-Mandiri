@@ -7,6 +7,7 @@ import {
   Package,
   ScrollText,
   Settings,
+  ShieldCheck,
   UsersRound,
   Wrench,
 } from 'lucide-react';
@@ -32,7 +33,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const { forbidden, session } = await requirePermission('dashboard.platform', '/admin');
   if (forbidden) return <Forbidden />;
   return (
-    <DashboardShell area="Portal Admin GMM" subtitle={session.user.fullName} nav={NAV}>
+    <DashboardShell
+      area="Portal Admin GMM"
+      subtitle={session.user.fullName}
+      nav={NAV}
+      variant="card"
+      areaIcon={ShieldCheck}
+    >
       {children}
     </DashboardShell>
   );
