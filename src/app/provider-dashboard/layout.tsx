@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   MapPinned,
   Package,
+  RadioTower,
   Settings,
   UsersRound,
   Wrench,
@@ -39,7 +40,13 @@ export default async function ProviderDashboardLayout({ children }: { children: 
     ? await getProviderRecord(session.actor.providerId)
     : null;
   return (
-    <DashboardShell area="Portal Provider" subtitle={provider?.displayName} nav={NAV}>
+    <DashboardShell
+      area="Portal Provider"
+      subtitle={provider?.displayName}
+      nav={NAV}
+      variant="card"
+      areaIcon={RadioTower}
+    >
       {children}
     </DashboardShell>
   );
