@@ -37,7 +37,7 @@ labelled **DEMO** and are not real offers.
 ## Documentation
 
 `docs/00` scope & open business decisions (`TODO_BUSINESS_DECISION`) · `01` architecture ·
-`02` ERD · `03` business rules · `04` route map · `05` user flows · `06` RBAC matrix ·
+`02` ERD · `03` business rules · `04` route map · `05` user flows · `06` RBAC matrix · `07` pending items ·
 `GMM-Dokumentasi-Setup-Docker.docx` (Docker setup, on hold).
 
 ## Current status
