@@ -2,17 +2,13 @@
 
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
+import { isPortalPath } from '@/lib/portal-paths';
 
 /** Standalone auth screens, without the marketplace header, footer and bars. */
 const STANDALONE = ['/login', '/register'];
-/** Work portals render their own shell (sidebar + top bar) instead of the marketplace chrome. */
-const PORTAL_PREFIXES = ['/admin', '/provider-dashboard'];
 
 export function isOutsideMarketplaceChrome(pathname: string) {
-  return (
-    STANDALONE.includes(pathname) ||
-    PORTAL_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))
-  );
+  return STANDALONE.includes(pathname) || isPortalPath(pathname);
 }
 
 /** Renders its (server-rendered) children everywhere except standalone screens and portals. */

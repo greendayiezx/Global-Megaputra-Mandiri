@@ -11,8 +11,10 @@ import {
   UsersRound,
   Wrench,
 } from 'lucide-react';
+import { Suspense, ViewTransition } from 'react';
 import { Forbidden } from '@/components/dashboard/dashboard-shell';
 import { PortalShell } from '@/components/portal/portal-shell';
+import { PortalSkeleton } from '@/components/portal/portal-skeleton';
 import { requirePermission } from '@/lib/auth/session';
 import { getProviderRecord } from '@/modules/packages/application/catalog';
 
@@ -32,7 +34,28 @@ const NAV = [
   { href: '/provider-dashboard/guide', label: 'Panduan Provider', icon: BookOpenCheck },
 ];
 
-export default async function ProviderDashboardLayout({ children }: { children: React.ReactNode }) {
+/** Same pattern as the admin layout: instant shell + skeleton, fade when crossing in/out. */
+export default function ProviderDashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <ViewTransition
+      enter={{ 'portal-enter': 'portal-in', default: 'none' }}
+      exit={{ 'portal-exit': 'portal-out', default: 'none' }}
+      default="none"
+    >
+      <Suspense
+        fallback={
+          <PortalShell area="Portal Provider" nav={NAV}>
+            <PortalSkeleton label="Memuat portal provider" />
+          </PortalShell>
+        }
+      >
+        <ProviderShell>{children}</ProviderShell>
+      </Suspense>
+    </ViewTransition>
+  );
+}
+
+async function ProviderShell({ children }: { children: React.ReactNode }) {
   const { forbidden, session } = await requirePermission(
     'dashboard.provider',
     '/provider-dashboard',

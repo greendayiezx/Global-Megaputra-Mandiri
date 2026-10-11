@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
 import './globals.css';
 
 import type { Metadata, Viewport } from 'next';
 import { CompareBar } from '@/components/compare/compare-controls';
 import { MobileBottomNav } from '@/components/layout/nav-links';
 import { SiteFooter } from '@/components/layout/site-footer';
+import { NavigationProgress } from '@/components/layout/navigation-progress';
 import { SiteChrome } from '@/components/layout/site-chrome';
 import { SiteHeader } from '@/components/layout/site-header';
 import { appConfig } from '@/config/app';
@@ -35,6 +37,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="id">
       <body className="flex min-h-dvh flex-col">
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         <a
           href="#konten"
           className="bg-navy sr-only z-50 rounded-md px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"

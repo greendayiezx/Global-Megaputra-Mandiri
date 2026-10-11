@@ -176,3 +176,57 @@
   background: transparent;
   border: 0;
 }
+
+/* ---------- Page transitions (React <ViewTransition>, see portal layouts) ---------- */
+
+/* Clicks pass through to the live page while a transition runs. */
+::view-transition {
+  pointer-events: none;
+}
+
+/*
+ * Entering a portal: the public page fades out ON TOP while the portal (already drawn
+ * underneath) settles in. Fading the portal in from transparent instead would flash an
+ * empty page between the two.
+ */
+html:active-view-transition-type(portal-enter)::view-transition-group(root) {
+  z-index: 1;
+}
+html:active-view-transition-type(portal-enter)::view-transition-old(root) {
+  animation: 240ms ease-out both portal-fade-out;
+}
+html:active-view-transition-type(portal-enter)::view-transition-new(root) {
+  animation: none;
+  opacity: 0;
+}
+::view-transition-new(.portal-in) {
+  animation: 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both portal-settle;
+}
+
+/* Leaving a portal: it fades out on top, revealing the public site underneath. */
+::view-transition-old(.portal-out) {
+  animation: 220ms ease-in both portal-fade-out;
+}
+::view-transition-new(.portal-out) {
+  animation: none;
+}
+
+@keyframes portal-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes portal-settle {
+  from {
+    transform: scale(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

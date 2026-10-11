@@ -2,6 +2,8 @@ import type { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { LogoMark } from '@/components/brand/logo';
+import { Skeleton } from '@/components/ui/primitives';
+import { PORTAL_EXIT } from '@/lib/portal-paths';
 import {
   PortalMobileMenu,
   PortalNav,
@@ -19,7 +21,12 @@ export interface PortalMenuItem {
 
 function Brand({ area }: { area: string }) {
   return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label="GMM — Beranda">
+    <Link
+      href="/"
+      transitionTypes={PORTAL_EXIT}
+      className="flex items-center gap-2.5"
+      aria-label="GMM — Beranda"
+    >
       <LogoMark className="size-10 rounded-none bg-transparent mix-blend-multiply" />
       <span className="leading-tight">
         <span className="text-navy block text-[17px] font-bold">GMM</span>
@@ -32,6 +39,7 @@ function Brand({ area }: { area: string }) {
 /**
  * Work-portal layout for providers and platform staff: its own sidebar and top bar, no
  * marketplace header/footer (those are hidden for portal routes by SiteChrome).
+ * Without `user` (while the session is still loading) the account menu shows a placeholder.
  */
 export function PortalShell({
   area,
@@ -40,7 +48,7 @@ export function PortalShell({
   children,
 }: {
   area: string;
-  user: { name: string; role: string };
+  user?: { name: string; role: string };
   nav: readonly PortalMenuItem[];
   children: ReactNode;
 }) {
@@ -68,7 +76,14 @@ export function PortalShell({
             <PortalSearch items={items} />
             <div className="ml-auto flex items-center gap-1">
               <PortalNotifications />
-              <PortalUserMenu name={user.name} role={user.role} />
+              {user ? (
+                <PortalUserMenu name={user.name} role={user.role} />
+              ) : (
+                <span className="flex items-center gap-2.5 py-1.5 pr-2 pl-1.5" aria-hidden="true">
+                  <Skeleton className="size-9 rounded-full" />
+                  <Skeleton className="hidden h-8 w-28 sm:block" />
+                </span>
+              )}
             </div>
           </div>
         </header>

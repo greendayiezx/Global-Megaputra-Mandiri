@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { Logo } from '@/components/brand/logo';
 import { CompareHeaderLink } from '@/components/compare/compare-controls';
 import type { Session } from '@/lib/auth/session';
+import { isPortalPath, PORTAL_ENTER } from '@/lib/portal-paths';
 import { logoutAction } from '@/modules/auth/api/actions';
 import { isPlatformStaff, isProviderMember } from '@/modules/auth/domain/rbac';
 import { NEEDS } from '@/content/needs';
@@ -148,6 +149,7 @@ export async function SiteHeader({ session }: { session: Session | null }) {
                   </p>
                   <Link
                     href={home!.href}
+                    transitionTypes={isPortalPath(home!.href) ? PORTAL_ENTER : undefined}
                     className="hover:bg-subtle block rounded-md px-3 py-2 text-sm font-medium"
                   >
                     {home!.label}

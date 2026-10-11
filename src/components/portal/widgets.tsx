@@ -1,6 +1,7 @@
 import { ArrowRight, BarChart3, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { isPortalPath, PORTAL_EXIT } from '@/lib/portal-paths';
 import { cn } from '@/lib/utils';
 
 /** CSS url() list trying common extensions, so a photo works whichever format it was saved in. */
@@ -58,6 +59,7 @@ export function WelcomeBanner({
         <p className="mt-3 text-sm leading-relaxed text-blue-100 md:text-base">{body}</p>
         <Link
           href={cta.href}
+          transitionTypes={isPortalPath(cta.href) ? undefined : PORTAL_EXIT}
           className="text-primary mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold shadow-sm transition-colors hover:bg-blue-50"
         >
           {cta.label} <ArrowRight className="size-4" aria-hidden="true" />

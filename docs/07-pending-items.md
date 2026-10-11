@@ -127,3 +127,4 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Banner sambutan portal memakai gambar dari folder `SuperAdmin/` & `Provider/`
 - [x] Halaman Panduan Provider di portal (`/provider-dashboard/guide`): checklist dari data asli + alur pesanan
 - [x] Loading spinner (tombol proses, peta coverage) & skeleton halaman portal Admin/Provider
+- [x] Perpindahan web publik ↔ portal lebih halus: shell portal tampil instan (skeleton), animasi fade (View Transitions), progress bar navigasi, redirect login 307 lewat `proxy.ts`

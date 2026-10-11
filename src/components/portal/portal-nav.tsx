@@ -7,6 +7,7 @@ import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'rea
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { logoutAction } from '@/modules/auth/api/actions';
+import { PORTAL_EXIT } from '@/lib/portal-paths';
 
 export interface PortalNavItem {
   href: string;
@@ -227,6 +228,7 @@ export function PortalUserMenu({ name, role }: { name: string; role: string }) {
         <div className="border-line bg-surface shadow-pop animate-select-in absolute right-0 z-40 mt-2 w-56 rounded-xl border p-1.5">
           <Link
             href="/"
+            transitionTypes={PORTAL_EXIT}
             className="hover:bg-subtle flex items-center gap-2 rounded-lg px-3 py-2 text-sm"
           >
             <ExternalLink className="size-4" aria-hidden="true" /> Lihat website
