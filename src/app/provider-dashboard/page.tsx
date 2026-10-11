@@ -1,14 +1,16 @@
-import { ClipboardList, Inbox, LifeBuoy, Percent, Target, UsersRound, Wallet } from 'lucide-react';
+import { CheckCircle2, ClipboardList, Hourglass, Package, Wallet } from 'lucide-react';
 import type { Metadata } from 'next';
-import { Forbidden, PageTitle } from '@/components/dashboard/dashboard-shell';
-import { ButtonLink } from '@/components/ui/button';
-import { Alert, Card, EmptyState, Metric } from '@/components/ui/primitives';
+import Link from 'next/link';
+import { Forbidden } from '@/components/dashboard/dashboard-shell';
+import { CtaBanner, EmptyChart, Panel, StatCard, WelcomeBanner } from '@/components/portal/widgets';
+import { Alert, Badge } from '@/components/ui/primitives';
 import { requirePermission } from '@/lib/auth/session';
+import { formatRupiah } from '@/lib/money';
 import { getProviderRecord, listPackagesForProvider } from '@/modules/packages/application/catalog';
 
 export const metadata: Metadata = { title: 'Portal Provider', robots: { index: false } };
 
-const PENDING = 'Aktif setelah modul pesanan (STEP 5)';
+const ORDERS = 'Aktif setelah modul pesanan (STEP 5)';
 
 export default async function ProviderOverview() {
   const { forbidden, session } = await requirePermission(
@@ -20,76 +22,123 @@ export default async function ProviderOverview() {
     getProviderRecord(session.actor.providerId),
     listPackagesForProvider(session.actor.providerId),
   ]);
-  const published = packages.filter((p) => p.status === 'PUBLISHED').length;
+  const published = packages.filter((p) => p.status === 'PUBLISHED');
 
   return (
-    <>
-      <PageTitle
-        title="Overview"
-        description="Kinerja akuisisi pelanggan Anda di GMM."
-        action={
-          <ButtonLink href="/provider-dashboard/packages" variant="secondary">
-            Kelola paket
-          </ButtonLink>
+    <div className="space-y-6">
+      <WelcomeBanner
+        title={
+          <>
+            Selamat Datang,
+            <br />
+            {provider?.displayName ?? 'Provider'}!
+          </>
         }
+        body="Kelola layanan internet Anda, pantau pesanan dan pemasangan dengan mudah melalui platform GMM Global Megaputra Mandiri."
+        cta={{ href: '/mitra', label: 'Lihat Panduan Provider' }}
+        image="Biznet Telecom Office Banner"
       />
+
       {provider?.verificationStatus !== 'VERIFIED' && (
-        <Alert tone="warning" className="mb-4" title="Provider belum terverifikasi">
+        <Alert tone="warning" title="Provider belum terverifikasi">
           Paket Anda tidak tampil di marketplace sampai verifikasi selesai.
         </Alert>
       )}
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        <Metric icon={Inbox} label="Pesanan baru" value={null} caption={PENDING} />
-        <Metric
-          icon={Target}
-          label="Leads"
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          icon={ClipboardList}
+          tone="blue"
+          label="Total Pesanan"
           value={null}
-          caption="Aktif di Fase 3 (lead management)"
+          caption={ORDERS}
         />
-        <Metric icon={UsersRound} label="Pelanggan aktif" value={null} caption={PENDING} />
-        <Metric
-          icon={Percent}
-          label="Conversion rate"
+        <StatCard
+          icon={Hourglass}
+          tone="amber"
+          label="Pesanan Diproses"
           value={null}
-          caption="Butuh data pesanan & analitik"
+          caption={ORDERS}
         />
-        <Metric icon={Wallet} label="Pendapatan (MRR)" value={null} caption={PENDING} />
-        <Metric
-          icon={LifeBuoy}
-          label="Tiket terbuka"
+        <StatCard
+          icon={CheckCircle2}
+          tone="green"
+          label="Paket Dipublikasikan"
+          value={`${published.length}`}
+          caption={`dari ${packages.length} paket`}
+        />
+        <StatCard
+          icon={Wallet}
+          tone="violet"
+          label="Total Pendapatan"
           value={null}
-          caption="Aktif di STEP 11 (support)"
+          caption={ORDERS}
         />
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
-        <Card>
-          <div className="border-line flex items-center justify-between border-b px-5 py-3.5">
-            <h2 className="text-base font-semibold">Paket Anda</h2>
-            <span className="text-fg-muted text-sm">
-              {published} dari {packages.length} dipublikasikan
-            </span>
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <Panel title="Grafik Penjualan">
+          <EmptyChart
+            message={`Grafik penjualan tampil setelah pesanan pertama masuk. ${ORDERS}.`}
+          />
+        </Panel>
+        <Panel
+          title="Pesanan Terbaru"
+          action={{ href: '/provider-dashboard/orders', label: 'Lihat semua' }}
+        >
+          <div className="grid h-56 place-items-center text-center">
+            <div>
+              <span className="bg-subtle text-fg-muted mx-auto grid size-11 place-items-center rounded-full">
+                <ClipboardList className="size-5" aria-hidden="true" />
+              </span>
+              <p className="text-fg-secondary mt-3 text-sm font-medium">Belum ada pesanan</p>
+              <p className="text-fg-muted mt-1 max-w-xs text-xs">
+                Pesanan pelanggan GMM akan masuk ke sini untuk Anda konfirmasi.
+              </p>
+            </div>
           </div>
-          <ul className="divide-line divide-y">
-            {packages.slice(0, 5).map((p) => (
-              <li key={p.id} className="flex items-center justify-between gap-3 px-5 py-3 text-sm">
-                <span className="font-medium">{p.name}</span>
-                <span className="text-fg-muted">{p.status}</span>
+        </Panel>
+      </div>
+
+      <Panel
+        title="Layanan & Produk Anda"
+        action={{ href: '/provider-dashboard/packages', label: 'Kelola' }}
+      >
+        {packages.length === 0 ? (
+          <p className="text-fg-muted text-sm">Belum ada paket.</p>
+        ) : (
+          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {packages.map((p) => (
+              <li key={p.id}>
+                <Link
+                  href="/provider-dashboard/packages"
+                  className="border-line hover:border-primary/50 hover:bg-primary-soft/40 flex h-full flex-col rounded-xl border p-4 transition-colors"
+                >
+                  <span className="flex items-start justify-between gap-2">
+                    <span className="bg-primary-soft text-primary grid size-9 place-items-center rounded-lg">
+                      <Package className="size-4" aria-hidden="true" />
+                    </span>
+                    <Badge tone={p.status === 'PUBLISHED' ? 'success' : 'neutral'}>
+                      {p.status === 'PUBLISHED' ? 'Aktif' : p.status}
+                    </Badge>
+                  </span>
+                  <span className="mt-3 text-sm font-semibold">{p.name}</span>
+                  <span className="text-fg-muted text-xs">{p.downloadMbps} Mbps</span>
+                  <span className="mt-auto pt-2 text-sm font-semibold">
+                    {formatRupiah(p.monthlyPrice)}
+                    <span className="text-fg-muted text-xs font-normal">/bulan</span>
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
-        </Card>
-        <section aria-labelledby="orders-title">
-          <h2 id="orders-title" className="mb-3 text-base font-semibold">
-            Pesanan terbaru
-          </h2>
-          <EmptyState
-            icon={ClipboardList}
-            title="Belum ada pesanan"
-            description="Pesanan dari pelanggan GMM akan masuk ke sini untuk Anda konfirmasi."
-          />
-        </section>
-      </div>
-    </>
+        )}
+      </Panel>
+
+      <CtaBanner
+        title="Bersama GMM, lebih mudah mengelola bisnis internet Anda."
+        body="Dukungan tim GMM untuk setiap pesanan, pemasangan, dan layanan pelanggan Anda."
+      />
+    </div>
   );
 }
