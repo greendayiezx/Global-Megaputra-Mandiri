@@ -74,6 +74,13 @@ const TONES = {
   violet: 'bg-violet-50 text-violet-600',
 } as const;
 
+const ICON_TONES = {
+  blue: 'text-blue-600',
+  amber: 'text-amber-600',
+  green: 'text-emerald-600',
+  violet: 'text-violet-600',
+} as const;
+
 /** KPI card. `value = null` renders "—" with the caption explaining why (no faked numbers). */
 export function StatCard({
   icon: Icon,
@@ -81,18 +88,24 @@ export function StatCard({
   label,
   value,
   caption,
+  iconOnly = false,
 }: {
   icon: LucideIcon;
   tone: keyof typeof TONES;
   label: string;
   value: string | null;
   caption: string;
+  iconOnly?: boolean;
 }) {
   return (
     <div className="border-line bg-surface shadow-card flex items-start gap-4 rounded-xl border p-5">
-      <span className={cn('grid size-11 shrink-0 place-items-center rounded-full', TONES[tone])}>
-        <Icon className="size-5" aria-hidden="true" />
-      </span>
+      {iconOnly ? (
+        <Icon className={cn('size-5 shrink-0', ICON_TONES[tone])} aria-hidden="true" />
+      ) : (
+        <span className={cn('grid size-11 shrink-0 place-items-center rounded-full', TONES[tone])}>
+          <Icon className="size-5" aria-hidden="true" />
+        </span>
+      )}
       <div className="min-w-0">
         <p className="text-fg-muted text-sm">{label}</p>
         <p className="mt-1 text-2xl font-bold tracking-tight">{value ?? '—'}</p>
