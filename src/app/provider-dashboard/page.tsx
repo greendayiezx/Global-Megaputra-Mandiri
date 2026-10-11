@@ -49,6 +49,7 @@ export default async function ProviderOverview() {
         <StatCard
           icon={ClipboardList}
           tone="blue"
+          iconOnly
           label="Total Pesanan"
           value={null}
           caption={ORDERS}
@@ -56,6 +57,7 @@ export default async function ProviderOverview() {
         <StatCard
           icon={Hourglass}
           tone="amber"
+          iconOnly
           label="Pesanan Diproses"
           value={null}
           caption={ORDERS}
@@ -63,6 +65,7 @@ export default async function ProviderOverview() {
         <StatCard
           icon={CheckCircle2}
           tone="green"
+          iconOnly
           label="Paket Dipublikasikan"
           value={`${published.length}`}
           caption={`dari ${packages.length} paket`}
@@ -70,6 +73,7 @@ export default async function ProviderOverview() {
         <StatCard
           icon={Wallet}
           tone="violet"
+          iconOnly
           label="Total Pendapatan"
           value={null}
           caption={ORDERS}
