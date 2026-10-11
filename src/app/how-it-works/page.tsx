@@ -48,15 +48,15 @@ export default function HowItWorksPage() {
               <h2 id="status" className="text-xl font-semibold">
                 Arti status ketersediaan
               </h2>
-              <Card className="mt-4 border-0">
-                <dl>
+              <Card className="mt-4">
+                <dl className="divide-line divide-y">
                   {STATUS.map(([s, text]) => (
                     <div
                       key={s}
                       className="grid items-center gap-2 px-5 py-3.5 text-sm sm:grid-cols-[170px_1fr]"
                     >
                       <dt>
-                        <CoverageStatusBadge status={s} />
+                        <CoverageStatusBadge status={s} className="bg-transparent px-0 py-0" />
                       </dt>
                       <dd className="text-fg-secondary">{text}</dd>
                     </div>
