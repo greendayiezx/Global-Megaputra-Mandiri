@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useCompareIds } from '@/components/compare/compare-store';
 import { cn } from '@/lib/utils';
 
 function isActive(pathname: string, href: string) {
@@ -36,6 +37,11 @@ const BOTTOM: { href: string; label: string; icon: LucideIcon; match: string[] }
 
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const compareIds = useCompareIds();
+  // Carry the picked packages, like the header link does; a bare /compare shows an empty table.
+  const compareHref = compareIds.length
+    ? `/compare?ids=${encodeURIComponent(compareIds.join(','))}`
+    : '/compare';
   const activeHref =
     [...BOTTOM]
       .sort((a, b) => b.href.length - a.href.length)
@@ -52,14 +58,21 @@ export function MobileBottomNav() {
           return (
             <li key={href}>
               <Link
-                href={href}
+                href={href === '/compare' ? compareHref : href}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
                   'flex h-16 flex-col items-center justify-center gap-1 text-[11px] font-medium',
                   active ? 'text-primary' : 'text-fg-muted',
                 )}
               >
-                <Icon className="size-5" aria-hidden="true" strokeWidth={active ? 2.25 : 1.75} />
+                <span className="relative">
+                  <Icon className="size-5" aria-hidden="true" strokeWidth={active ? 2.25 : 1.75} />
+                  {href === '/compare' && compareIds.length > 0 && (
+                    <span className="bg-primary absolute -top-1.5 -right-2.5 grid size-4 place-items-center rounded-full text-[10px] font-semibold text-white">
+                      {compareIds.length}
+                    </span>
+                  )}
+                </span>
                 {label}
               </Link>
             </li>

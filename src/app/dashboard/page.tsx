@@ -37,7 +37,7 @@ export default async function CustomerDashboard() {
         ))}
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
         <section aria-labelledby="last-order">
           <h2 id="last-order" className="mb-3 text-lg font-semibold">
             Pesanan terakhir

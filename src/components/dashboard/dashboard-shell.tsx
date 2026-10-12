@@ -61,7 +61,7 @@ export function DashboardShell({
   return (
     <div className="container-page py-6 md:py-8">
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-8">
-        <aside className="lg:col-span-3 xl:col-span-2">
+        <aside className="min-w-0 lg:col-span-3 xl:col-span-2">
           <div className="lg:sticky lg:top-40">
             <p className="text-fg-muted text-xs font-semibold tracking-wide uppercase">{area}</p>
             {subtitle && <p className="mt-0.5 truncate text-sm font-medium">{subtitle}</p>}

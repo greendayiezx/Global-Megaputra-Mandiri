@@ -139,7 +139,7 @@ export default async function HomePage() {
               </ButtonLink>
             }
           />
-          <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {providers.slice(0, 3).map((s) => (
               <ProviderCard key={s.provider.id} summary={s} />
             ))}
@@ -166,7 +166,7 @@ export default async function HomePage() {
             </ButtonLink>
           }
         />
-        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {packages.items.slice(0, 3).map((v) => (
             <PackageCard key={v.pkg.id} view={v} />
           ))}
@@ -175,7 +175,7 @@ export default async function HomePage() {
 
       {/* 6. Comparison CTA */}
       <section className="container-page" aria-labelledby="cmp-title">
-        <div className="bg-navy grid gap-8 overflow-hidden rounded-xl p-6 text-white md:p-10 lg:grid-cols-2 lg:items-center">
+        <div className="bg-navy grid grid-cols-1 gap-8 overflow-hidden rounded-xl p-6 text-white md:p-10 lg:grid-cols-2 lg:items-center">
           <div>
             <h2 id="cmp-title" className="text-2xl font-bold text-white md:text-[28px]">
               Membandingkan Paket Internet Jadi Lebih Mudah

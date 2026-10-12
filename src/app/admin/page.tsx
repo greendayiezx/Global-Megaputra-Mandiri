@@ -63,7 +63,7 @@ export default async function AdminDashboard() {
         image="SuperAdmin/Super Admin at a Modern Tech Workspace"
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           icon={UsersRound}
           tone="blue"
@@ -94,7 +94,7 @@ export default async function AdminDashboard() {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <Panel title="Ringkasan Transaksi">
           <EmptyChart
             message={`Grafik transaksi harian tampil setelah ada transaksi. ${PAYMENTS}.`}
@@ -142,7 +142,7 @@ export default async function AdminDashboard() {
         </div>
       </Panel>
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <Panel
           title="Aktivitas Sistem"
           action={{ href: '/admin/audit-logs', label: 'Lihat semua' }}

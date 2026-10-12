@@ -282,7 +282,7 @@ export default async function ProviderGuidePage() {
         </ol>
       </Panel>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         {/* Order flow */}
         <Panel title="Alur pesanan pelanggan">
           <p className="text-fg-muted -mt-1 mb-4 text-sm">

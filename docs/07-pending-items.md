@@ -129,3 +129,4 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Perpindahan web publik ↔ portal lebih halus: shell portal tampil instan (skeleton), animasi fade (View Transitions), progress bar navigasi, redirect login 307 lewat `proxy.ts`
 - [x] Login langsung ke area sesuai peran (tanpa singgah di `/dashboard`)
 - [x] Favicon & ikon aplikasi dari logo GMM; tombol banner Super Admin → Kelola Provider
+- [x] Favicon tanpa latar (lencana bulat); uji responsif 47 halaman di lebar 320–768px: perbaikan overflow beranda, dashboard pelanggan & admin, Cara Kerja versi vertikal di HP, link Bandingkan di navigasi bawah

@@ -45,7 +45,7 @@ export default async function ProviderOverview() {
         </Alert>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           icon={ClipboardList}
           tone="blue"
@@ -80,7 +80,7 @@ export default async function ProviderOverview() {
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Panel title="Grafik Penjualan">
           <EmptyChart
             message={`Grafik penjualan tampil setelah pesanan pertama masuk. ${ORDERS}.`}
@@ -111,7 +111,7 @@ export default async function ProviderOverview() {
         {packages.length === 0 ? (
           <p className="text-fg-muted text-sm">Belum ada paket.</p>
         ) : (
-          <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {packages.map((p) => (
               <li key={p.id}>
                 <Link

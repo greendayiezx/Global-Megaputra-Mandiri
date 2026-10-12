@@ -83,7 +83,7 @@ export default async function ProviderPage({ params, searchParams }: Props) {
             {packages.length === 0 ? (
               <p className="text-fg-muted mt-4 text-sm">Belum ada paket yang dipublikasikan.</p>
             ) : (
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                 {packages.map((v) => (
                   <PackageCard key={v.pkg.id} view={v} query={locationQuery} />
                 ))}

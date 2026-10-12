@@ -41,7 +41,7 @@ export default async function PackageDetailPage({ params, searchParams }: Props)
     : null;
   const orderable = coverage ? isOrderableCoverage(coverage.status) : false;
 
-  const specs: [string, string][] = [
+  const baseSpecs: [string, string][] = [
     ['Teknologi', TECHNOLOGY_LABEL[pkg.technology]],
     ['Router', pkg.routerIncluded ? 'Termasuk' : 'Tidak termasuk'],
     ['FUP', pkg.fupPolicy ?? 'Tidak ada FUP yang dinyatakan provider'],
@@ -52,8 +52,14 @@ export default async function PackageDetailPage({ params, searchParams }: Props)
       'Estimasi instalasi',
       formatInstallWindow(pkg.estInstallationDaysMin, pkg.estInstallationDaysMax),
     ],
-    ...pkg.features.map((f): [string, string] => [f.label, f.value]),
   ];
+  // Provider features may repeat a base row (e.g. "Router"): show one row with both details.
+  const specMap = new Map(baseSpecs);
+  for (const f of pkg.features) {
+    const base = specMap.get(f.label);
+    specMap.set(f.label, base && base !== f.value ? `${base} — ${f.value}` : f.value);
+  }
+  const specs = [...specMap];
 
   return (
     <div className="container-page py-6 md:py-8">

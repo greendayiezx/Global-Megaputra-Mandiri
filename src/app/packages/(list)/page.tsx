@@ -182,7 +182,8 @@ export default async function PackagesPage({
                   <input key={name} type="hidden" name={name} value={value} />
                 ),
               )}
-              <p className="text-lg font-bold">Filter</p>
+              {/* The phone filter sheet has its own "Filter" header with a close button. */}
+              <p className="hidden text-lg font-bold lg:block">Filter</p>
               <fieldset className="space-y-3">
                 <legend className="mb-3 text-sm font-semibold">Harga Bulanan</legend>
                 <PriceRange
