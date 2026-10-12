@@ -230,3 +230,47 @@ html:active-view-transition-type(portal-enter)::view-transition-new(root) {
     animation-delay: 0s !important;
   }
 }
+
+/* ---------- Scroll reveal & hero motion (public site) ---------- */
+
+/* <Reveal>: only elements below the fold at mount get data-reveal="hidden". */
+.reveal {
+  transition:
+    opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal[data-reveal='hidden'] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+
+/* Hero: slow zoom on the photo and staggered entrance of the copy. */
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+}
+.hero-zoom {
+  animation: hero-zoom 9s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+.hero-rise {
+  animation: hero-rise 800ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-zoom,
+  .hero-rise {
+    animation: none;
+    transition: none;
+  }
+}

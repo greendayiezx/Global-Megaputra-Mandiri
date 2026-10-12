@@ -249,16 +249,24 @@ export function SectionHeader({
   action,
   as: Heading = 'h2',
   id,
+  eyebrow,
 }: {
   title: string;
   description?: ReactNode;
   action?: ReactNode;
   as?: 'h1' | 'h2';
   id?: string;
+  /** Small pill label above the heading, e.g. "Kebutuhan". */
+  eyebrow?: string;
 }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div className="max-w-2xl">
+        {eyebrow && (
+          <p className="border-primary/20 bg-primary-soft text-primary mb-3 inline-flex rounded-full border px-3 py-1 text-xs font-semibold tracking-wide uppercase">
+            {eyebrow}
+          </p>
+        )}
         <Heading
           id={id}
           className={

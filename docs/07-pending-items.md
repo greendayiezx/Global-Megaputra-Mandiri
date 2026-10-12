@@ -130,3 +130,4 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Login langsung ke area sesuai peran (tanpa singgah di `/dashboard`)
 - [x] Favicon & ikon aplikasi dari logo GMM; tombol banner Super Admin → Kelola Provider
 - [x] Favicon tanpa latar (lencana bulat); uji responsif 47 halaman di lebar 320–768px: perbaikan overflow beranda, dashboard pelanggan & admin, Cara Kerja versi vertikal di HP, link Bandingkan di navigasi bawah
+- [x] Beranda baru: hero foto layar penuh (zoom pelan), angka GMM dengan hitung naik (data asli), kartu kebutuhan bergambar besar, pita perbandingan parallax, CTA penutup foto penuh, animasi muncul saat scroll (menghormati mode kurangi animasi)

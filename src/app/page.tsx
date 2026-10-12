@@ -1,45 +1,18 @@
-import {
-  ArrowRight,
-  Headset,
-  MessageSquareText,
-  MousePointerClick,
-  ReceiptText,
-  ShieldCheck,
-} from 'lucide-react';
+import { ArrowRight, MessageSquareText } from 'lucide-react';
 import Link from 'next/link';
 import { GmmHero } from '@/components/marketplace/gmm-hero';
+import { CountUp } from '@/components/motion/count-up';
+import { ParallaxImage } from '@/components/motion/parallax-image';
+import { Reveal } from '@/components/motion/reveal';
 import { PackageCard } from '@/components/marketplace/package-card';
 import { ProviderCard } from '@/components/marketplace/provider-card';
 import { ButtonLink } from '@/components/ui/button';
-import { Card, EmptyState, SectionHeader } from '@/components/ui/primitives';
+import { DemoBadge, EmptyState, SectionHeader } from '@/components/ui/primitives';
 import { Faq } from '@/components/ui/faq';
 import { FAQ } from '@/content/faq';
 import { NEEDS } from '@/content/needs';
 import { formatRupiah } from '@/lib/format';
 import { searchPackages, searchProviders } from '@/modules/packages/application/catalog';
-
-const TRUST = [
-  {
-    icon: ShieldCheck,
-    title: 'Provider Terverifikasi',
-    body: 'Dokumen legal diperiksa tim GMM sebelum tampil.',
-  },
-  {
-    icon: ReceiptText,
-    title: 'Harga Transparan',
-    body: 'Semua biaya wajib tampil sebelum Anda memesan.',
-  },
-  {
-    icon: MousePointerClick,
-    title: 'Proses Mudah',
-    body: 'Cek lokasi, pilih paket, dan pesan dalam satu alur.',
-  },
-  {
-    icon: Headset,
-    title: 'Dukungan Pelanggan',
-    body: 'Tim GMM mendampingi dari pemesanan hingga aktif.',
-  },
-];
 
 const emptySearch = {
   point: null,
@@ -74,54 +47,101 @@ export default async function HomePage() {
     searchPackages(emptySearch),
   ]);
   const comparePreview = packages.items.slice(0, 3);
+  // Only real figures from the catalogue (demo data is flagged as such).
+  const stats = [
+    { value: providers.length, label: 'Provider terverifikasi' },
+    { value: packages.total, label: 'Paket internet' },
+    {
+      value: new Set(providers.flatMap((s) => s.provider.serviceAreaNames)).size,
+      label: 'Wilayah layanan',
+    },
+  ];
+  const statsAreDemo = providers.some((s) => s.provider.isDemo);
 
   return (
     <>
-      {/* 1. Hero banner */}
+      {/* 1. Full-bleed hero (includes the trust strip) */}
       <GmmHero />
 
-      {/* 2. Trust indicators */}
-      <section aria-label="Keunggulan GMM" className="border-line bg-surface border-y">
-        <ul className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-x-6 gap-y-5 px-4 py-7 min-[420px]:grid-cols-2 sm:px-6 md:px-8 lg:grid-cols-4">
-          {TRUST.map(({ icon: Icon, title, body }) => (
-            <li key={title} className="flex items-start gap-3">
-              <span className="bg-primary-soft text-primary grid size-9 shrink-0 place-items-center rounded-md">
-                <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold">{title}</p>
-                <p className="text-fg-muted mt-0.5 text-[13px] leading-snug">{body}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+      {/* 2. GMM in numbers — counts up on scroll, real values only */}
+      <section aria-labelledby="stats-title" className="container-page pt-10 pb-4 md:pt-14">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+          <Reveal>
+            <p className="text-primary text-xs font-semibold tracking-wide uppercase">
+              GMM dalam angka
+            </p>
+            <h2
+              id="stats-title"
+              className="mt-2 text-2xl font-bold md:text-[32px] md:leading-tight"
+            >
+              Satu tempat untuk membandingkan internet di lokasi Anda
+            </h2>
+            {statsAreDemo && (
+              <p className="text-fg-muted mt-3 flex items-center gap-2 text-sm">
+                <DemoBadge /> Angka dihitung dari data demo saat ini.
+              </p>
+            )}
+          </Reveal>
+          <dl className="grid grid-cols-3 gap-3 sm:gap-6">
+            {stats.map((st, i) => (
+              <Reveal
+                key={st.label}
+                delay={i * 90}
+                className="border-line bg-surface shadow-card flex flex-col-reverse rounded-2xl border p-4 text-center sm:p-6"
+              >
+                <dt className="text-fg-muted mt-2 text-xs sm:text-sm">{st.label}</dt>
+                <dd className="text-primary text-3xl font-bold tracking-tight sm:text-5xl">
+                  <CountUp value={st.value} />
+                </dd>
+              </Reveal>
+            ))}
+          </dl>
+        </div>
       </section>
 
-      {/* 3. Search by need */}
+      {/* 3. Search by need — large photo tiles */}
       <section className="section container-page" aria-labelledby="need-title">
-        <SectionHeader id="need-title" title="Cari Internet Sesuai Kebutuhan Anda" />
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {NEEDS.map(({ icon: Icon, title, body, href }) => (
-            <li key={title}>
+        <Reveal>
+          <SectionHeader
+            id="need-title"
+            eyebrow="Kebutuhan"
+            title="Cari Internet Sesuai Kebutuhan Anda"
+            description="Mulai dari cara Anda memakai internet; kami saring paket yang cocok."
+          />
+        </Reveal>
+        <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+          {NEEDS.map(({ icon: Icon, title, body, href, image, imageAlt }, i) => (
+            <Reveal as="li" key={title} delay={i * 90}>
               <Link
                 href={href}
-                className="group border-line bg-surface shadow-card hover:border-primary flex h-full items-start gap-3 rounded-lg border p-4 transition-colors"
+                className="group bg-navy shadow-card focus-visible:outline-primary relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl p-4 text-white focus-visible:outline-2 focus-visible:outline-offset-2 sm:p-5 lg:aspect-[3/4]"
               >
-                <span className="bg-primary-soft text-primary grid size-10 shrink-0 place-items-center rounded-md">
+                {/* eslint-disable-next-line @next/next/no-img-element -- remote stock photo, sized by CSS */}
+                <img
+                  src={image}
+                  alt={imageAlt}
+                  loading="lazy"
+                  className="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 -z-10 bg-gradient-to-t from-[#05122b]/90 via-[#05122b]/35 to-transparent"
+                />
+                <span className="grid size-10 place-items-center rounded-xl bg-white/15 backdrop-blur-sm">
                   <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
                 </span>
-                <span className="flex-1">
-                  <span className="flex items-center justify-between gap-2 font-semibold">
-                    {title}
-                    <ArrowRight
-                      className="text-fg-muted group-hover:text-primary size-4 transition-transform group-hover:translate-x-0.5"
-                      aria-hidden="true"
-                    />
-                  </span>
-                  <span className="text-fg-muted mt-0.5 block text-[13px]">{body}</span>
+                <span className="mt-3 flex items-center justify-between gap-2 text-base font-semibold sm:text-lg">
+                  {title}
+                  <ArrowRight
+                    className="size-4 shrink-0 transition-transform group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </span>
+                <span className="mt-1 hidden text-[13px] leading-snug text-white/80 sm:block">
+                  {body}
                 </span>
               </Link>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </section>
@@ -129,19 +149,24 @@ export default async function HomePage() {
       {/* 4. Providers */}
       <section className="section border-line bg-surface border-y" aria-labelledby="prov-title">
         <div className="container-page">
-          <SectionHeader
-            id="prov-title"
-            title="Provider Pilihan"
-            description="Hanya provider yang sudah lolos verifikasi dokumen yang tampil di GMM."
-            action={
-              <ButtonLink href="/provider" variant="ghost" className="text-primary">
-                Semua provider <ArrowRight aria-hidden="true" />
-              </ButtonLink>
-            }
-          />
-          <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {providers.slice(0, 3).map((s) => (
-              <ProviderCard key={s.provider.id} summary={s} />
+          <Reveal>
+            <SectionHeader
+              id="prov-title"
+              eyebrow="Provider"
+              title="Provider Pilihan"
+              description="Hanya provider yang sudah lolos verifikasi dokumen yang tampil di GMM."
+              action={
+                <ButtonLink href="/provider" variant="ghost" className="text-primary">
+                  Semua provider <ArrowRight aria-hidden="true" />
+                </ButtonLink>
+              }
+            />
+          </Reveal>
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {providers.slice(0, 3).map((s, i) => (
+              <Reveal key={s.provider.id} delay={i * 90}>
+                <ProviderCard summary={s} />
+              </Reveal>
             ))}
           </div>
         </div>
@@ -149,47 +174,69 @@ export default async function HomePage() {
 
       {/* 5. Packages */}
       <section className="section container-page" aria-labelledby="pkg-title">
-        <SectionHeader
-          id="pkg-title"
-          title="Paket Internet Pilihan"
-          description={
-            <>
-              Diurutkan dengan rumus rekomendasi yang kami publikasikan.{' '}
-              <Link href="/how-it-works#urutan" className="text-primary hover:underline">
-                Lihat caranya
-              </Link>
-            </>
-          }
-          action={
-            <ButtonLink href="/packages" variant="ghost" className="text-primary">
-              Semua paket <ArrowRight aria-hidden="true" />
-            </ButtonLink>
-          }
-        />
-        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {packages.items.slice(0, 3).map((v) => (
-            <PackageCard key={v.pkg.id} view={v} />
+        <Reveal>
+          <SectionHeader
+            id="pkg-title"
+            eyebrow="Paket"
+            title="Paket Internet Pilihan"
+            description={
+              <>
+                Diurutkan dengan rumus rekomendasi yang kami publikasikan.{' '}
+                <Link href="/how-it-works#urutan" className="text-primary hover:underline">
+                  Lihat caranya
+                </Link>
+              </>
+            }
+            action={
+              <ButtonLink href="/packages" variant="ghost" className="text-primary">
+                Semua paket <ArrowRight aria-hidden="true" />
+              </ButtonLink>
+            }
+          />
+        </Reveal>
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {packages.items.slice(0, 3).map((v, i) => (
+            <Reveal key={v.pkg.id} delay={i * 90}>
+              <PackageCard view={v} />
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* 6. Comparison CTA */}
-      <section className="container-page" aria-labelledby="cmp-title">
-        <div className="bg-navy grid grid-cols-1 gap-8 overflow-hidden rounded-xl p-6 text-white md:p-10 lg:grid-cols-2 lg:items-center">
-          <div>
-            <h2 id="cmp-title" className="text-2xl font-bold text-white md:text-[28px]">
+      {/* 6. Comparison — full-bleed parallax band */}
+      <section
+        aria-labelledby="cmp-title"
+        className="relative isolate overflow-hidden bg-[#05122b] text-white"
+      >
+        <ParallaxImage src="/images/Futuristic%20Telecom%20Facility%20at%20Dusk.png" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,18,43,0.95)_0%,rgba(5,18,43,0.82)_50%,rgba(5,18,43,0.45)_100%)]"
+        />
+        <div className="container-page grid grid-cols-1 items-center gap-10 py-20 md:py-28 lg:grid-cols-2">
+          <Reveal>
+            <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-cyan-200 uppercase">
+              Bandingkan
+            </p>
+            <h2
+              id="cmp-title"
+              className="mt-4 text-3xl leading-tight font-bold text-white md:text-[42px]"
+            >
               Membandingkan Paket Internet Jadi Lebih Mudah
             </h2>
-            <p className="mt-3 max-w-md text-white/75">
+            <p className="mt-4 max-w-md text-white/75 md:text-lg">
               Bandingkan harga, kecepatan, fitur, dan layanan dari berbagai provider dalam satu
               tempat.
             </p>
-            <ButtonLink href="/packages" variant="inverse" size="lg" className="mt-6">
+            <ButtonLink href="/packages" variant="inverse" size="lg" className="mt-8">
               Bandingkan Paket
             </ButtonLink>
-          </div>
+          </Reveal>
           {comparePreview.length > 0 && (
-            <div className="overflow-x-auto rounded-lg border border-white/15 bg-white/5">
+            <Reveal
+              delay={120}
+              className="overflow-x-auto rounded-2xl border border-white/15 bg-white/[0.07] backdrop-blur-md"
+            >
               <table className="w-full min-w-[420px] text-sm">
                 <caption className="sr-only">Cuplikan perbandingan paket (data demo)</caption>
                 <thead>
@@ -225,14 +272,16 @@ export default async function HomePage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </Reveal>
           )}
         </div>
       </section>
 
       {/* 8. Reviews — real reviews only */}
       <section className="container-page pt-12 md:pt-16" aria-labelledby="rev-title">
-        <SectionHeader id="rev-title" title="Ulasan Pelanggan" />
+        <Reveal>
+          <SectionHeader id="rev-title" eyebrow="Ulasan" title="Ulasan Pelanggan" />
+        </Reveal>
         <EmptyState
           className="mt-6"
           icon={MessageSquareText}
@@ -258,21 +307,39 @@ export default async function HomePage() {
         }
       />
 
-      {/* 10. Final CTA */}
-      <section className="container-page">
-        <Card className="flex flex-col items-start gap-5 p-6 md:flex-row md:items-center md:justify-between md:p-8">
-          <div>
-            <h2 className="text-xl font-bold md:text-2xl">
-              Provider apa yang bisa dipasang di lokasi Anda?
-            </h2>
-            <p className="text-fg-muted mt-1">
-              Cek gratis dalam hitungan detik, tanpa membuat akun.
-            </p>
+      {/* 10. Final CTA — full-bleed photo */}
+      <section
+        aria-labelledby="cta-title"
+        className="relative isolate mt-4 overflow-hidden bg-[#05122b]"
+      >
+        <ParallaxImage
+          src="/images/GMM%20Login.png"
+          strength={0.1}
+          imageClassName="object-[70%_center]"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,18,43,0.92)_0%,rgba(5,28,65,0.75)_50%,rgba(5,28,65,0.15)_100%)]"
+        />
+        <Reveal className="container-page py-20 md:py-28">
+          <h2
+            id="cta-title"
+            className="max-w-xl text-3xl leading-tight font-bold text-white md:text-[42px]"
+          >
+            Provider apa yang bisa dipasang di lokasi Anda?
+          </h2>
+          <p className="mt-4 max-w-md text-white/80 md:text-lg">
+            Cek gratis dalam hitungan detik, tanpa membuat akun.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <ButtonLink href="/coverage" size="lg">
+              Cek Ketersediaan
+            </ButtonLink>
+            <ButtonLink href="/mitra" variant="inverse" size="lg">
+              Jadi Mitra Provider
+            </ButtonLink>
           </div>
-          <ButtonLink href="/coverage" size="lg" className="shrink-0">
-            Cek Ketersediaan
-          </ButtonLink>
-        </Card>
+        </Reveal>
       </section>
     </>
   );
