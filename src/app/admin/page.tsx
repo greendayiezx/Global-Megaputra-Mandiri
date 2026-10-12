@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
           </>
         }
         body="Kelola seluruh sistem, pantau provider dan pengguna, serta atur platform GMM Global Megaputra Mandiri."
-        cta={{ href: '/how-it-works', label: 'Lihat Panduan Sistem' }}
+        cta={{ href: '/admin/providers', label: 'Kelola Provider' }}
         image="SuperAdmin/Super Admin at a Modern Tech Workspace"
       />
 

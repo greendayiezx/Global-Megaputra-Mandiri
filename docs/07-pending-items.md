@@ -39,7 +39,6 @@ Legenda prioritas: **P1** = menghalangi peluncuran · **P2** = penting · **P3**
 | B11 | **Halaman Kontak**                      | `/contact` dengan formulir (rate-limited) belum dibuat.                                              | P2        |
 | B13 | **Grafik & angka dashboard portal**     | Total pesanan/transaksi/pendapatan dan grafiknya tampil "—" sampai STEP 5–6.                         | P1        |
 | B14 | **Notifikasi portal**                   | Lonceng notifikasi masih kosong (Fase 2).                                                            | P2        |
-| B12 | **Favicon / ikon tab**                  | `favicon.ico` belum ada (404 di konsol browser).                                                     | P3        |
 
 ## C. Modul sistem (roadmap STEP)
 
@@ -128,3 +127,5 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Halaman Panduan Provider di portal (`/provider-dashboard/guide`): checklist dari data asli + alur pesanan
 - [x] Loading spinner (tombol proses, peta coverage) & skeleton halaman portal Admin/Provider
 - [x] Perpindahan web publik ↔ portal lebih halus: shell portal tampil instan (skeleton), animasi fade (View Transitions), progress bar navigasi, redirect login 307 lewat `proxy.ts`
+- [x] Login langsung ke area sesuai peran (tanpa singgah di `/dashboard`)
+- [x] Favicon & ikon aplikasi dari logo GMM; tombol banner Super Admin → Kelola Provider
