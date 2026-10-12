@@ -1,12 +1,12 @@
 import {
+  ArrowRight,
   Check,
   ChevronDown,
   Globe,
-  LifeBuoy,
+  Handshake,
   LogOut,
   Menu,
   Search,
-  TicketPercent,
   UserRound,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ import { logoutAction } from '@/modules/auth/api/actions';
 import { isPlatformStaff, isProviderMember } from '@/modules/auth/domain/rbac';
 import { NEEDS } from '@/content/needs';
 import { DesktopNav } from './desktop-nav';
+import { HeaderShell } from './header-shell';
 import { MAIN_NAV, MORE_LINKS, type NavMenu } from './nav-config';
 import { getNavData } from './nav-data';
 
@@ -75,56 +76,12 @@ export async function SiteHeader({ session }: { session: Session | null }) {
   const navData = await getNavData();
 
   return (
-    <header className="bg-surface sticky top-0 z-30">
-      {/* Utility bar */}
-      <div className="bg-navy hidden text-[13px] text-white/80 md:block">
-        <div className="flex h-9 w-full items-center justify-end px-4 md:px-6 lg:px-8">
-          <ul className="flex items-center divide-x divide-white/20">
-            <li className="px-3">
-              <Link href="/promo" className="flex items-center gap-1.5 hover:text-white">
-                <TicketPercent className="size-4" aria-hidden="true" /> Promo
-              </Link>
-            </li>
-            <li className="px-3">
-              <Link href="/faq" className="hover:text-white">
-                Bantuan
-              </Link>
-            </li>
-            <li className="px-3">
-              <Link href="/mitra" className="hover:text-white">
-                Jadi Mitra
-              </Link>
-            </li>
-            <li className="pl-3">
-              <details className="group relative">
-                <summary className="flex cursor-pointer list-none items-center gap-1 hover:text-white [&::-webkit-details-marker]:hidden">
-                  <Globe className="size-4" aria-hidden="true" />
-                  <span>ID | IDR</span>
-                  <ChevronDown
-                    className="size-3.5 transition-transform group-open:rotate-180"
-                    aria-hidden="true"
-                  />
-                </summary>
-                <ul className="border-line bg-surface text-fg shadow-pop absolute right-0 z-40 mt-2 w-48 rounded-md border p-1 text-sm">
-                  <li className="flex items-center justify-between rounded-sm px-3 py-2 font-medium">
-                    Bahasa Indonesia
-                    <Check className="text-primary size-4" aria-hidden="true" />
-                  </li>
-                  <li className="text-fg-muted flex items-center justify-between px-3 py-2">
-                    English <span className="text-[11px]">Segera hadir</span>
-                  </li>
-                </ul>
-              </details>
-            </li>
-          </ul>
-        </div>
-      </div>
-
+    <HeaderShell>
       {/* Main bar */}
-      <div className="border-line border-b">
-        <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-6 lg:pt-3 xl:gap-8">
+      <div>
+        <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-6 lg:py-2 xl:gap-8">
           <Link href="/" aria-label="GMM — Beranda" className="shrink-0">
-            <Logo />
+            <Logo roomy />
           </Link>
           {/* Search with the main navigation directly beneath it */}
           <div className="hidden min-w-0 flex-1 md:block lg:max-w-3xl">
@@ -133,10 +90,38 @@ export async function SiteHeader({ session }: { session: Session | null }) {
           </div>
 
           <div className="ml-auto flex items-center gap-1">
+            {/* Language & currency (only Indonesian / IDR for now) */}
+            <details className="group relative hidden md:block lg:hidden xl:block">
+              <summary
+                className="group/lang text-fg-secondary hover:bg-subtle hover:text-fg overlay:text-white overlay:hover:bg-white/10 overlay:hover:text-white flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 transition-colors [&::-webkit-details-marker]:hidden"
+                aria-label="Bahasa dan mata uang"
+              >
+                <Globe
+                  className="size-5 motion-safe:transition-transform motion-safe:duration-500 group-hover/lang:motion-safe:rotate-[20deg]"
+                  aria-hidden="true"
+                />
+                <span className="flex items-center gap-0.5 text-[11px] font-medium">
+                  ID | IDR
+                  <ChevronDown
+                    className="size-3 transition-transform group-open:rotate-180"
+                    aria-hidden="true"
+                  />
+                </span>
+              </summary>
+              <ul className="border-line bg-surface text-fg shadow-pop absolute right-0 z-40 mt-2 w-52 rounded-lg border p-1.5 text-sm">
+                <li className="flex items-center justify-between rounded-md px-3 py-2 font-medium">
+                  Bahasa Indonesia · IDR
+                  <Check className="text-primary size-4" aria-hidden="true" />
+                </li>
+                <li className="text-fg-muted flex items-center justify-between px-3 py-2">
+                  English <span className="text-[11px]">Segera hadir</span>
+                </li>
+              </ul>
+            </details>
             <CompareHeaderLink />
             {session ? (
               <details className="group relative hidden sm:block">
-                <summary className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden">
+                <summary className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg overlay:text-white overlay:hover:bg-white/10 overlay:hover:text-white flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden">
                   <UserRound
                     className="group-hover/acct:motion-safe:animate-nav-wave size-5"
                     aria-hidden="true"
@@ -167,7 +152,7 @@ export async function SiteHeader({ session }: { session: Session | null }) {
             ) : (
               <Link
                 href="/login"
-                className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg hidden flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 sm:flex"
+                className="group/acct text-fg-secondary hover:bg-subtle hover:text-fg overlay:text-white overlay:hover:bg-white/10 overlay:hover:text-white hidden flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 sm:flex"
               >
                 <UserRound
                   className="group-hover/acct:motion-safe:animate-nav-wave size-5"
@@ -177,10 +162,33 @@ export async function SiteHeader({ session }: { session: Session | null }) {
               </Link>
             )}
 
+            {/* Jadi Mitra: the one call to action in the header */}
+            <Link
+              href="/mitra"
+              aria-label="Jadi Mitra — untuk provider internet"
+              title="Jadi Mitra"
+              className="group/mitra bg-primary hover:bg-primary-hover overlay:bg-white overlay:text-navy overlay:hover:bg-blue-50 ml-2 hidden h-11 items-center gap-3 rounded-xl px-1.5 text-white shadow-sm transition-[background-color,color,transform] duration-200 active:scale-[0.98] lg:inline-flex xl:h-12 xl:pr-4 xl:pl-2"
+            >
+              <span className="overlay:bg-primary/10 overlay:text-primary grid size-8 place-items-center rounded-lg bg-white/15">
+                <Handshake
+                  className="size-[18px] group-hover/mitra:motion-safe:animate-[handshake_600ms_ease-in-out]"
+                  aria-hidden="true"
+                />
+              </span>
+              <span className="hidden text-left leading-tight xl:block">
+                <span className="block text-sm font-semibold">Jadi Mitra</span>
+                <span className="block text-[11px] opacity-80">Untuk provider internet</span>
+              </span>
+              <ArrowRight
+                className="hidden size-4 transition-transform duration-200 group-hover/mitra:translate-x-1 xl:block"
+                aria-hidden="true"
+              />
+            </Link>
+
             {/* Mobile / tablet menu (no-JS) */}
             <details className="group relative lg:hidden">
               <summary
-                className="text-fg-secondary hover:bg-subtle flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden"
+                className="text-fg-secondary hover:bg-subtle hover:text-fg overlay:text-white overlay:hover:bg-white/10 overlay:hover:text-white flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden"
                 aria-label="Menu"
               >
                 <Menu className="size-5" aria-hidden="true" />
@@ -226,22 +234,15 @@ export async function SiteHeader({ session }: { session: Session | null }) {
                 </ul>
                 <div className="border-line mt-2 border-t pt-2">
                   <Link
-                    href="/promo"
-                    className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
-                  >
-                    <TicketPercent className="size-4" aria-hidden="true" /> Promo
-                  </Link>
-                  <Link
-                    href="/faq"
-                    className="hover:bg-subtle flex items-center gap-2 rounded-md px-3 py-2.5 text-sm"
-                  >
-                    <LifeBuoy className="size-4" aria-hidden="true" /> Bantuan
-                  </Link>
-                  <Link
                     href="/mitra"
-                    className="hover:bg-subtle block rounded-md px-3 py-2.5 text-sm"
+                    className="bg-primary-soft text-primary hover:bg-primary-soft/70 mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5"
                   >
-                    Jadi Mitra
+                    <Handshake className="size-5" aria-hidden="true" />
+                    <span className="flex-1 leading-tight">
+                      <span className="block text-sm font-semibold">Jadi Mitra</span>
+                      <span className="text-fg-muted block text-xs">Untuk provider internet</span>
+                    </span>
+                    <ArrowRight className="size-4" aria-hidden="true" />
                   </Link>
                   {session ? (
                     <form action={logoutAction}>
@@ -274,6 +275,6 @@ export async function SiteHeader({ session }: { session: Session | null }) {
           </div>
         </div>
       </div>
-    </header>
+    </HeaderShell>
   );
 }

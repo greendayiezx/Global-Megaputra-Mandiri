@@ -35,10 +35,10 @@ function isActive(pathname: string, item: NavItem) {
 const itemClass = (highlighted: boolean) =>
   cn(
     'relative flex h-full items-center gap-1 px-2 text-sm font-medium whitespace-nowrap transition-colors xl:px-3',
-    'after:bg-primary after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:origin-center after:transition-transform after:duration-300 after:ease-out xl:after:inset-x-3',
+    'after:bg-primary overlay:after:bg-white after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:origin-center after:transition-transform after:duration-300 after:ease-out xl:after:inset-x-3',
     highlighted
-      ? 'text-primary after:scale-x-100'
-      : 'text-fg-secondary hover:text-fg after:scale-x-0',
+      ? 'text-primary overlay:text-white after:scale-x-100'
+      : 'text-fg-secondary hover:text-fg overlay:text-white/85 overlay:hover:text-white after:scale-x-0',
   );
 
 /**

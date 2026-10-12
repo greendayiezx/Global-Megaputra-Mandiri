@@ -59,12 +59,17 @@ export function GmmHero() {
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,18,43,0.95)_0%,rgba(5,28,65,0.85)_55%,rgba(5,28,65,0.55)_100%)] sm:bg-[linear-gradient(90deg,rgba(5,18,43,0.94)_0%,rgba(5,28,65,0.72)_45%,rgba(5,28,65,0.08)_100%)]"
       />
+      {/* Keeps the floating header's white text legible over bright parts of the photo. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-[#05122b]/70 to-transparent"
+      />
       <div
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 -z-10 h-1/3 bg-gradient-to-t from-[#05122b]/80 to-transparent"
       />
 
-      <div className="container-page flex min-h-[640px] flex-col pt-14 pb-28 sm:min-h-[600px] lg:min-h-[min(calc(100svh-137px),820px)] lg:pt-20 lg:pb-32">
+      <div className="container-page flex min-h-[700px] flex-col pt-[calc(var(--site-header-h)+3rem)] pb-28 sm:min-h-[660px] lg:min-h-[min(100svh,920px)] lg:pt-[calc(var(--site-header-h)+4rem)] lg:pb-32">
         <div className="my-auto max-w-[620px]">
           <p className="hero-rise inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200 backdrop-blur-sm">
             <Wifi className="size-3.5 text-cyan-300" aria-hidden="true" />

@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Styles for elements inside the site header while it floats transparent over a photo. */
+@custom-variant overlay (&:where(.site-header[data-overlay]:not(:has([aria-expanded='true'], details[open])) *));
+
 /* Inter (SIL OFL 1.1, see /fonts/Inter-LICENSE.txt) — self-hosted, no third-party requests. */
 @font-face {
   font-family: 'Inter Variable';
@@ -296,5 +299,57 @@ html:active-view-transition-type(portal-enter)::view-transition-new(root) {
   .marquee-track > ul[aria-hidden='true'],
   .marquee-track [data-dup] {
     display: none;
+  }
+}
+
+/* ---------- Site header (see HeaderShell) ---------- */
+
+:root {
+  /* Fallbacks until HeaderShell measures the real height. */
+  --site-header-h: 64px;
+}
+@media (min-width: 1024px) {
+  :root {
+    --site-header-h: 100px;
+  }
+}
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background-color: var(--color-surface);
+  box-shadow: 0 1px 0 var(--color-line);
+  transition:
+    background-color 300ms ease,
+    box-shadow 300ms ease;
+}
+/* Photo-led pages: the hero slides up underneath the header. */
+.site-header--float {
+  margin-bottom: calc(-1 * var(--site-header-h));
+}
+.site-header[data-overlay]:not(:has([aria-expanded='true'], details[open])) {
+  background-color: transparent;
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header {
+    transition: none;
+  }
+}
+
+/* Jadi Mitra button: the handshake gives a short shake on hover. */
+@keyframes handshake {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-14deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  75% {
+    transform: rotate(-6deg);
   }
 }

@@ -18,16 +18,28 @@ export function LogoMark({ className }: { className?: string }) {
   );
 }
 
-export function Logo({ compact = false }: { compact?: boolean }) {
+export function Logo({
+  compact = false,
+  roomy = false,
+}: {
+  compact?: boolean;
+  /** Header use: drop the subtitle on laptop widths (lg) where the menu needs the room. */
+  roomy?: boolean;
+}) {
   return (
     <span className="flex items-center gap-3">
       <LogoMark className="size-12 lg:size-14" />
       <span className="leading-none">
-        <span className="text-navy block text-[22px] font-bold tracking-tight lg:text-[26px]">
+        <span className="text-navy overlay:text-white block text-[22px] font-bold tracking-tight transition-colors lg:text-[26px]">
           GMM
         </span>
         {!compact && (
-          <span className="text-fg-muted mt-1 hidden text-[11.5px] font-medium tracking-wide sm:block lg:text-[13px]">
+          <span
+            className={cn(
+              'text-fg-muted overlay:text-white/75 mt-1 hidden text-[11.5px] font-medium tracking-wide transition-colors sm:block lg:text-[13px]',
+              roomy && 'lg:hidden xl:block',
+            )}
+          >
             Global Megaputra Mandiri
           </span>
         )}

@@ -133,3 +133,4 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Favicon tanpa latar (lencana bulat); uji responsif 47 halaman di lebar 320–768px: perbaikan overflow beranda, dashboard pelanggan & admin, Cara Kerja versi vertikal di HP, link Bandingkan di navigasi bawah
 - [x] Beranda baru: hero foto layar penuh (zoom pelan), angka GMM dengan hitung naik (data asli), kartu kebutuhan bergambar besar, pita perbandingan parallax, CTA penutup foto penuh, animasi muncul saat scroll (menghormati mode kurangi animasi)
 - [x] Hero foto penuh di Tentang Kami, Jadi Mitra & Cek Coverage; bar "cek lokasi" lengket di beranda; marquee nama provider; dukungan video hero (`public/videos/hero.mp4`)
+- [x] Header: transparan di atas foto (beranda, Tentang, Mitra, Coverage) lalu putih saat scroll; bar atas dihapus (Promo & Bantuan ada di Lainnya); ID | IDR dan tombol Jadi Mitra pindah ke kanan

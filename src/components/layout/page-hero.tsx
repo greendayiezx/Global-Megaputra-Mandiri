@@ -51,12 +51,17 @@ export function PageHero({
         className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,18,43,0.95)_0%,rgba(5,28,65,0.82)_55%,rgba(5,28,65,0.4)_100%)] sm:bg-[linear-gradient(90deg,rgba(5,18,43,0.94)_0%,rgba(5,28,65,0.72)_45%,rgba(5,28,65,0.1)_100%)]"
       />
 
+      {/* Keeps the floating header's white text legible over bright parts of the photo. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-[#05122b]/70 to-transparent"
+      />
       <div
         className={cn(
           'container-page flex flex-col justify-center',
           compact
-            ? 'min-h-[300px] pt-8 pb-24 md:min-h-[340px]'
-            : 'min-h-[420px] pt-10 pb-24 md:min-h-[480px] md:pb-28',
+            ? 'min-h-[calc(var(--site-header-h)+300px)] pt-[calc(var(--site-header-h)+2rem)] pb-24 md:min-h-[calc(var(--site-header-h)+340px)]'
+            : 'min-h-[calc(var(--site-header-h)+420px)] pt-[calc(var(--site-header-h)+2.5rem)] pb-24 md:min-h-[calc(var(--site-header-h)+480px)] md:pb-28',
         )}
       >
         <nav aria-label="Breadcrumb" className="hero-rise text-sm text-blue-100/75">

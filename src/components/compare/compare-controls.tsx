@@ -48,7 +48,7 @@ export function CompareHeaderLink() {
   return (
     <Link
       href={ids.length ? `/compare?ids=${encodeURIComponent(ids.join(','))}` : '/compare'}
-      className="group/cmp text-fg-secondary hover:bg-subtle hover:text-fg relative flex flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5"
+      className="group/cmp text-fg-secondary hover:bg-subtle hover:text-fg overlay:text-white overlay:hover:bg-white/10 overlay:hover:text-white relative flex flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5"
     >
       {/* Half-turn with a slight overshoot on hover: the two arrows swap places. */}
       <GitCompareArrows
