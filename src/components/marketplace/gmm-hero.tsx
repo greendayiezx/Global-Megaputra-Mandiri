@@ -8,10 +8,10 @@ import {
 } from 'lucide-react';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import Image from 'next/image';
 import Link from 'next/link';
 import { HeroCurve } from '@/components/layout/hero-curve';
 import { HeroLocationForm } from '@/components/coverage/coverage-search-form';
+import { HeroBackdrop, HeroDots, HeroHeadline, type HeroSlide } from './hero-slides';
 
 const TRUST = [
   { icon: ShieldCheck, title: 'Provider Terverifikasi', body: 'Legalitas diperiksa tim GMM' },
@@ -20,17 +20,45 @@ const TRUST = [
   { icon: Headset, title: 'Dukungan Pelanggan', body: 'Didampingi sampai aktif' },
 ];
 
-/**
- * Full-bleed homepage hero: the smart-home-at-dusk photo runs edge to edge under a navy
- * gradient, zooms out slowly, and the copy rises in. The trust points sit on a glass strip
- * at the bottom, and a soft curve hands over to the page below.
- */
 /** Optional background video: drop `public/videos/hero.mp4` (short, muted loop) to enable it. */
 const HERO_VIDEO = '/videos/hero.mp4';
-const hasHeroVideo = () => existsSync(join(process.cwd(), 'public', HERO_VIDEO));
+const inPublic = (path: string) => existsSync(join(process.cwd(), 'public', path));
 
+/**
+ * Banner slides: only the photo, title and subtitle change; the address form and the
+ * comparison link stay put. A slide whose photo is not in public/images yet is skipped.
+ */
+function heroSlides(): HeroSlide[] {
+  const slides: HeroSlide[] = [
+    {
+      image: '/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png',
+      title: 'Temukan Internet Terbaik di Lokasimu',
+      subtitle:
+        'Bandingkan berbagai provider internet, pilih paket yang sesuai kebutuhan, dan nikmati layanan internet terbaik untuk kebutuhan Anda.',
+    },
+  ];
+  const hub = ['png', 'jpg', 'jpeg', 'webp']
+    .map((ext) => `/images/Hub Konektivitas Digital Modern.${ext}`)
+    .find(inPublic);
+  if (hub) {
+    slides.push({
+      image: encodeURI(hub),
+      title: 'Temukan Provider Internet di Sekitarmu',
+      subtitle:
+        'Provider terverifikasi yang menjangkau lokasimu, dalam satu tempat. Bandingkan kecepatan, harga, dan biaya pasang sebelum memilih.',
+    });
+  }
+  return slides;
+}
+
+/**
+ * Full-bleed homepage hero: photo slides crossfade edge to edge under a navy gradient with a
+ * slow zoom, the copy rises in, the trust points sit at the bottom, and a soft curve hands
+ * over to the page below.
+ */
 export function GmmHero() {
-  const video = hasHeroVideo();
+  const video = inPublic(HERO_VIDEO) ? HERO_VIDEO : undefined;
+  const slides = heroSlides();
   return (
     <section aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-[#05122b]">
       {/* Desktop: the photo starts below the floating header (so the provider tiles keep clear
@@ -39,29 +67,7 @@ export function GmmHero() {
         aria-hidden="true"
         className="absolute inset-0 -z-20 lg:top-[calc(var(--site-header-h)+1.5rem)] lg:[mask-image:linear-gradient(to_bottom,transparent,#000_120px)]"
       >
-        <div className="hero-zoom absolute inset-0">
-          <Image
-            src="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-[70%_center] lg:object-top"
-          />
-          {/* The photo stays underneath as poster and as the reduced-motion fallback. */}
-          {video && (
-            <video
-              className="absolute inset-0 size-full object-cover motion-reduce:hidden"
-              src={HERO_VIDEO}
-              poster="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
-          )}
-        </div>
+        <HeroBackdrop slides={slides} video={video} />
       </div>
       <div
         aria-hidden="true"
@@ -83,16 +89,7 @@ export function GmmHero() {
             <Wifi className="size-3.5 text-cyan-300" aria-hidden="true" />
             Marketplace Internet &amp; Provider
           </p>
-          <h1
-            id="hero-title"
-            className="hero-rise mt-4 text-[36px] leading-[1.05] font-bold tracking-tight text-white [animation-delay:100ms] sm:text-[48px] lg:text-[60px]"
-          >
-            Temukan Internet Terbaik di Lokasimu
-          </h1>
-          <p className="hero-rise mt-4 max-w-[520px] text-[15px] leading-relaxed text-blue-100/90 [animation-delay:200ms] md:text-lg">
-            Bandingkan berbagai provider internet, pilih paket yang sesuai kebutuhan, dan nikmati
-            layanan internet terbaik untuk kebutuhan Anda.
-          </p>
+          <HeroHeadline slides={slides} />
           <div className="hero-rise [animation-delay:300ms]">
             <HeroLocationForm className="mt-8" />
           </div>
@@ -106,6 +103,14 @@ export function GmmHero() {
               aria-hidden="true"
             />
           </Link>
+          {slides.length > 1 && (
+            <div className="hero-rise mt-6 [animation-delay:450ms]">
+              <HeroDots
+                count={slides.length}
+                labels={slides.map((sl, i) => `Banner ${i + 1}: ${sl.title}`)}
+              />
+            </div>
+          )}
         </div>
 
         {/* Trust points: no box, a hairline above and thin dividers between columns */}
