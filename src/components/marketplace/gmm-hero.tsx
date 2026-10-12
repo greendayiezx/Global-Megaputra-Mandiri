@@ -6,6 +6,8 @@ import {
   ShieldCheck,
   Wifi,
 } from 'lucide-react';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HeroLocationForm } from '@/components/coverage/coverage-search-form';
@@ -22,7 +24,12 @@ const TRUST = [
  * gradient, zooms out slowly, and the copy rises in. The trust points sit on a glass strip
  * at the bottom, and a soft curve hands over to the page below.
  */
+/** Optional background video: drop `public/videos/hero.mp4` (short, muted loop) to enable it. */
+const HERO_VIDEO = '/videos/hero.mp4';
+const hasHeroVideo = () => existsSync(join(process.cwd(), 'public', HERO_VIDEO));
+
 export function GmmHero() {
+  const video = hasHeroVideo();
   return (
     <section aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-[#05122b]">
       <div aria-hidden="true" className="hero-zoom absolute inset-0 -z-20">
@@ -34,6 +41,19 @@ export function GmmHero() {
           sizes="100vw"
           className="object-cover object-[70%_center] lg:object-center"
         />
+        {/* The photo stays underneath as poster and as the reduced-motion fallback. */}
+        {video && (
+          <video
+            className="absolute inset-0 size-full object-cover motion-reduce:hidden"
+            src={HERO_VIDEO}
+            poster="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+        )}
       </div>
       <div
         aria-hidden="true"

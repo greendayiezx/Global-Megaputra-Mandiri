@@ -21,6 +21,7 @@ Legenda prioritas: **P1** = menghalangi peluncuran · **P2** = penting · **P3**
 | A8  | **Promo asli**                              | Data promo (provider, periode, syarat). Halaman Promo & filter "Sedang promo" masih kosong karena belum ada data.                                                                                                                                 | P3        |
 | A9  | **Foto ilustrasi milik sendiri** (opsional) | Saat ini banyak memakai foto stok Unsplash (kartu kebutuhan, langkah mitra, provider). Bisa diganti foto GMM sendiri.                                                                                                                             | P3        |
 | A10 | **Banner portal per provider**              | Gambar banner sudah dipakai (`public/images/SuperAdmin/` & `public/images/Provider/`). Catatan: banner provider berlogo Biznet tampil untuk **semua** provider; sebaiknya ganti gambar umum atau banner per-provider.                             | P3        |
+| A11 | **Video hero** (opsional)                   | Video pendek (10–20 detik, tanpa suara, < 5 MB, mp4) disimpan di `public/videos/hero.mp4` — otomatis tampil di hero beranda. Foto tetap jadi cadangan.                                                                                            | P3        |
 
 ## B. Fitur website yang belum dibangun
 
@@ -131,3 +132,4 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Favicon & ikon aplikasi dari logo GMM; tombol banner Super Admin → Kelola Provider
 - [x] Favicon tanpa latar (lencana bulat); uji responsif 47 halaman di lebar 320–768px: perbaikan overflow beranda, dashboard pelanggan & admin, Cara Kerja versi vertikal di HP, link Bandingkan di navigasi bawah
 - [x] Beranda baru: hero foto layar penuh (zoom pelan), angka GMM dengan hitung naik (data asli), kartu kebutuhan bergambar besar, pita perbandingan parallax, CTA penutup foto penuh, animasi muncul saat scroll (menghormati mode kurangi animasi)
+- [x] Hero foto penuh di Tentang Kami, Jadi Mitra & Cek Coverage; bar "cek lokasi" lengket di beranda; marquee nama provider; dukungan video hero (`public/videos/hero.mp4`)

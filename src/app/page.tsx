@@ -6,6 +6,8 @@ import { ParallaxImage } from '@/components/motion/parallax-image';
 import { Reveal } from '@/components/motion/reveal';
 import { PackageCard } from '@/components/marketplace/package-card';
 import { ProviderCard } from '@/components/marketplace/provider-card';
+import { ProviderMarquee } from '@/components/marketplace/provider-marquee';
+import { StickyLocationBar } from '@/components/marketplace/sticky-location-bar';
 import { ButtonLink } from '@/components/ui/button';
 import { DemoBadge, EmptyState, SectionHeader } from '@/components/ui/primitives';
 import { Faq } from '@/components/ui/faq';
@@ -62,6 +64,7 @@ export default async function HomePage() {
     <>
       {/* 1. Full-bleed hero (includes the trust strip) */}
       <GmmHero />
+      <StickyLocationBar heroId="hero-title" />
 
       {/* 2. GMM in numbers — counts up on scroll, real values only */}
       <section aria-labelledby="stats-title" className="container-page pt-10 pb-4 md:pt-14">
@@ -97,6 +100,22 @@ export default async function HomePage() {
             ))}
           </dl>
         </div>
+      </section>
+
+      {/* Providers on GMM — names from the catalogue, scrolling slowly */}
+      <section aria-label="Provider di GMM" className="pt-8 pb-2">
+        <Reveal>
+          <p className="text-fg-muted container-page mb-3 text-center text-xs font-semibold tracking-wide uppercase">
+            Provider yang sudah bergabung di GMM
+          </p>
+          <ProviderMarquee
+            providers={providers.map((s) => ({
+              slug: s.provider.slug,
+              displayName: s.provider.displayName,
+              verified: s.provider.verificationStatus === 'VERIFIED',
+            }))}
+          />
+        </Reveal>
       </section>
 
       {/* 3. Search by need — large photo tiles */}

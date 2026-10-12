@@ -1,6 +1,7 @@
 import { BadgeCheck, FileCheck2, MapPinned, Package } from 'lucide-react';
 import type { Metadata } from 'next';
-import { ContentPage } from '@/components/layout/content-page';
+import { PageHero } from '@/components/layout/page-hero';
+import { Reveal } from '@/components/motion/reveal';
 import { ButtonLink } from '@/components/ui/button';
 import { Alert } from '@/components/ui/primitives';
 import TimelineBlock01, { type TimelineEntry } from '@/components/ui/timeline-01';
@@ -55,38 +56,51 @@ const STEPS: TimelineEntry[] = [
 
 export default function MitraPage() {
   return (
-    <ContentPage
-      crumb="Jadi Mitra"
-      title="Jadi Mitra Provider"
-      description="Terima pesanan dari pelanggan yang lokasinya berada di area layanan Anda."
-      wide
-    >
-      <Alert tone="info" className="max-w-3xl" title="Pendaftaran online segera dibuka">
-        Formulir pendaftaran provider dan unggah dokumen aktif pada tahap pengembangan berikutnya.
-        Ketentuan komisi kemitraan sedang difinalisasi.
-      </Alert>
-      <div className="mt-4 mb-8 flex flex-wrap gap-3">
-        <ButtonLink href="/register">Buat akun terlebih dahulu</ButtonLink>
-        <ButtonLink href="/how-it-works#verifikasi" variant="secondary">
-          Proses verifikasi
-        </ButtonLink>
+    <>
+      <PageHero
+        image="/images/Futuristic%20Telecom%20Facility%20at%20Dusk.png"
+        imagePosition="object-[65%_center]"
+        crumb="Jadi Mitra"
+        eyebrow="Kemitraan provider"
+        title="Jadi Mitra Provider"
+        description="Terima pesanan dari pelanggan yang lokasinya berada di area layanan Anda."
+      >
+        <div className="flex flex-wrap gap-3">
+          <ButtonLink href="/register" size="lg">
+            Buat akun terlebih dahulu
+          </ButtonLink>
+          <ButtonLink href="/how-it-works#verifikasi" variant="inverse" size="lg">
+            Proses verifikasi
+          </ButtonLink>
+        </div>
+      </PageHero>
+
+      <div className="container-page pt-10 pb-12 md:pt-12 md:pb-16">
+        <Reveal>
+          <Alert tone="info" className="max-w-3xl" title="Pendaftaran online segera dibuka">
+            Formulir pendaftaran provider dan unggah dokumen aktif pada tahap pengembangan
+            berikutnya. Ketentuan komisi kemitraan sedang difinalisasi.
+          </Alert>
+        </Reveal>
+        <Reveal className="mt-8">
+          <TimelineBlock01
+            badge="Langkah kemitraan"
+            title="Empat langkah sampai paket Anda tayang"
+            description="Dari pendaftaran hingga pesanan pertama: setiap provider melewati proses yang sama agar pelanggan GMM hanya melihat penawaran yang terverifikasi."
+            items={STEPS}
+            footer={
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <p className="text-fg-muted text-sm">
+                  Foto adalah ilustrasi. Ketentuan komisi kemitraan sedang difinalisasi.
+                </p>
+                <ButtonLink href="/how-it-works#verifikasi" variant="secondary" size="sm">
+                  Detail proses verifikasi
+                </ButtonLink>
+              </div>
+            }
+          />
+        </Reveal>
       </div>
-      <TimelineBlock01
-        badge="Langkah kemitraan"
-        title="Empat langkah sampai paket Anda tayang"
-        description="Dari pendaftaran hingga pesanan pertama: setiap provider melewati proses yang sama agar pelanggan GMM hanya melihat penawaran yang terverifikasi."
-        items={STEPS}
-        footer={
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="text-fg-muted text-sm">
-              Foto adalah ilustrasi. Ketentuan komisi kemitraan sedang difinalisasi.
-            </p>
-            <ButtonLink href="/how-it-works#verifikasi" variant="secondary" size="sm">
-              Detail proses verifikasi
-            </ButtonLink>
-          </div>
-        }
-      />
-    </ContentPage>
+    </>
   );
 }

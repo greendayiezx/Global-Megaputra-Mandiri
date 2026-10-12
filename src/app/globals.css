@@ -274,3 +274,27 @@ html:active-view-transition-type(portal-enter)::view-transition-new(root) {
     transition: none;
   }
 }
+
+/* Provider marquee: two identical rows slide left by one row width, then loop. */
+@keyframes marquee {
+  to {
+    transform: translate3d(calc(-50% - 0.375rem), 0, 0);
+  }
+}
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    mask-image: none;
+  }
+  .marquee-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+  }
+  .marquee-track > ul[aria-hidden='true'],
+  .marquee-track [data-dup] {
+    display: none;
+  }
+}
