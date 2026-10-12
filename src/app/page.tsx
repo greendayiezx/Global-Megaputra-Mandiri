@@ -329,18 +329,19 @@ export default async function HomePage() {
       {/* 10. Final CTA — full-bleed photo */}
       <section
         aria-labelledby="cta-title"
-        className="relative isolate mt-4 overflow-hidden bg-[#05122b]"
+        className="bleed-to-footer relative isolate mt-12 flex min-h-[560px] items-center overflow-hidden bg-[#05122b] md:mt-16 lg:min-h-[680px]"
       >
+        {/* Taller band, bottom-weighted crop: the van and technician stay in frame. */}
         <ParallaxImage
           src="/images/GMM%20Login.png"
-          strength={0.1}
-          imageClassName="object-[70%_center]"
+          strength={0.06}
+          imageClassName="object-[70%_75%]"
         />
         <div
           aria-hidden="true"
           className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,18,43,0.92)_0%,rgba(5,28,65,0.75)_50%,rgba(5,28,65,0.15)_100%)]"
         />
-        <Reveal className="container-page py-20 md:py-28">
+        <Reveal className="container-page w-full py-20 md:py-28">
           <h2
             id="cta-title"
             className="max-w-xl text-3xl leading-tight font-bold text-white md:text-[42px]"

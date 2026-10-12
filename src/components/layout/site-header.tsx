@@ -167,9 +167,9 @@ export async function SiteHeader({ session }: { session: Session | null }) {
               href="/mitra"
               aria-label="Jadi Mitra — untuk provider internet"
               title="Jadi Mitra"
-              className="group/mitra bg-primary hover:bg-primary-hover overlay:bg-white overlay:text-navy overlay:hover:bg-blue-50 ml-2 hidden h-11 items-center gap-3 rounded-xl px-1.5 text-white shadow-sm transition-[background-color,color,transform] duration-200 active:scale-[0.98] lg:inline-flex xl:h-12 xl:pr-4 xl:pl-2"
+              className="group/mitra bg-primary hover:bg-primary-hover overlay:bg-[#0b2552]/90 overlay:text-white overlay:ring-1 overlay:ring-white/20 overlay:shadow-none overlay:hover:bg-white/10 ml-2 hidden h-11 items-center gap-3 rounded-xl px-1.5 text-white shadow-sm transition-[background-color,color,transform] duration-200 active:scale-[0.98] lg:inline-flex xl:h-12 xl:pr-4 xl:pl-2"
             >
-              <span className="overlay:bg-primary/10 overlay:text-primary grid size-8 place-items-center rounded-lg bg-white/15">
+              <span className="grid size-8 place-items-center rounded-lg bg-white/15">
                 <Handshake
                   className="size-[18px] group-hover/mitra:motion-safe:animate-[handshake_600ms_ease-in-out]"
                   aria-hidden="true"

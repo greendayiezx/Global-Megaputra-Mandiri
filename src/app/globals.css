@@ -353,3 +353,30 @@ html:active-view-transition-type(portal-enter)::view-transition-new(root) {
     transform: rotate(-6deg);
   }
 }
+
+/* HeroCurve: a highlight runs along the curve's blue edge, left to right, on repeat. */
+@keyframes hero-curve-flow {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.hero-curve-flow {
+  animation: hero-curve-flow 5s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-curve-flow {
+    animation: none;
+    stroke-opacity: 0;
+  }
+}
+
+/* A page that ends on a full-bleed photo band runs straight into the footer (no gap). */
+main:has(> .bleed-to-footer:last-child) ~ [data-bottom-spacer] {
+  display: none;
+}
+main:has(> .bleed-to-footer:last-child) ~ footer {
+  margin-top: 0;
+}

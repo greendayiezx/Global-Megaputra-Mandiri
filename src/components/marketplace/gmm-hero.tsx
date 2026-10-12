@@ -10,6 +10,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HeroCurve } from '@/components/layout/hero-curve';
 import { HeroLocationForm } from '@/components/coverage/coverage-search-form';
 
 const TRUST = [
@@ -32,28 +33,35 @@ export function GmmHero() {
   const video = hasHeroVideo();
   return (
     <section aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-[#05122b]">
-      <div aria-hidden="true" className="hero-zoom absolute inset-0 -z-20">
-        <Image
-          src="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-[70%_center] lg:object-center"
-        />
-        {/* The photo stays underneath as poster and as the reduced-motion fallback. */}
-        {video && (
-          <video
-            className="absolute inset-0 size-full object-cover motion-reduce:hidden"
-            src={HERO_VIDEO}
-            poster="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
+      {/* Desktop: the photo starts below the floating header (so the provider tiles keep clear
+          of its controls) and its top edge fades into the navy background. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-20 lg:top-[calc(var(--site-header-h)+1.5rem)] lg:[mask-image:linear-gradient(to_bottom,transparent,#000_120px)]"
+      >
+        <div className="hero-zoom absolute inset-0">
+          <Image
+            src="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[70%_center] lg:object-top"
           />
-        )}
+          {/* The photo stays underneath as poster and as the reduced-motion fallback. */}
+          {video && (
+            <video
+              className="absolute inset-0 size-full object-cover motion-reduce:hidden"
+              src={HERO_VIDEO}
+              poster="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          )}
+        </div>
       </div>
       <div
         aria-hidden="true"
@@ -120,16 +128,7 @@ export function GmmHero() {
           ))}
         </ul>
       </div>
-
-      {/* Soft curve into the page background */}
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1440 80"
-        preserveAspectRatio="none"
-        className="text-canvas absolute inset-x-0 -bottom-px h-10 w-full sm:h-14 lg:h-20"
-      >
-        <path fill="currentColor" d="M0 44C360 84 1080 4 1440 44V80H0Z" />
-      </svg>
+      <HeroCurve />
     </section>
   );
 }

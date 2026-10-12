@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HeroCurve } from '@/components/layout/hero-curve';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -104,15 +105,7 @@ export function PageHero({
           {children && <div className="hero-rise mt-7 [animation-delay:280ms]">{children}</div>}
         </div>
       </div>
-
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1440 80"
-        preserveAspectRatio="none"
-        className="text-canvas absolute inset-x-0 -bottom-px h-10 w-full sm:h-14 lg:h-20"
-      >
-        <path fill="currentColor" d="M0 44C360 84 1080 4 1440 44V80H0Z" />
-      </svg>
+      <HeroCurve />
     </section>
   );
 }

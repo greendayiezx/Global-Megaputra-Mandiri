@@ -151,7 +151,7 @@ export default function AboutPage() {
 
       {/* Closing band */}
       <section
-        className="relative isolate mt-4 overflow-hidden bg-[#05122b]"
+        className="bleed-to-footer relative isolate mt-4 overflow-hidden bg-[#05122b]"
         aria-labelledby="ab-cta"
       >
         <ParallaxImage

@@ -62,7 +62,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </main>
         <SiteChrome>
           {/* Room for the fixed mobile bottom nav. */}
-          <div aria-hidden="true" className="h-20 lg:hidden" />
+          <div aria-hidden="true" data-bottom-spacer className="h-20 lg:hidden" />
           <SiteFooter />
           <CompareBar />
           <MobileBottomNav />
