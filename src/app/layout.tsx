@@ -13,7 +13,7 @@ import { getSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
   title: {
-    default: 'GMM — Temukan Internet Terbaik di Lokasimu',
+    default: 'GMM',
     template: '%s · GMM',
   },
   description:

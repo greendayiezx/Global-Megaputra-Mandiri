@@ -14,10 +14,10 @@ import { HeroCurve } from '@/components/layout/hero-curve';
 import { HeroLocationForm } from '@/components/coverage/coverage-search-form';
 
 const TRUST = [
-  { icon: ShieldCheck, title: 'Provider Terverifikasi', body: 'Dokumen legal diperiksa tim GMM.' },
-  { icon: ReceiptText, title: 'Harga Transparan', body: 'Semua biaya tampil sebelum memesan.' },
-  { icon: MousePointerClick, title: 'Proses Mudah', body: 'Cek lokasi, pilih, pesan.' },
-  { icon: Headset, title: 'Dukungan Pelanggan', body: 'Didampingi sampai internet aktif.' },
+  { icon: ShieldCheck, title: 'Provider Terverifikasi', body: 'Legalitas diperiksa tim GMM' },
+  { icon: ReceiptText, title: 'Harga Transparan', body: 'Semua biaya tampil di awal' },
+  { icon: MousePointerClick, title: 'Proses Mudah', body: 'Cek lokasi, pilih, pesan' },
+  { icon: Headset, title: 'Dukungan Pelanggan', body: 'Didampingi sampai aktif' },
 ];
 
 /**
@@ -108,22 +108,22 @@ export function GmmHero() {
           </Link>
         </div>
 
-        {/* Trust strip on glass */}
+        {/* Trust points: no box, a hairline above and thin dividers between columns */}
         <ul
           aria-label="Keunggulan GMM"
-          className="hero-rise mt-10 grid grid-cols-2 gap-x-4 gap-y-4 rounded-2xl border border-white/15 bg-white/[0.07] p-4 backdrop-blur-md [animation-delay:500ms] sm:p-5 lg:grid-cols-4 lg:gap-x-6"
+          className="hero-rise mt-12 grid grid-cols-2 gap-x-6 gap-y-5 border-t border-white/15 pt-6 [animation-delay:500ms] lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-white/15"
         >
           {TRUST.map(({ icon: Icon, title, body }) => (
-            <li key={title} className="flex items-start gap-3">
-              <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white/10 text-cyan-200">
-                <Icon className="size-5" strokeWidth={1.75} aria-hidden="true" />
-              </span>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-white">{title}</p>
-                <p className="mt-0.5 hidden text-[13px] leading-snug text-blue-100/75 sm:block">
-                  {body}
-                </p>
-              </div>
+            <li key={title} className="min-w-0 lg:px-8 lg:first:pl-0 lg:last:pr-0">
+              <p className="flex flex-col items-start gap-1.5 text-sm font-semibold text-white sm:flex-row sm:items-center sm:gap-2 sm:text-[15px]">
+                <Icon
+                  className="size-[18px] shrink-0 text-cyan-300"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+                {title}
+              </p>
+              <p className="mt-1 text-[13px] text-blue-100/80 lg:text-sm">{body}</p>
             </li>
           ))}
         </ul>
