@@ -1,7 +1,9 @@
 @import 'tailwindcss';
 
 /* Styles for elements inside the site header while it floats transparent over a photo. */
-@custom-variant overlay (&:where(.site-header[data-overlay]:not(:has([aria-expanded='true'], details[open])) *));
+@custom-variant overlay (&:where(html:not([data-hero-tone='light']) .site-header[data-overlay]:not(:has([aria-expanded='true'], details[open])) *));
+/* Homepage hero showing a light photo slide (set on <html> by HeroBackdrop). */
+@custom-variant herolight (&:where([data-hero-tone='light'] *));
 
 /* Inter (SIL OFL 1.1, see /fonts/Inter-LICENSE.txt) — self-hosted, no third-party requests. */
 @font-face {
