@@ -81,7 +81,7 @@ export async function SiteHeader({ session }: { session: Session | null }) {
       <div>
         <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-6 lg:py-2 xl:gap-8">
           <Link href="/" aria-label="GMM — Beranda" className="shrink-0">
-            <Logo roomy />
+            <Logo inHeader />
           </Link>
           {/* Search with the main navigation directly beneath it */}
           <div className="hidden min-w-0 flex-1 md:block lg:max-w-3xl">
@@ -162,27 +162,18 @@ export async function SiteHeader({ session }: { session: Session | null }) {
               </Link>
             )}
 
-            {/* Jadi Mitra: the one call to action in the header */}
+            {/* Jadi Mitra: same icon-over-label shape as the controls beside it, set apart by a
+                soft blue fill (a quiet white tint over dark photos). */}
             <Link
               href="/mitra"
               aria-label="Jadi Mitra — untuk provider internet"
-              title="Jadi Mitra"
-              className="group/mitra bg-primary hover:bg-primary-hover overlay:bg-[#0b2552]/90 overlay:text-white overlay:ring-1 overlay:ring-white/20 overlay:shadow-none overlay:hover:bg-white/10 ml-2 hidden h-11 items-center gap-3 rounded-xl px-1.5 text-white shadow-sm transition-[background-color,color,transform] duration-200 active:scale-[0.98] lg:inline-flex xl:h-12 xl:pr-4 xl:pl-2"
+              className="group/mitra bg-primary-soft text-primary hover:bg-primary overlay:bg-white/10 overlay:text-white overlay:hover:bg-white/20 ml-1 hidden flex-col items-center gap-0.5 rounded-md px-3 py-1.5 transition-colors duration-200 hover:text-white sm:flex"
             >
-              <span className="grid size-8 place-items-center rounded-lg bg-white/15">
-                <Handshake
-                  className="size-[18px] group-hover/mitra:motion-safe:animate-[handshake_600ms_ease-in-out]"
-                  aria-hidden="true"
-                />
-              </span>
-              <span className="hidden text-left leading-tight xl:block">
-                <span className="block text-sm font-semibold">Jadi Mitra</span>
-                <span className="block text-[11px] opacity-80">Untuk provider internet</span>
-              </span>
-              <ArrowRight
-                className="hidden size-4 transition-transform duration-200 group-hover/mitra:translate-x-1 xl:block"
+              <Handshake
+                className="size-5 group-hover/mitra:motion-safe:animate-[handshake_600ms_ease-in-out]"
                 aria-hidden="true"
               />
+              <span className="text-[11px] font-semibold whitespace-nowrap">Jadi Mitra</span>
             </Link>
 
             {/* Mobile / tablet menu (no-JS) */}
