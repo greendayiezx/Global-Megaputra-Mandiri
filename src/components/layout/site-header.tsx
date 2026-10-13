@@ -177,8 +177,9 @@ export async function SiteHeader({ session }: { session: Session | null }) {
               <span className="text-[11px] font-semibold whitespace-nowrap">Jadi Mitra</span>
             </Link>
 
-            {/* Mobile / tablet menu (no-JS) */}
-            <details className="group relative lg:hidden">
+            {/* Mobile / tablet menu (no-JS). Not `relative`: the panel hangs from the sticky header,
+                edge to edge. */}
+            <details className="group lg:hidden">
               <summary
                 className="text-fg-secondary hover:bg-subtle hover:text-fg overlay:text-white overlay:hover:bg-white/10 overlay:hover:text-white flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden"
                 aria-label="Menu"
@@ -195,81 +196,83 @@ export async function SiteHeader({ session }: { session: Session | null }) {
                 </span>
                 <span className="text-[11px] font-medium">Menu</span>
               </summary>
-              <div className="menu-panel border-line bg-surface shadow-pop absolute right-0 mt-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border p-3">
-                <SearchForm id="mobile-search" className="mb-3 md:hidden" />
-                <ul className="space-y-0.5">
-                  {MAIN_NAV.map((item) => (
-                    <li key={item.href}>
-                      {item.menu ? (
-                        <details className="group/sub">
-                          <summary className="hover:bg-subtle flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+              <div className="menu-panel border-line bg-surface absolute inset-x-0 top-full max-h-[calc(100dvh-var(--site-header-h))] overflow-y-auto overscroll-contain border-t pt-3 pb-4 shadow-[0_16px_32px_-12px_rgb(15_23_42/0.25)]">
+                <div className="container-header">
+                  <SearchForm id="mobile-search" className="mb-3 md:hidden" />
+                  <ul className="space-y-0.5">
+                    {MAIN_NAV.map((item) => (
+                      <li key={item.href}>
+                        {item.menu ? (
+                          <details className="group/sub">
+                            <summary className="hover:bg-subtle flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2.5 text-[15px] font-medium [&::-webkit-details-marker]:hidden">
+                              {item.label}
+                              <ChevronDown
+                                className="text-fg-muted size-4 transition-transform group-open/sub:rotate-180"
+                                aria-hidden="true"
+                              />
+                            </summary>
+                            <ul className="menu-sub border-line mb-1 ml-3 border-l pl-2">
+                              {MOBILE_SUBLINKS[item.menu].map((sub) => (
+                                <li key={sub.href}>
+                                  <Link
+                                    href={sub.href}
+                                    className="text-fg-secondary hover:bg-subtle block rounded-md px-3 py-2 text-sm"
+                                  >
+                                    {sub.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </details>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className="hover:bg-subtle block rounded-md px-3 py-2.5 text-[15px] font-medium"
+                          >
                             {item.label}
-                            <ChevronDown
-                              className="text-fg-muted size-4 transition-transform group-open/sub:rotate-180"
-                              aria-hidden="true"
-                            />
-                          </summary>
-                          <ul className="menu-sub border-line mb-1 ml-3 border-l pl-2">
-                            {MOBILE_SUBLINKS[item.menu].map((sub) => (
-                              <li key={sub.href}>
-                                <Link
-                                  href={sub.href}
-                                  className="text-fg-secondary hover:bg-subtle block rounded-md px-3 py-2 text-sm"
-                                >
-                                  {sub.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </details>
-                      ) : (
-                        <Link
-                          href={item.href}
-                          className="hover:bg-subtle block rounded-md px-3 py-2.5 text-[15px] font-medium"
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="border-line mt-2 border-t pt-2">
+                    <Link
+                      href="/mitra"
+                      className="bg-primary-soft text-primary hover:bg-primary-soft/70 mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5"
+                    >
+                      <Handshake className="size-5" aria-hidden="true" />
+                      <span className="flex-1 leading-tight">
+                        <span className="block text-sm font-semibold">Jadi Mitra</span>
+                        <span className="text-fg-muted block text-xs">Untuk provider internet</span>
+                      </span>
+                      <ArrowRight className="size-4" aria-hidden="true" />
+                    </Link>
+                    {session ? (
+                      <form action={logoutAction}>
+                        <button
+                          type="submit"
+                          className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm"
                         >
-                          {item.label}
+                          <LogOut className="size-4" aria-hidden="true" /> Keluar
+                        </button>
+                      </form>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2 px-1 pt-2">
+                        <Link
+                          href="/login"
+                          className="border-line-strong rounded-md border py-2 text-center text-sm font-semibold"
+                        >
+                          Masuk
                         </Link>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                <div className="border-line mt-2 border-t pt-2">
-                  <Link
-                    href="/mitra"
-                    className="bg-primary-soft text-primary hover:bg-primary-soft/70 mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5"
-                  >
-                    <Handshake className="size-5" aria-hidden="true" />
-                    <span className="flex-1 leading-tight">
-                      <span className="block text-sm font-semibold">Jadi Mitra</span>
-                      <span className="text-fg-muted block text-xs">Untuk provider internet</span>
-                    </span>
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </Link>
-                  {session ? (
-                    <form action={logoutAction}>
-                      <button
-                        type="submit"
-                        className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-left text-sm"
-                      >
-                        <LogOut className="size-4" aria-hidden="true" /> Keluar
-                      </button>
-                    </form>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-2 px-1 pt-2">
-                      <Link
-                        href="/login"
-                        className="border-line-strong rounded-md border py-2 text-center text-sm font-semibold"
-                      >
-                        Masuk
-                      </Link>
-                      <Link
-                        href="/register"
-                        className="bg-primary rounded-md py-2 text-center text-sm font-semibold text-white"
-                      >
-                        Daftar
-                      </Link>
-                    </div>
-                  )}
+                        <Link
+                          href="/register"
+                          className="bg-primary rounded-md py-2 text-center text-sm font-semibold text-white"
+                        >
+                          Daftar
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </details>

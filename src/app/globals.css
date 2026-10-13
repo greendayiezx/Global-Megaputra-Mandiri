@@ -339,22 +339,21 @@ html:active-view-transition-type(portal-enter)::view-transition-new(root) {
   }
 }
 
-/* Mobile menu (a <details>): the panel grows out of the Menu button, items follow just after,
-   and sub-lists slide open, instead of popping in. */
+/* Mobile menu (a <details>): a full-width sheet that unrolls downward from the header, its
+   items easing in just behind the edge, and sub-lists sliding open. */
 @keyframes menu-panel-in {
   from {
-    opacity: 0;
-    transform: translateY(-6px) scale(0.96);
+    clip-path: inset(0 0 100% 0);
   }
   to {
-    opacity: 1;
-    transform: none;
+    /* Negative bottom inset keeps the drop shadow visible while it runs. */
+    clip-path: inset(0 0 -48px 0);
   }
 }
 @keyframes menu-item-in {
   from {
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
@@ -363,14 +362,13 @@ html:active-view-transition-type(portal-enter)::view-transition-new(root) {
 }
 @media (prefers-reduced-motion: no-preference) {
   details[open] > .menu-panel {
-    transform-origin: top right;
-    animation: menu-panel-in 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: menu-panel-in 340ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  details[open] > .menu-panel > * {
-    animation: menu-item-in 260ms 60ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  details[open] > .menu-panel > * > * {
+    animation: menu-item-in 320ms 90ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
   }
   details[open] > .menu-sub {
-    animation: menu-item-in 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: menu-item-in 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 }
 
