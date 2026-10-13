@@ -8,6 +8,7 @@ import {
   Menu,
   Search,
   UserRound,
+  X,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from '@/components/brand/logo';
@@ -182,10 +183,19 @@ export async function SiteHeader({ session }: { session: Session | null }) {
                 className="text-fg-secondary hover:bg-subtle hover:text-fg overlay:text-white overlay:hover:bg-white/10 overlay:hover:text-white flex cursor-pointer list-none flex-col items-center gap-0.5 rounded-md px-2.5 py-1.5 [&::-webkit-details-marker]:hidden"
                 aria-label="Menu"
               >
-                <Menu className="size-5" aria-hidden="true" />
+                <span className="relative size-5">
+                  <Menu
+                    className="absolute inset-0 size-5 transition-[opacity,rotate] duration-200 group-open:rotate-90 group-open:opacity-0"
+                    aria-hidden="true"
+                  />
+                  <X
+                    className="absolute inset-0 size-5 -rotate-90 opacity-0 transition-[opacity,rotate] duration-200 group-open:rotate-0 group-open:opacity-100"
+                    aria-hidden="true"
+                  />
+                </span>
                 <span className="text-[11px] font-medium">Menu</span>
               </summary>
-              <div className="border-line bg-surface shadow-pop absolute right-0 mt-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border p-3">
+              <div className="menu-panel border-line bg-surface shadow-pop absolute right-0 mt-2 max-h-[calc(100dvh-6rem)] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border p-3">
                 <SearchForm id="mobile-search" className="mb-3 md:hidden" />
                 <ul className="space-y-0.5">
                   {MAIN_NAV.map((item) => (
@@ -199,7 +209,7 @@ export async function SiteHeader({ session }: { session: Session | null }) {
                               aria-hidden="true"
                             />
                           </summary>
-                          <ul className="border-line mb-1 ml-3 border-l pl-2">
+                          <ul className="menu-sub border-line mb-1 ml-3 border-l pl-2">
                             {MOBILE_SUBLINKS[item.menu].map((sub) => (
                               <li key={sub.href}>
                                 <Link

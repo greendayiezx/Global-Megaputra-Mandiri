@@ -85,12 +85,14 @@ export default async function HomePage() {
               </p>
             )}
           </Reveal>
+          {/* Numbers pinned to the top of each card (justify-end in column-reverse), so a one-line
+              label next to two-line ones does not push its number down. */}
           <dl className="grid grid-cols-3 gap-3 sm:gap-6">
             {stats.map((st, i) => (
               <Reveal
                 key={st.label}
                 delay={i * 90}
-                className="border-line bg-surface shadow-card flex flex-col-reverse rounded-2xl border p-4 text-center sm:p-6"
+                className="border-line bg-surface shadow-card flex flex-col-reverse justify-end rounded-2xl border p-4 text-center sm:p-6"
               >
                 <dt className="text-fg-muted mt-2 text-xs sm:text-sm">{st.label}</dt>
                 <dd className="text-primary text-3xl font-bold tracking-tight sm:text-5xl">
