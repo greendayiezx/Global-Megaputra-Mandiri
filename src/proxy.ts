@@ -21,7 +21,10 @@ function basicAuthChallenge(request: NextRequest): NextResponse | null {
   const header = request.headers.get('authorization') ?? '';
   if (header.startsWith('Basic ')) {
     try {
-      if (sameText(atob(header.slice(6)), expected)) return null;
+      const given = atob(header.slice(6));
+      // "user:password" checks both; a value without ":" is a password with any username.
+      const candidate = expected.includes(':') ? given : given.slice(given.indexOf(':') + 1);
+      if (sameText(candidate, expected)) return null;
     } catch {
       // malformed base64: fall through to the challenge
     }

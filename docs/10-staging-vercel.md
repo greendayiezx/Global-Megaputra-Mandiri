@@ -40,20 +40,20 @@ lewat chat atau di-commit ke git.
 
 ## 3. Environment variables (Vercel → Settings → Environment Variables)
 
-| Nama                                        | Nilai                                             | Wajib      |
-| ------------------------------------------- | ------------------------------------------------- | ---------- |
-| `APP_ENV`                                   | `staging`                                         | Ya         |
-| `APP_SHOW_DEMO_DATA`                        | `true`                                            | Ya         |
-| `DB_DRIVER`                                 | `postgres`                                        | Ya         |
-| `DATABASE_URL`                              | connection string **Pooled** dari Neon            | Ya         |
-| `DATABASE_URL_UNPOOLED`                     | connection string **Direct** dari Neon            | Ya         |
-| `DATABASE_POOL_MAX`                         | `3`                                               | Ya         |
-| `RATE_LIMIT_SECRET`                         | string acak ≥ 32 karakter (cara membuat di bawah) | Ya         |
-| `TRUST_PROXY`                               | `true`                                            | Ya         |
-| `APP_URL`                                   | `https://<nama-project>.vercel.app`               | Ya         |
-| `APP_ALLOWED_ORIGINS`                       | `<nama-project>.vercel.app`                       | Ya         |
-| `STAGING_BASIC_AUTH`                        | `<nama>:<kata-sandi>`, mis. `gmm:<sandi-kuat>`    | Disarankan |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | kosongkan (tombol Google nonaktif)                | Tidak      |
+| Nama                                        | Nilai                                              | Wajib      |
+| ------------------------------------------- | -------------------------------------------------- | ---------- |
+| `APP_ENV`                                   | `staging`                                          | Ya         |
+| `APP_SHOW_DEMO_DATA`                        | `true`                                             | Ya         |
+| `DB_DRIVER`                                 | `postgres`                                         | Ya         |
+| `DATABASE_URL`                              | connection string **Pooled** dari Neon             | Ya         |
+| `DATABASE_URL_UNPOOLED`                     | connection string **Direct** dari Neon             | Ya         |
+| `DATABASE_POOL_MAX`                         | `3`                                                | Ya         |
+| `RATE_LIMIT_SECRET`                         | string acak ≥ 32 karakter (cara membuat di bawah)  | Ya         |
+| `TRUST_PROXY`                               | `true`                                             | Ya         |
+| `APP_URL`                                   | `https://<nama-project>.vercel.app`                | Ya         |
+| `APP_ALLOWED_ORIGINS`                       | `<nama-project>.vercel.app`                        | Ya         |
+| `STAGING_BASIC_AUTH`                        | `<nama>:<kata-sandi>` atau sandi saja (nama bebas) | Disarankan |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | kosongkan (tombol Google nonaktif)                 | Tidak      |
 
 Membuat `RATE_LIMIT_SECRET` (jalankan di terminal VS Code, salin hasilnya):
 
