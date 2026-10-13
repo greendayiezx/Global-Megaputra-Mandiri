@@ -9,6 +9,7 @@ import { DEMO_ACCOUNTS, DEMO_PASSWORD } from '@/modules/auth/application/bootstr
 import { safeRedirectPath } from '@/modules/auth/domain/credentials';
 import { isGoogleLoginEnabled } from '@/modules/auth/infrastructure/google-oauth';
 import { homePathFor } from '@/modules/auth/domain/rbac';
+import { allowsDemoAccounts } from '@/lib/app-env';
 
 export const metadata: Metadata = { title: 'Masuk', robots: { index: false } };
 
@@ -29,8 +30,7 @@ export default async function LoginPage({
   const errorMessage = GOOGLE_ERRORS[str(params, 'error') ?? ''];
   const session = await getSession();
   if (session) redirect(next || homePathFor(session.actor));
-  const showDemo =
-    process.env.NODE_ENV !== 'production' && process.env.APP_SHOW_DEMO_DATA !== 'false';
+  const showDemo = allowsDemoAccounts();
 
   return (
     <AuthShell

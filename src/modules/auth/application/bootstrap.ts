@@ -3,6 +3,7 @@ import { getDb, type Db } from '@/db/client';
 import { permissions, providerUsers, rolePermissions, roles, userRoles, users } from '@/db/schema';
 import { PERMISSIONS, ROLE_PERMISSIONS, ROLES, type RoleKey } from '../domain/rbac';
 import { hashPassword } from '../infrastructure/crypto';
+import { allowsDemoAccounts } from '@/lib/app-env';
 
 /** Upserts roles/permissions/role_permissions from the code matrix (idempotent). */
 export async function syncRbac(db: Db): Promise<void> {
@@ -72,7 +73,7 @@ export const DEMO_ACCOUNTS: {
 ];
 
 export async function seedDemoAccounts(db: Db): Promise<void> {
-  if (process.env.NODE_ENV === 'production') return;
+  if (!allowsDemoAccounts()) return;
   const passwordHash = await hashPassword(DEMO_PASSWORD);
   for (const acc of DEMO_ACCOUNTS) {
     const [existing] = await db
@@ -99,14 +100,12 @@ export async function seedDemoAccounts(db: Db): Promise<void> {
 
 const globalForReady = globalThis as unknown as { __gmmReady?: Promise<Db> };
 
-/** Database with migrations applied, RBAC synced, and (dev only) demo accounts present. */
+/** Database with migrations applied, RBAC synced, and (dev/staging only) demo accounts present. */
 export function getReadyDb(): Promise<Db> {
   globalForReady.__gmmReady ??= (async () => {
     const db = await getDb();
     await syncRbac(db);
-    const showDemo =
-      process.env.APP_SHOW_DEMO_DATA !== 'false' && process.env.NODE_ENV !== 'production';
-    if (showDemo) await seedDemoAccounts(db);
+    if (allowsDemoAccounts()) await seedDemoAccounts(db);
     return db;
   })().catch((err) => {
     globalForReady.__gmmReady = undefined;

@@ -43,7 +43,13 @@ async function createPostgresDb(): Promise<Db> {
   if (!url) throw new Error('DATABASE_URL is required when DB_DRIVER=postgres');
   const postgres = (await import('postgres')).default;
   const { drizzle } = await import('drizzle-orm/postgres-js');
-  const db = drizzle(postgres(url, { max: 10 }), { schema });
+  const client = postgres(url, {
+    // Serverless hosts open one pool per instance: keep it small there (DATABASE_POOL_MAX=3).
+    max: Number(process.env.DATABASE_POOL_MAX ?? 10),
+    // Transaction-mode poolers (Neon "-pooler" hosts, PgBouncer) cannot keep prepared statements.
+    prepare: !/-pooler\.|pgbouncer=true/.test(url),
+  });
+  const db = drizzle(client, { schema });
   if (process.env.DB_AUTO_MIGRATE === 'true') {
     const { migrate } = await import('drizzle-orm/postgres-js/migrator');
     await migrate(db, { migrationsFolder: MIGRATIONS_FOLDER });
@@ -59,7 +65,13 @@ export function getDb(): Promise<Db> {
     const driver = driverFromEnv();
     globalForDb.__gmmDb = (
       driver === 'pglite'
-        ? createPgliteDb(resolve(process.cwd(), process.env.PGLITE_DATA_DIR ?? '.data/pglite'))
+        ? createPgliteDb(
+            // Dev-only folder: keep the build from tracing (and shipping) the whole project.
+            resolve(
+              /*turbopackIgnore: true*/ process.cwd(),
+              process.env.PGLITE_DATA_DIR ?? '.data/pglite',
+            ),
+          )
         : createPostgresDb()
     ).catch((err) => {
       globalForDb.__gmmDb = undefined;

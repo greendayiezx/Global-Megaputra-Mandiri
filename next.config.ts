@@ -57,7 +57,12 @@ const nextConfig: NextConfig = {
   },
 
   async headers() {
-    return [{ source: '/:path*', headers: securityHeaders }];
+    // Staging is a private preview: keep search engines out of it.
+    const robots =
+      process.env.APP_ENV === 'staging'
+        ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
+        : [];
+    return [{ source: '/:path*', headers: [...securityHeaders, ...robots] }];
   },
 };
 

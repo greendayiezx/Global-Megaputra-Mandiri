@@ -1,13 +1,16 @@
 import 'dotenv/config';
 import { getDb } from '../client';
+import { allowsDemoAccounts } from '../../lib/app-env';
 import {
   DEMO_ACCOUNTS,
   seedDemoAccounts,
   syncRbac,
 } from '../../modules/auth/application/bootstrap';
 
-if (process.env.NODE_ENV === 'production') {
-  console.error('Refusing to seed demo data in production.');
+if (!allowsDemoAccounts()) {
+  console.error(
+    'Refusing to seed demo accounts here (production). Staging needs APP_ENV=staging and APP_SHOW_DEMO_DATA=true.',
+  );
   process.exit(1);
 }
 const db = await getDb();

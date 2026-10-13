@@ -85,27 +85,23 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - **Alamat belum di-geocode**: titik pin di peta yang menentukan coverage.
 - **Lingkungan produksi**: `RATE_LIMIT_SECRET`, `APP_URL`, `APP_ALLOWED_ORIGINS` wajib diisi.
 
-### E1. Rencana lingkungan Dev → Staging → Production (ditunda, menunggu keputusan hosting)
+### E1. Lingkungan Dev → Staging → Production
 
-| Lingkungan     | Tempat                 | Database                | Data                      | Akses                                 |
-| -------------- | ---------------------- | ----------------------- | ------------------------- | ------------------------------------- |
-| **Dev**        | Laptop (`npm run dev`) | PGlite lokal (`.data/`) | Akun & paket demo         | Developer                             |
-| **Staging**    | Server online          | PostgreSQL terpisah     | Data uji + data pra-rilis | Tim & mitra uji (password, `noindex`) |
-| **Production** | Server online publik   | PostgreSQL + PostGIS    | Data asli                 | Publik                                |
+Staging dipilih di **Vercel + Neon** (cepat online untuk investor). Kode staging selesai; panduan
+pemasangan di [docs/10-staging-vercel.md](10-staging-vercel.md).
 
-- **Alur branch**: branch kerja → `staging` (deploy otomatis ke staging) → `main` (production).
-- **Kredensial terpisah per lingkungan**: `APP_URL`, `RATE_LIMIT_SECRET`, `APP_ALLOWED_ORIGINS`,
-  Google OAuth (redirect URI staging didaftarkan terpisah), payment gateway mode sandbox di staging.
-- **Pekerjaan sebelum staging bisa jalan**:
-  - [ ] PostgreSQL asli (PGlite tidak bisa di server; `DATABASE_URL` sudah didukung `src/db/client.ts`).
-  - [ ] Penanda `APP_ENV=staging` agar data uji bisa di-seed (bootstrap demo & `db:seed` sengaja
-        menolak jalan saat `NODE_ENV=production`).
-  - [ ] Redis untuk rate limit (wajib bila multi-instance/serverless; opsional untuk staging 1 server).
-  - [ ] `docker-compose` staging (Postgres + PostGIS) dan panduan deploy di `docs/`.
-- **Pilihan hosting (belum diputuskan)**:
-  - _VPS Indonesia + Docker_ (rekomendasi): paling mirip arsitektur akhir (PostGIS, Redis, MinIO).
-  - _Vercel + Postgres terkelola (Neon/Supabase)_: paling cepat online; perlu Redis & storage
-    dokumen eksternal lebih awal.
+| Lingkungan     | Tempat                 | Database                | Data              | Akses                                 |
+| -------------- | ---------------------- | ----------------------- | ----------------- | ------------------------------------- |
+| **Dev**        | Laptop (`npm run dev`) | PGlite lokal (`.data/`) | Akun & paket demo | Developer                             |
+| **Staging**    | Vercel (Singapura)     | Neon PostgreSQL         | Akun & paket demo | Link + kata sandi opsional, `noindex` |
+| **Production** | Belum ditentukan       | PostgreSQL + PostGIS    | Data asli         | Publik                                |
+
+- [x] PostgreSQL asli didukung (pooler Neon, migrasi lewat koneksi direct, `vercel-build`).
+- [x] Penanda staging: `APP_ENV=staging` **dan** `APP_SHOW_DEMO_DATA=true` (akun demo hanya bila keduanya).
+- [x] Gerbang kata sandi `STAGING_BASIC_AUTH`, header `noindex`, region Singapura.
+- [ ] **Anda**: buat akun Neon & Vercel, isi environment variables, deploy (langkah 1–4 di docs/10).
+- [ ] Redis untuk rate limit sebelum production multi-server.
+- [ ] Production: pilih hosting (VPS + Docker untuk PostGIS/Redis/MinIO, atau tetap Vercel + layanan terkelola).
 
 ---
 
@@ -134,3 +130,4 @@ Detail lengkap ada di `docs/00-product-scope-and-assumptions.md` §5.
 - [x] Beranda baru: hero foto layar penuh (zoom pelan), angka GMM dengan hitung naik (data asli), kartu kebutuhan bergambar besar, pita perbandingan parallax, CTA penutup foto penuh, animasi muncul saat scroll (menghormati mode kurangi animasi)
 - [x] Hero foto penuh di Tentang Kami, Jadi Mitra & Cek Coverage; bar "cek lokasi" lengket di beranda; marquee nama provider; dukungan video hero (`public/videos/hero.mp4`)
 - [x] Header: transparan di atas foto (beranda, Tentang, Mitra, Coverage) lalu putih saat scroll; bar atas dihapus (Promo & Bantuan ada di Lainnya); ID | IDR dan tombol Jadi Mitra pindah ke kanan
+- [x] Staging siap dipasang di Vercel + Neon (panduan docs/10), indikator dev Next.js disembunyikan
