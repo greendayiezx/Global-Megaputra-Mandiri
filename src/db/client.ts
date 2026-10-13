@@ -39,8 +39,13 @@ export async function createPgliteDb(dataDir: string | null): Promise<Db> {
 }
 
 async function createPostgresDb(): Promise<Db> {
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error('DATABASE_URL is required when DB_DRIVER=postgres');
+  const raw = process.env.DATABASE_URL;
+  if (!raw) throw new Error('DATABASE_URL is required when DB_DRIVER=postgres');
+  // Neon's copied strings carry `channel_binding=require`, a libpq option postgres-js would
+  // forward to the server as an unknown setting.
+  const parsed = new URL(raw);
+  parsed.searchParams.delete('channel_binding');
+  const url = parsed.toString();
   const postgres = (await import('postgres')).default;
   const { drizzle } = await import('drizzle-orm/postgres-js');
   const client = postgres(url, {
