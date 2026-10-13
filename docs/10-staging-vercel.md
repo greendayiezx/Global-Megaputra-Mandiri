@@ -22,6 +22,10 @@ lewat chat atau di-commit ke git.
    - **Pooled** (host mengandung `-pooler`) → untuk `DATABASE_URL`
    - **Direct** (tanpa `-pooler`) → untuk `DATABASE_URL_UNPOOLED`
 
+   Klik **Connect**, salin dengan **Copy snippet** (toggle **Connection pooling** ON lalu OFF).
+   Parameter `channel_binding=require` di ujung alamat boleh dibiarkan; kode GMM membuangnya
+   otomatis karena driver postgres-js tidak mendukungnya.
+
 ## 2. Buat project di Vercel
 
 1. Buka [vercel.com](https://vercel.com), masuk dengan akun GitHub.
@@ -29,8 +33,10 @@ lewat chat atau di-commit ke git.
 3. Framework terdeteksi otomatis (Next.js). Build Command dibiarkan default: Vercel memakai
    skrip `vercel-build` (migrasi database lalu build).
 4. Sebelum klik Deploy, buka **Environment Variables** dan isi tabel di langkah 3.
-5. Setelah project dibuat: **Settings → Git → Production Branch** = `claude/gifted-knuth-s18uyp`
-   (atau `main` bila perubahan sudah digabung ke main).
+5. Setelah project dibuat: **Settings → Environments → Production → Branch Tracking** =
+   `claude/gifted-knuth-s18uyp` (atau `main` bila perubahan sudah digabung ke main), lalu **Save**.
+   Deploy pertama dari `main` boleh dilewati/gagal; push berikutnya ke branch itu membangun staging.
+6. Integrasi opsional (Redis, dll.) dilewati.
 
 ## 3. Environment variables (Vercel → Settings → Environment Variables)
 
