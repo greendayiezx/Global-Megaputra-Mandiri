@@ -12,7 +12,8 @@ import {
 } from '@/modules/coverage/domain/coverage';
 import { isPackagePubliclyListable } from '@/modules/packages/domain/package-rules';
 import { isProviderPubliclyVisible } from '@/modules/providers/domain/provider-rules';
-import { demoCatalogRepository } from '../infrastructure/demo-catalog';
+import { getReadyDb } from '@/modules/auth/application/bootstrap';
+import { createDbCatalogRepository } from '../infrastructure/db-catalog';
 import {
   TECHNOLOGY_LABEL,
   type CatalogRepository,
@@ -21,7 +22,7 @@ import {
   type Technology,
 } from './catalog-repository';
 
-const repo: CatalogRepository = demoCatalogRepository;
+const repo: CatalogRepository = createDbCatalogRepository(getReadyDb);
 
 export interface ProviderCoverage {
   provider: ProviderRecord;

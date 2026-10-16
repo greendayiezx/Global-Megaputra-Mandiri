@@ -4,6 +4,7 @@ import { permissions, providerUsers, rolePermissions, roles, userRoles, users } 
 import { PERMISSIONS, ROLE_PERMISSIONS, ROLES, type RoleKey } from '../domain/rbac';
 import { hashPassword } from '../infrastructure/crypto';
 import { allowsDemoAccounts } from '@/lib/app-env';
+import { seedDemoCatalog } from '@/modules/packages/infrastructure/seed-demo-catalog';
 
 /** Upserts roles/permissions/role_permissions from the code matrix (idempotent). */
 export async function syncRbac(db: Db): Promise<void> {
@@ -100,12 +101,15 @@ export async function seedDemoAccounts(db: Db): Promise<void> {
 
 const globalForReady = globalThis as unknown as { __gmmReady?: Promise<Db> };
 
-/** Database with migrations applied, RBAC synced, and (dev/staging only) demo accounts present. */
+/** Database with migrations applied, RBAC synced, and (dev/staging only) demo catalog and accounts. */
 export function getReadyDb(): Promise<Db> {
   globalForReady.__gmmReady ??= (async () => {
     const db = await getDb();
     await syncRbac(db);
-    if (allowsDemoAccounts()) await seedDemoAccounts(db);
+    if (allowsDemoAccounts()) {
+      await seedDemoCatalog(db);
+      await seedDemoAccounts(db);
+    }
     return db;
   })().catch((err) => {
     globalForReady.__gmmReady = undefined;

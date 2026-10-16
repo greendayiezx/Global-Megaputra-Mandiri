@@ -7,8 +7,8 @@ import type {
 
 /**
  * DEMO DATA — not real companies, prices, coverage, or SLAs.
- * Every record has `isDemo: true` and is labelled "DEMO" in the UI. Used until the
- * Postgres-backed catalog exists, and later as seed data for local development.
+ * Every record has `isDemo: true` and is labelled "DEMO" in the UI. Seeded into the
+ * database on dev/staging only (never production); the in-memory adapter remains for tests.
  */
 
 const d = (iso: string) => new Date(iso);
@@ -341,6 +341,9 @@ export const DEMO_LOCATIONS = [
   { label: 'Contoh: Depok', lat: -6.4025, lng: 106.7942 },
   { label: 'Contoh: Bogor', lat: -6.595, lng: 106.8166 },
 ] as const;
+
+/** Seed source for dev/staging databases (see seed-demo-catalog.ts). */
+export const DEMO_CATALOG = { providers, packages, zones } as const;
 
 export const demoCatalogRepository: CatalogRepository = {
   listProviders: async () => providers,

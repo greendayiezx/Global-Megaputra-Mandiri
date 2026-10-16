@@ -6,15 +6,17 @@ import {
   seedDemoAccounts,
   syncRbac,
 } from '../../modules/auth/application/bootstrap';
+import { seedDemoCatalog } from '../../modules/packages/infrastructure/seed-demo-catalog';
 
 if (!allowsDemoAccounts()) {
   console.error(
-    'Refusing to seed demo accounts here (production). Staging needs APP_ENV=staging and APP_SHOW_DEMO_DATA=true.',
+    'Refusing to seed demo data here (production). Staging needs APP_ENV=staging and APP_SHOW_DEMO_DATA=true.',
   );
   process.exit(1);
 }
 const db = await getDb();
 await syncRbac(db);
+await seedDemoCatalog(db);
 await seedDemoAccounts(db);
-console.warn(`demo accounts ready: ${DEMO_ACCOUNTS.map((a) => a.email).join(', ')}`);
+console.warn(`demo catalog and accounts ready: ${DEMO_ACCOUNTS.map((a) => a.email).join(', ')}`);
 process.exit(0);
