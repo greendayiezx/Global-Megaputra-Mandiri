@@ -11,10 +11,18 @@ import { TECHNOLOGY_LABEL } from '@/modules/packages/application/catalog-reposit
 
 export const metadata: Metadata = { title: 'Manajemen Provider', robots: { index: false } };
 
+/** Work queue first: providers waiting on GMM, then the rest. */
+const ORDER = { UNDER_REVIEW: 0, PENDING: 1, SUSPENDED: 2, REJECTED: 3, VERIFIED: 4 } as const;
+
 export default async function AdminProvidersPage() {
   const { forbidden, session } = await requirePermission('dashboard.platform', '/admin/providers');
   if (forbidden || !can(session.actor, 'provider.read')) return <Forbidden />;
-  const rows = await listAllProvidersForStaff();
+  const rows = (await listAllProvidersForStaff()).sort(
+    (a, b) => ORDER[a.provider.verificationStatus] - ORDER[b.provider.verificationStatus],
+  );
+  const waiting = rows.filter((r) =>
+    ['PENDING', 'UNDER_REVIEW'].includes(r.provider.verificationStatus),
+  ).length;
 
   return (
     <>
@@ -22,9 +30,11 @@ export default async function AdminProvidersPage() {
         title="Provider"
         description="Semua provider, termasuk yang belum tampil publik."
       />
-      <Alert tone="info" className="mb-4">
-        Persetujuan/penolakan verifikasi dengan pemeriksaan dokumen dan audit log aktif di STEP 3.
-      </Alert>
+      {waiting > 0 && (
+        <Alert tone="info" className="mb-4">
+          {waiting} provider menunggu keputusan verifikasi.
+        </Alert>
+      )}
       <Card className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-sm">
           <thead className="border-line bg-canvas text-fg-muted border-b text-left text-xs">
@@ -54,7 +64,13 @@ export default async function AdminProvidersPage() {
               <tr key={p.id} className="hover:bg-canvas">
                 <td className="px-4 py-3">
                   <p className="flex items-center gap-2 font-medium">
-                    {p.displayName} {p.isDemo && <DemoBadge />}
+                    <Link
+                      href={`/admin/providers/${p.id}`}
+                      className="text-primary hover:underline"
+                    >
+                      {p.displayName}
+                    </Link>
+                    {p.isDemo && <DemoBadge />}
                   </p>
                   <p className="text-fg-muted text-xs">{p.legalName}</p>
                 </td>

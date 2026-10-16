@@ -30,6 +30,10 @@ export function Input({ className, ...props }: ComponentProps<'input'>) {
   return <input className={cn(control, 'h-11', className)} {...props} />;
 }
 
+export function Textarea({ className, ...props }: ComponentProps<'textarea'>) {
+  return <textarea className={cn(control, 'min-h-24 py-2.5', className)} {...props} />;
+}
+
 export function Select({ className, children, ...props }: ComponentProps<'select'>) {
   return (
     <div className="relative">

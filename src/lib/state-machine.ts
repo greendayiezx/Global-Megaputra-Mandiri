@@ -37,6 +37,11 @@ export function createStateMachine<S extends string>(entity: string, table: Tran
       return ruleFor(from, to)?.actors.includes(actor) ?? false;
     },
 
+    /** Whether moving from → to must record a reason (for building forms). */
+    requiresReason(from: S, to: S): boolean {
+      return ruleFor(from, to)?.requiresReason ?? false;
+    },
+
     allowedNext(from: S, actor: ActorKind): S[] {
       const rules: Partial<Record<S, TransitionRule>> = table[from] ?? {};
       return (Object.keys(rules) as S[]).filter((to) => rules[to]?.actors.includes(actor));

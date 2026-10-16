@@ -8,13 +8,17 @@ import { PackageStatusBadge } from './status-badges';
 export function PackageTable({
   packages,
   providerName,
+  reviewHref,
 }: {
   packages: PackageRecord[];
   providerName?: (providerId: string) => string;
+  /** Links each name to a management page instead of the public listing. */
+  reviewHref?: (packageId: string) => string;
 }) {
   return (
     <Card className="overflow-x-auto">
-      <table className="w-full min-w-[760px] text-sm">
+      {packages.length === 0 && <p className="text-fg-muted px-5 py-4 text-sm">Belum ada paket.</p>}
+      <table className={packages.length ? 'w-full min-w-[760px] text-sm' : 'hidden'}>
         <thead className="border-line bg-canvas text-fg-muted border-b text-left text-xs">
           <tr>
             <th scope="col" className="px-4 py-3 font-medium">
@@ -49,7 +53,11 @@ export function PackageTable({
           {packages.map((p) => (
             <tr key={p.id} className="hover:bg-canvas">
               <td className="px-4 py-3 font-medium">
-                {p.status === 'PUBLISHED' ? (
+                {reviewHref ? (
+                  <Link href={reviewHref(p.id)} className="text-primary hover:underline">
+                    {p.name}
+                  </Link>
+                ) : p.status === 'PUBLISHED' ? (
                   <Link href={`/packages/${p.slug}`} className="hover:text-primary">
                     {p.name}
                   </Link>

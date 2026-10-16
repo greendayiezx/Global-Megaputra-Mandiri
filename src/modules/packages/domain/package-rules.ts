@@ -67,26 +67,28 @@ export interface PackageForRules {
 const isNonNegInt = (n: number) => Number.isSafeInteger(n) && n >= 0;
 const isPosInt = (n: number) => Number.isSafeInteger(n) && n > 0;
 
-/** Field-level completeness required before a package can be reviewed/published. */
+/** Field-level completeness required before a package can be reviewed/published (messages are user-facing). */
 export function packageCompletenessIssues(pkg: PackageForRules): string[] {
   const issues: string[] = [];
-  if (!pkg.name.trim()) issues.push('name is required');
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(pkg.slug)) issues.push('slug must be kebab-case');
-  if (!isPosInt(pkg.downloadMbps)) issues.push('download speed must be a positive integer');
-  if (!isPosInt(pkg.uploadMbps)) issues.push('upload speed must be a positive integer');
-  if (!pkg.technology) issues.push('technology is required');
-  if (!isPosInt(pkg.monthlyPrice)) issues.push('monthly price must be greater than zero');
-  if (!isNonNegInt(pkg.installationFee)) issues.push('installation fee must be stated (0 if free)');
-  if (!isNonNegInt(pkg.activationFee)) issues.push('activation fee must be stated (0 if free)');
-  if (!isNonNegInt(pkg.contractMonths)) issues.push('contract period must be stated (0 if none)');
-  if (!pkg.supportHours?.trim()) issues.push('support hours are required');
+  if (!pkg.name.trim()) issues.push('Nama paket wajib diisi');
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(pkg.slug))
+    issues.push('Slug hanya huruf kecil, angka, dan tanda hubung');
+  if (!isPosInt(pkg.downloadMbps)) issues.push('Kecepatan download harus angka bulat lebih dari 0');
+  if (!isPosInt(pkg.uploadMbps)) issues.push('Kecepatan upload harus angka bulat lebih dari 0');
+  if (!pkg.technology) issues.push('Teknologi wajib dipilih');
+  if (!isPosInt(pkg.monthlyPrice)) issues.push('Harga bulanan harus lebih dari 0');
+  if (!isNonNegInt(pkg.installationFee)) issues.push('Biaya instalasi wajib diisi (0 bila gratis)');
+  if (!isNonNegInt(pkg.activationFee)) issues.push('Biaya aktivasi wajib diisi (0 bila gratis)');
+  if (!isNonNegInt(pkg.contractMonths))
+    issues.push('Masa kontrak wajib diisi (0 bila tanpa kontrak)');
+  if (!pkg.supportHours?.trim()) issues.push('Jam dukungan wajib diisi');
   if (
     pkg.estInstallationDaysMin === null ||
     pkg.estInstallationDaysMax === null ||
     pkg.estInstallationDaysMin < 0 ||
     pkg.estInstallationDaysMax < pkg.estInstallationDaysMin
   ) {
-    issues.push('estimated installation time range is required');
+    issues.push('Perkiraan waktu instalasi (min–maks hari) wajib diisi');
   }
   return issues;
 }
@@ -104,7 +106,7 @@ export function canProviderPublishPackage(
     provider.verifiedAt === null ||
     provider.deletedAt
   ) {
-    return { ok: false, code: 'PROVIDER_NOT_VERIFIED', reasons: ['provider is not verified'] };
+    return { ok: false, code: 'PROVIDER_NOT_VERIFIED', reasons: ['Provider belum terverifikasi'] };
   }
   return decide('VALIDATION_ERROR', packageCompletenessIssues(pkg));
 }
