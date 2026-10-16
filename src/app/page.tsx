@@ -236,7 +236,7 @@ export default async function HomePage() {
         />
         <div className="container-page grid grid-cols-1 items-center gap-10 py-20 md:py-28 lg:grid-cols-2">
           <Reveal>
-            <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-cyan-200 uppercase">
+            <p className="text-xs font-semibold tracking-wide text-cyan-200 uppercase">
               Bandingkan
             </p>
             <h2

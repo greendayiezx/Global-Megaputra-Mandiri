@@ -37,7 +37,8 @@ export const badgeVariants = cva(
         warning: 'bg-warning-soft text-warning-fg',
         danger: 'bg-danger-soft text-danger-fg',
         outline: 'border border-line text-fg-secondary',
-        demo: 'border border-warning/40 bg-warning-soft text-[11px] font-semibold tracking-wide text-warning-fg uppercase',
+        // Plain text (no box), still amber so sample data stays noticeable.
+        demo: 'px-0 py-0 text-[11px] font-semibold tracking-wide text-warning-fg uppercase',
       },
     },
     defaultVariants: { tone: 'neutral' },
@@ -256,14 +257,14 @@ export function SectionHeader({
   action?: ReactNode;
   as?: 'h1' | 'h2';
   id?: string;
-  /** Small pill label above the heading, e.g. "Kebutuhan". */
+  /** Small label above the heading, e.g. "Kebutuhan". */
   eyebrow?: string;
 }) {
   return (
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div className="max-w-2xl">
         {eyebrow && (
-          <p className="border-primary/20 bg-primary-soft text-primary mb-3 inline-flex rounded-full border px-3 py-1 text-xs font-semibold tracking-wide uppercase">
+          <p className="text-primary mb-2 text-xs font-semibold tracking-wide uppercase">
             {eyebrow}
           </p>
         )}

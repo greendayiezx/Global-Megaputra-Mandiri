@@ -92,7 +92,7 @@ export function GmmHero() {
 
       <div className="container-page flex min-h-[700px] flex-col pt-[calc(var(--site-header-h)+3rem)] pb-28 sm:min-h-[660px] lg:min-h-[min(100svh,920px)] lg:pt-[calc(var(--site-header-h)+4rem)] lg:pb-32">
         <div className="my-auto max-w-[620px]">
-          <p className="hero-rise herolight:border-primary/25 herolight:bg-primary-soft herolight:text-primary inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-200 backdrop-blur-sm transition-colors duration-[1200ms]">
+          <p className="hero-rise herolight:text-primary inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-cyan-200 uppercase transition-colors duration-[1200ms]">
             <Wifi className="herolight:text-primary size-3.5 text-cyan-300" aria-hidden="true" />
             Marketplace Internet &amp; Provider
           </p>

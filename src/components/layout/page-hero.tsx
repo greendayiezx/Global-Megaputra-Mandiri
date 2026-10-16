@@ -82,7 +82,7 @@ export function PageHero({
         </nav>
         <div className="mt-6 max-w-[640px]">
           {eyebrow && (
-            <p className="hero-rise inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-cyan-200 uppercase backdrop-blur-sm [animation-delay:60ms]">
+            <p className="hero-rise text-xs font-semibold tracking-wide text-cyan-200 uppercase [animation-delay:60ms]">
               {eyebrow}
             </p>
           )}

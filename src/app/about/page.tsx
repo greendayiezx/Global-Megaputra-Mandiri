@@ -111,9 +111,7 @@ export default function AboutPage() {
             />
           </Reveal>
           <Reveal delay={120}>
-            <p className="border-primary/20 bg-primary-soft text-primary inline-flex rounded-full border px-3 py-1 text-xs font-semibold tracking-wide uppercase">
-              Provider
-            </p>
+            <p className="text-primary text-xs font-semibold tracking-wide uppercase">Provider</p>
             <h2 id="prov-title" className="mt-3 text-2xl font-bold md:text-[32px] md:leading-tight">
               Untuk provider
             </h2>
