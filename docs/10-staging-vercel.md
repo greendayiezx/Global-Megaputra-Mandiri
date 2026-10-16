@@ -33,8 +33,8 @@ lewat chat atau di-commit ke git.
 3. Framework terdeteksi otomatis (Next.js). Build Command dibiarkan default: Vercel memakai
    skrip `vercel-build` (migrasi database lalu build).
 4. Sebelum klik Deploy, buka **Environment Variables** dan isi tabel di langkah 3.
-5. Setelah project dibuat: **Settings → Environments → Production → Branch Tracking** =
-   `claude/gifted-knuth-s18uyp` (atau `main` bila perubahan sudah digabung ke main), lalu **Save**.
+5. Setelah project dibuat: **Settings → Environments → Production → Branch Tracking** = `staging`,
+   lalu **Save** (lihat "Alur perubahan" di bawah).
    Deploy pertama dari `main` boleh dilewati/gagal; push berikutnya ke branch itu membangun staging.
 6. Integrasi opsional (Redis, dll.) dilewati.
 
@@ -76,10 +76,22 @@ Klik **Deploy** (atau **Redeploy** setelah mengisi variabel). Setelah selesai, b
 - [ ] Masuk dengan `admin@demo.gmm.invalid` / `GmmDemo#2026` → Portal Admin
 - [ ] Masuk dengan `provider@demo.gmm.invalid` → Portal Provider
 
-## Memperbarui staging
+## Alur perubahan: local dulu, baru staging
 
-Setiap push ke Production Branch otomatis membangun ulang staging; migrasi database ikut
-berjalan. Tidak perlu mengulang langkah 1–3.
+| Branch                       | Untuk                                    | Tampil di                                        |
+| ---------------------------- | ---------------------------------------- | ------------------------------------------------ |
+| `claude/gifted-knuth-s18uyp` | Pekerjaan harian (semua push ke sini)    | Laptop (Sync + `npm run dev`) dan link preview   |
+| `staging`                    | Versi yang sudah disetujui untuk dilihat | `https://gmm-staging.vercel.app` (link investor) |
+
+1. Perubahan di-push ke `claude/gifted-knuth-s18uyp`.
+2. Di VS Code klik **Sync**, jalankan `npm install` bila ada paket baru, lalu `npm run dev` dan cek
+   di `http://localhost:3000` (database lokal PGlite, aman untuk coba-coba). Vercel juga membuat link
+   preview untuk tiap push (tab **Deployments**), berguna untuk cek dari HP.
+3. Bila sudah sesuai: minta "naikkan ke staging". Branch `staging` disamakan dengan pekerjaan yang
+   disetujui, lalu Vercel membangun ulang `gmm-staging.vercel.app`; migrasi database ikut berjalan.
+
+Production Branch di Vercel (**Settings → Environments → Production → Branch Tracking**) = `staging`.
+Link investor hanya berubah lewat langkah 3, jadi tidak ada perubahan setengah jadi saat demo.
 
 ## Yang perlu diingat
 
