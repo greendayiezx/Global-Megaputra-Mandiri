@@ -24,6 +24,8 @@ import { Badge } from '@/components/ui/primitives';
 import { requirePermission } from '@/lib/auth/session';
 import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { getReadyDb } from '@/modules/auth/application/bootstrap';
+import { countActiveZones } from '@/modules/coverage/application/zone-self-service';
 import { getProviderRecord, listPackagesForProvider } from '@/modules/packages/application/catalog';
 
 export const metadata: Metadata = { title: 'Panduan Provider', robots: { index: false } };
@@ -98,9 +100,10 @@ export default async function ProviderGuidePage() {
     '/provider-dashboard/guide',
   );
   if (forbidden || !session.actor.providerId) return <Forbidden />;
-  const [p, packages] = await Promise.all([
+  const [p, packages, zoneCount] = await Promise.all([
     getProviderRecord(session.actor.providerId),
     listPackagesForProvider(session.actor.providerId),
+    getReadyDb().then((db) => countActiveZones(db, session.actor.providerId!)),
   ]);
   if (!p) return <Forbidden />;
 
@@ -165,16 +168,18 @@ export default async function ProviderGuidePage() {
       state: published > 0 ? 'done' : inReview > 0 ? 'waiting' : 'todo',
       detail:
         packages.length === 0
-          ? 'Belum ada paket. Tambah paket aktif di STEP 3.'
+          ? 'Belum ada paket. Klik Tambah paket, isi semua biaya, lalu ajukan ke GMM.'
           : `${published} dari ${packages.length} paket dipublikasikan${inReview ? `, ${inReview} menunggu review GMM` : ''}.`,
       action: { href: '/provider-dashboard/packages', label: 'Kelola paket' },
     },
     {
       icon: MapPinned,
       title: 'Atur area layanan (coverage)',
-      state: 'soon',
+      state: zoneCount > 0 ? 'done' : 'todo',
       detail:
-        'Gambar polygon, radius, atau wilayah layanan agar pelanggan di lokasi tersebut menemukan paket Anda. Aktif di STEP 3.',
+        zoneCount > 0
+          ? `${zoneCount} area aktif dipakai saat pelanggan mengecek alamatnya.`
+          : 'Tambahkan area (titik tengah + radius) agar pelanggan di lokasi tersebut menemukan paket Anda.',
       action: { href: '/provider-dashboard/coverage', label: 'Buka Area Layanan' },
     },
     {

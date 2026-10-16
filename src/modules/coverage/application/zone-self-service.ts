@@ -125,3 +125,12 @@ export async function setOwnZoneStatus(
     });
   });
 }
+
+/** Active zone count for dashboards; the caller has already authorised provider access. */
+export async function countActiveZones(db: Db, providerId: string): Promise<number> {
+  const rows = await db
+    .select({ id: coverageZones.id })
+    .from(coverageZones)
+    .where(and(eq(coverageZones.providerId, providerId), eq(coverageZones.status, 'ACTIVE')));
+  return rows.length;
+}

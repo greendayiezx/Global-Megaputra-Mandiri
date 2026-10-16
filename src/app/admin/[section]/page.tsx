@@ -25,8 +25,9 @@ const SECTIONS: Record<string, { title: string; step: string; description: strin
   },
   settings: {
     title: 'Pengaturan',
-    step: 'STEP 3',
-    description: 'Tarif pajak, kebijakan penagihan, SLA, dan retensi data.',
+    step: 'STEP 5',
+    description:
+      'Tarif pajak, kebijakan penagihan, SLA, dan retensi data (menunggu keputusan D1–D9).',
   },
 };
 
