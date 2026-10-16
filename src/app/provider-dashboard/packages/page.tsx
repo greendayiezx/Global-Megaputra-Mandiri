@@ -2,11 +2,11 @@ import { Plus } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Forbidden, PageTitle } from '@/components/dashboard/dashboard-shell';
 import { PackageTable } from '@/components/dashboard/package-table';
-import { Button } from '@/components/ui/button';
+import { ButtonLink } from '@/components/ui/button';
 import { Alert } from '@/components/ui/primitives';
 import { requirePermission } from '@/lib/auth/session';
-import { listPackagesForProvider } from '@/modules/packages/application/catalog';
 import { can } from '@/modules/auth/domain/rbac';
+import { listPackagesForProvider } from '@/modules/packages/application/catalog';
 
 export const metadata: Metadata = { title: 'Paket Provider', robots: { index: false } };
 
@@ -17,27 +17,35 @@ export default async function ProviderPackagesPage() {
   );
   const providerId = session.actor.providerId;
   if (forbidden || !providerId) return <Forbidden />;
-  const packages = await listPackagesForProvider(providerId);
+  const packages = (await listPackagesForProvider(providerId)).filter(
+    (p) => p.status !== 'ARCHIVED',
+  );
   const canManage = can(session.actor, 'package.manage', { providerId });
+  const sentBack = packages.filter((p) => p.status === 'DRAFT').length;
 
   return (
     <>
       <PageTitle
         title="Paket"
-        description="Paket hanya tampil di marketplace setelah disetujui tim GMM."
+        description="Paket tampil di marketplace setelah diajukan dan diterbitkan tim GMM."
         action={
           canManage ? (
-            <Button disabled title="Tersedia di STEP 3">
+            <ButtonLink href="/provider-dashboard/packages/new">
               <Plus aria-hidden="true" /> Tambah paket
-            </Button>
+            </ButtonLink>
           ) : undefined
         }
       />
-      <Alert tone="info" className="mb-4">
-        Pembuatan dan pengubahan paket (dengan review GMM dan riwayat harga) aktif di STEP 3. Data
-        di bawah adalah paket demo milik provider Anda.
-      </Alert>
-      <PackageTable packages={packages} />
+      {sentBack > 0 && (
+        <Alert tone="info" className="mb-4">
+          {sentBack} paket masih draf. Buka paketnya, lengkapi, lalu klik &ldquo;Ajukan ke
+          GMM&rdquo;.
+        </Alert>
+      )}
+      <PackageTable
+        packages={packages}
+        reviewHref={canManage ? (id) => `/provider-dashboard/packages/${id}` : undefined}
+      />
     </>
   );
 }

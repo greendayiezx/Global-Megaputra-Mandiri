@@ -3,11 +3,6 @@ import { Forbidden, ModulePending } from '@/components/dashboard/dashboard-shell
 import { requirePermission } from '@/lib/auth/session';
 
 const SECTIONS: Record<string, { title: string; step: string; description: string }> = {
-  coverage: {
-    title: 'Coverage',
-    step: 'STEP 3',
-    description: 'Gambar polygon, radius, atau area administratif layanan Anda.',
-  },
   orders: {
     title: 'Pesanan',
     step: 'STEP 5',
