@@ -99,7 +99,12 @@ pemasangan di [docs/10-staging-vercel.md](10-staging-vercel.md).
 - [x] PostgreSQL asli didukung (pooler Neon, migrasi lewat koneksi direct, `vercel-build`).
 - [x] Penanda staging: `APP_ENV=staging` **dan** `APP_SHOW_DEMO_DATA=true` (akun demo hanya bila keduanya).
 - [x] Gerbang kata sandi `STAGING_BASIC_AUTH`, header `noindex`, region Singapura.
-- [ ] **Anda**: buat akun Neon & Vercel, isi environment variables, deploy (langkah 1–4 di docs/10).
+- [x] Neon & Vercel aktif: `https://gmm-staging.vercel.app` (dikunci `STAGING_BASIC_AUTH`).
+- [x] Alur local → staging: kerja di `claude/gifted-knuth-s18uyp`, staging hanya dari branch `staging`
+      (Production Branch di Vercel) setelah disetujui.
+- [ ] Audit log: batasi akses ke peran tertentu, tambah ekspor & masa simpan (D9); nanti salin ke
+      penyimpanan terpisah (log drain). Audit log per-akun di Portal Provider (STEP 3/9).
+- [ ] Pelacak error (mis. Sentry) sebelum live ke pelanggan.
 - [ ] Redis untuk rate limit sebelum production multi-server.
 - [ ] Production: pilih hosting (VPS + Docker untuk PostGIS/Redis/MinIO, atau tetap Vercel + layanan terkelola).
 
