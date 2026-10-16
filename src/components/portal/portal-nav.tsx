@@ -82,7 +82,7 @@ export function PortalMobileMenu({
       >
         <Menu className="size-5" aria-hidden="true" />
       </button>
-      {/* Portaled to <body>: the header's backdrop-filter would otherwise trap `fixed`. */}
+      {/* Portaled to <body> so the overlay is never trapped by the header's stacking context. */}
       {open &&
         createPortal(
           <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Menu">

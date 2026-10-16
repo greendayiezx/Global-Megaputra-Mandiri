@@ -67,7 +67,9 @@ export function PortalShell({
       </aside>
 
       <div className="flex min-w-0 flex-col">
-        <header className="border-line bg-surface/95 sticky top-0 z-30 border-b backdrop-blur">
+        {/* Solid background: iOS Safari tints its top bar from an opaque sticky header; a
+            translucent one lets the page show through above it while scrolling. */}
+        <header className="border-line bg-surface sticky top-0 z-30 border-b">
           <div className="flex h-16 items-center gap-3 px-4 lg:px-8">
             <PortalMobileMenu items={items} header={<Brand area={area} />} />
             <div className="lg:hidden">
