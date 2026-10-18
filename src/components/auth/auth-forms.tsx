@@ -32,7 +32,7 @@ function IconInput({ icon: Icon, ...props }: React.ComponentProps<'input'> & { i
   );
 }
 
-function PasswordInput(props: React.ComponentProps<'input'>) {
+export function PasswordInput(props: React.ComponentProps<'input'>) {
   const [show, setShow] = useState(false);
   return (
     <div className="relative">

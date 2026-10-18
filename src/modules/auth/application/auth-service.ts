@@ -1,8 +1,9 @@
-import { and, eq, inArray, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNull, like } from 'drizzle-orm';
 import type { Db } from '@/db/client';
-import { providerUsers, roles, sessions, userRoles, users } from '@/db/schema';
+import { providers, providerUsers, roles, sessions, userRoles, users } from '@/db/schema';
 import { audit } from '@/lib/audit';
 import { AppError } from '@/lib/errors';
+import { firstFreeSlug, kebab } from '@/lib/slug';
 import type { RateLimiter } from '@/lib/rate-limit';
 import {
   afterFailedLogin,
@@ -139,6 +140,134 @@ export async function registerCustomer(
       userAgent: ctx.userAgent,
     });
     return issueSession(deps, tx, user!.id, ctx);
+  });
+}
+
+export interface ProviderRegistrationInput {
+  /** Account owner = the provider's PIC. */
+  fullName: string;
+  email: string;
+  phone: string;
+  password: string;
+  company: {
+    displayName: string;
+    legalName: string;
+    nib: string | null;
+    address: string;
+    technologies: string[];
+    serviceAreaNames: string[];
+  };
+}
+
+/**
+ * Self-service provider sign-up: creates the owner account, a provider in PENDING
+ * verification (invisible to the public until GMM approves), the PROVIDER_OWNER
+ * membership, and a session, all in one transaction.
+ */
+export async function registerProvider(
+  deps: AuthDeps,
+  input: ProviderRegistrationInput,
+  ctx: RequestContext,
+): Promise<SessionIssued & { providerId: string }> {
+  const ipKey = ctx.ip ? hmacIdentifier(ctx.ip) : 'unknown';
+  const rl = await deps.limiter.hit(`register:${ipKey}`, 10, 3600);
+  if (!rl.allowed) throw new AppError('RATE_LIMITED', TOO_MANY, { retryAfter: rl.retryAfter });
+
+  const email = normalizeEmail(input.email);
+  const phone = normalizeIndonesianPhone(input.phone);
+  const fullName = input.fullName.trim().replace(/\s+/g, ' ');
+  const c = input.company;
+  const fieldErrors: Record<string, string> = {};
+  if (fullName.length < 2) fieldErrors.fullName = 'Nama penanggung jawab wajib diisi.';
+  if (!phone) fieldErrors.phone = 'Gunakan nomor ponsel Indonesia, mis. 0812xxxxxxx.';
+  if (c.displayName.trim().length < 2) fieldErrors.displayName = 'Nama merek wajib diisi.';
+  if (c.legalName.trim().length < 2) fieldErrors.legalName = 'Nama badan usaha wajib diisi.';
+  if (c.nib && !/^\d{13}$/.test(c.nib)) fieldErrors.nib = 'NIB terdiri dari 13 digit angka.';
+  if (c.address.trim().length < 10) fieldErrors.address = 'Tulis alamat kantor lengkap.';
+  if (c.technologies.length === 0) fieldErrors.technologies = 'Pilih minimal satu teknologi.';
+  const pwIssues = passwordIssues(input.password, email);
+  if (pwIssues.length) fieldErrors.password = pwIssues.join(' ');
+  if (Object.keys(fieldErrors).length) {
+    throw new AppError('VALIDATION_ERROR', 'Periksa kembali data Anda.', { fieldErrors });
+  }
+
+  const passwordHash = await hashPassword(input.password);
+  return deps.db.transaction(async (tx) => {
+    const [emailTaken] = await tx
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.email, email));
+    if (emailTaken) {
+      throw new AppError(
+        'CONFLICT',
+        'Email sudah terdaftar. Masuk dengan akun tersebut atau gunakan email lain.',
+        {
+          fieldErrors: { email: 'Email sudah terdaftar.' },
+        },
+      );
+    }
+    const [phoneTaken] = await tx
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.phone, phone!));
+    if (phoneTaken) {
+      throw new AppError('CONFLICT', 'Nomor ponsel sudah terdaftar.', {
+        fieldErrors: { phone: 'Nomor ponsel sudah terdaftar.' },
+      });
+    }
+
+    const [user] = await tx
+      .insert(users)
+      .values({ email, phone, fullName, passwordHash })
+      .returning({ id: users.id });
+
+    const base = kebab(c.displayName) || 'provider';
+    const taken = new Set(
+      (
+        await tx
+          .select({ slug: providers.slug })
+          .from(providers)
+          .where(like(providers.slug, `${base}%`))
+      ).map((r) => r.slug),
+    );
+    const [provider] = await tx
+      .insert(providers)
+      .values({
+        slug: firstFreeSlug(base, taken),
+        displayName: c.displayName.trim(),
+        legalName: c.legalName.trim(),
+        nib: c.nib || null,
+        address: c.address.trim(),
+        picName: fullName,
+        picPhone: phone,
+        picEmail: email,
+        technologies: c.technologies,
+        serviceAreaNames: c.serviceAreaNames,
+        verificationStatus: 'PENDING',
+      })
+      .returning({ id: providers.id });
+
+    const [ownerRole] = await tx
+      .select({ id: roles.id })
+      .from(roles)
+      .where(eq(roles.key, 'PROVIDER_OWNER'));
+    if (!ownerRole) throw new AppError('CONFIGURATION_MISSING', 'Roles are not initialised.');
+    await tx
+      .insert(providerUsers)
+      .values({ providerId: provider!.id, userId: user!.id, roleId: ownerRole.id });
+
+    await audit(tx, {
+      actorId: user!.id,
+      actorKind: 'PROVIDER',
+      action: 'provider_registered',
+      entity: 'provider',
+      entityId: provider!.id,
+      after: { displayName: c.displayName.trim(), verificationStatus: 'PENDING' },
+      ipHash: ctx.ip ? hmacIdentifier(ctx.ip) : null,
+      userAgent: ctx.userAgent,
+    });
+    const session = await issueSession(deps, tx, user!.id, ctx);
+    return { ...session, providerId: provider!.id };
   });
 }
 

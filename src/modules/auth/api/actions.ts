@@ -14,6 +14,7 @@ import {
   login,
   logout,
   registerCustomer,
+  registerProvider,
   resolveSession,
 } from '@/modules/auth/application/auth-service';
 import { safeRedirectPath } from '@/modules/auth/domain/credentials';
@@ -120,4 +121,79 @@ export async function logoutAction(): Promise<void> {
   }
   await clearSessionCookie();
   redirect('/');
+}
+
+const providerSignupSchema = z
+  .object({
+    displayName: z.string().max(80),
+    legalName: z.string().max(160),
+    nib: z.string().trim().max(20).optional(),
+    address: z.string().max(300),
+    serviceAreaNames: z.string().max(1000).optional(),
+    fullName: z.string().max(120),
+    email: z.email({ error: 'Masukkan email yang valid.' }).max(254),
+    phone: z.string().trim().max(20),
+    password: z.string().max(128),
+    passwordConfirm: z.string().max(128),
+    terms: z.literal('on', { error: 'Anda perlu menyetujui syarat & kebijakan privasi.' }),
+  })
+  .refine((d) => d.password === d.passwordConfirm, {
+    path: ['passwordConfirm'],
+    error: 'Konfirmasi password tidak sama.',
+  });
+
+/** Provider self sign-up from /mitra/daftar. */
+export async function registerProviderAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const raw = Object.fromEntries(formData) as Record<string, string>;
+  const keep = [
+    'displayName',
+    'legalName',
+    'nib',
+    'address',
+    'serviceAreaNames',
+    'fullName',
+    'email',
+    'phone',
+  ];
+  const values = Object.fromEntries(keep.map((k) => [k, raw[k] ?? '']));
+  const technologies = formData.getAll('technologies').map(String);
+  values.technologies = technologies.join(',');
+  const parsed = providerSignupSchema.safeParse(raw);
+  if (!parsed.success) {
+    return { status: 'error', fieldErrors: fieldErrorsOf(parsed.error), values };
+  }
+  const d = parsed.data;
+  try {
+    const s = await registerProvider(
+      await authDeps(),
+      {
+        fullName: d.fullName,
+        email: d.email,
+        phone: d.phone,
+        password: d.password,
+        company: {
+          displayName: d.displayName,
+          legalName: d.legalName,
+          nib: d.nib || null,
+          address: d.address,
+          technologies: technologies.filter((t) =>
+            ['FIBER', 'FIXED_WIRELESS', 'CABLE', 'SATELLITE'].includes(t),
+          ),
+          serviceAreaNames: (d.serviceAreaNames ?? '')
+            .split('\n')
+            .map((x) => x.trim())
+            .filter(Boolean)
+            .slice(0, 30),
+        },
+      },
+      await requestContext(),
+    );
+    await setSessionCookie(s.token, s.expiresAt);
+  } catch (err) {
+    return toState(err, values);
+  }
+  redirect('/provider-dashboard/guide?welcome=1');
 }

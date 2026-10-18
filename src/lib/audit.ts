@@ -9,6 +9,7 @@ export type AuditAction =
   | 'login_locked'
   | 'logout'
   | 'user_role_changed'
+  | 'provider_registered'
   | 'provider_approved'
   | 'provider_rejected'
   | 'provider_status_changed'

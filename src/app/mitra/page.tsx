@@ -66,8 +66,8 @@ export default function MitraPage() {
         description="Terima pesanan dari pelanggan yang lokasinya berada di area layanan Anda."
       >
         <div className="flex flex-wrap gap-3">
-          <ButtonLink href="/register" size="lg">
-            Buat akun terlebih dahulu
+          <ButtonLink href="/mitra/daftar" size="lg">
+            Daftar sekarang
           </ButtonLink>
           <ButtonLink href="/how-it-works#verifikasi" variant="inverse" size="lg">
             Proses verifikasi
@@ -77,9 +77,13 @@ export default function MitraPage() {
 
       <div className="container-page pt-10 pb-12 md:pt-12 md:pb-16">
         <Reveal>
-          <Alert tone="info" className="max-w-3xl" title="Pendaftaran online segera dibuka">
-            Formulir pendaftaran provider dan unggah dokumen aktif pada tahap pengembangan
-            berikutnya. Ketentuan komisi kemitraan sedang difinalisasi.
+          <Alert tone="info" className="max-w-3xl" title="Pendaftaran online sudah dibuka">
+            Daftarkan perusahaan Anda, lalu lengkapi profil, paket, dan area layanan di Portal
+            Provider. Paket tayang setelah diverifikasi tim GMM. Ketentuan komisi kemitraan sedang
+            difinalisasi.
+            <ButtonLink href="/mitra/daftar" size="sm" className="mt-3">
+              Daftar jadi mitra
+            </ButtonLink>
           </Alert>
         </Reveal>
         <Reveal className="mt-8">

@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { Forbidden, PageTitle } from '@/components/dashboard/dashboard-shell';
 import { ProviderStatusBadge } from '@/components/dashboard/status-badges';
 import { Panel } from '@/components/portal/widgets';
-import { Badge } from '@/components/ui/primitives';
+import { Alert, Badge } from '@/components/ui/primitives';
 import { requirePermission } from '@/lib/auth/session';
 import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
@@ -94,7 +94,11 @@ const RULES = [
   'Pesanan yang ditolak wajib disertai alasan agar pelanggan mendapat kejelasan.',
 ];
 
-export default async function ProviderGuidePage() {
+export default async function ProviderGuidePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ welcome?: string }>;
+}) {
   const { forbidden, session } = await requirePermission(
     'dashboard.provider',
     '/provider-dashboard/guide',
@@ -201,6 +205,12 @@ export default async function ProviderGuidePage() {
         title="Panduan Provider"
         description="Langkah agar paket Anda tampil di GMM dan siap menerima pelanggan."
       />
+      {(await searchParams).welcome === '1' && (
+        <Alert tone="success" title="Pendaftaran berhasil" className="mb-6">
+          Perusahaan Anda tercatat dengan status &ldquo;Menunggu dokumen&rdquo;. Ikuti langkah di
+          bawah; tim GMM akan menghubungi penanggung jawab untuk verifikasi.
+        </Alert>
+      )}
 
       {/* Progress summary */}
       <section className="border-line bg-surface shadow-card rounded-xl border p-5">
