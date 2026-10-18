@@ -176,7 +176,11 @@ export default async function CoveragePage({
                         ? 'Butuh bantuan mencari internet di lokasi ini?'
                         : 'Ada provider yang perlu survei di lokasi ini'
                     }
-                    body="Tim GMM bisa membantu mengecek pilihan lain atau menjadwalkan survei."
+                    body="Ajukan survei dan dapatkan kode untuk memantau statusnya, atau tanya langsung tim GMM."
+                    action={{
+                      href: `/permintaan${qs({ lat: result.point.lat, lng: result.point.lng, address: address ?? undefined })}`,
+                      label: 'Ajukan survei',
+                    }}
                     message={`Halo GMM, saya mengecek ketersediaan internet di ${address ?? 'lokasi saya'} (titik ${result.point.lat.toFixed(5)}, ${result.point.lng.toFixed(5)}). ${orderable.length === 0 ? 'Hasilnya belum ada provider. Apakah ada pilihan lain?' : 'Ada provider yang perlu survei. Bisa dibantu?'}`}
                   />
                 )}

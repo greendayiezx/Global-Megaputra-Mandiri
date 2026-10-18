@@ -189,6 +189,13 @@ export default async function PackageDetailPage({ params, searchParams }: Props)
                     Cek Ketersediaan Dulu
                   </ButtonLink>
                 )}
+                <ButtonLink
+                  href={`/permintaan${qs({ kind: 'INSTALLATION', package: pkg.slug, lat: pt?.lat, lng: pt?.lng })}`}
+                  variant="outline"
+                  size="lg"
+                >
+                  Minta dihubungi untuk pemasangan
+                </ButtonLink>
                 <CompareToggle packageId={pkg.id} name={pkg.name} className="w-full" />
                 <a
                   href={whatsappLink(

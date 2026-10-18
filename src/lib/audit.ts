@@ -21,6 +21,8 @@ export type AuditAction =
   | 'package_status_changed'
   | 'package_price_changed'
   | 'coverage_changed'
+  | 'service_request_created'
+  | 'service_request_updated'
   | 'order_created'
   | 'order_status_changed'
   | 'payment_updated'
