@@ -415,3 +415,10 @@ main:has(> .bleed-to-footer:last-child) ~ [data-bottom-spacer] {
 main:has(> .bleed-to-footer:last-child) ~ footer {
   margin-top: 0;
 }
+
+/* WhatsApp button: on phones, step above the compare bar when it is showing. */
+@media (width < 64rem) {
+  body:has([data-compare-bar]) .wa-fab {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 9.5rem);
+  }
+}

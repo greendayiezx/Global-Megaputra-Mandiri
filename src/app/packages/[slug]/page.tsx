@@ -1,5 +1,7 @@
 import { ArrowDown, ArrowUp, BadgeCheck, CalendarClock, MapPin } from 'lucide-react';
 import type { Metadata } from 'next';
+import { WhatsAppIcon } from '@/components/consult/whatsapp-icon';
+import { whatsappLink } from '@/config/contact';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CompareToggle } from '@/components/compare/compare-controls';
@@ -188,6 +190,16 @@ export default async function PackageDetailPage({ params, searchParams }: Props)
                   </ButtonLink>
                 )}
                 <CompareToggle packageId={pkg.id} name={pkg.name} className="w-full" />
+                <a
+                  href={whatsappLink(
+                    `Halo GMM, saya ingin bertanya tentang paket ${pkg.name} dari ${provider.displayName} (${formatRupiah(pkg.monthlyPrice)}/bulan).`,
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-fg-secondary hover:text-fg mt-1 inline-flex items-center justify-center gap-2 text-sm font-medium"
+                >
+                  <WhatsAppIcon className="size-4 text-[#25D366]" /> Tanya paket ini lewat WhatsApp
+                </a>
               </div>
             </Card>
 

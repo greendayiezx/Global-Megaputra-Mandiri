@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 
 /** Pages that open with a full-bleed photo: the header floats over it until you scroll. */
-const OVERLAY_ROUTES = ['/', '/about', '/mitra', '/coverage'];
+const OVERLAY_ROUTES = ['/', '/about', '/mitra', '/coverage', '/konsultasi'];
 
 /**
  * The site header's outer element. On photo-led pages it starts transparent with white

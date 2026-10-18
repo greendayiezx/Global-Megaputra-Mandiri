@@ -1,5 +1,6 @@
 import { ArrowRight, MessageSquareText } from 'lucide-react';
 import Link from 'next/link';
+import { ConsultBand } from '@/components/consult/consult-band';
 import { GmmHero } from '@/components/marketplace/gmm-hero';
 import { CountUp } from '@/components/motion/count-up';
 import { ParallaxImage } from '@/components/motion/parallax-image';
@@ -328,7 +329,10 @@ export default async function HomePage() {
         }
       />
 
-      {/* 10. Final CTA — full-bleed photo */}
+      {/* 10. Consultation for visitors who are still unsure */}
+      <ConsultBand />
+
+      {/* 11. Final CTA — full-bleed photo */}
       <section
         aria-labelledby="cta-title"
         className="bleed-to-footer relative isolate mt-12 flex min-h-[560px] items-center overflow-hidden bg-[#05122b] md:mt-16 lg:min-h-[680px]"

@@ -3,6 +3,7 @@ import './globals.css';
 
 import type { Metadata, Viewport } from 'next';
 import { CompareBar } from '@/components/compare/compare-controls';
+import { WhatsAppFab } from '@/components/consult/whatsapp-fab';
 import { MobileBottomNav } from '@/components/layout/nav-links';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { NavigationProgress } from '@/components/layout/navigation-progress';
@@ -65,6 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div aria-hidden="true" data-bottom-spacer className="h-20 lg:hidden" />
           <SiteFooter />
           <CompareBar />
+          <WhatsAppFab />
           <MobileBottomNav />
         </SiteChrome>
       </body>

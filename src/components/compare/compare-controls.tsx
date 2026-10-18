@@ -76,6 +76,7 @@ export function CompareBar() {
     <div
       role="region"
       aria-label="Paket yang dibandingkan"
+      data-compare-bar
       className="fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom,0px)+4.5rem)] z-40 px-4 lg:bottom-6"
     >
       <div className="border-navy bg-navy shadow-pop mx-auto flex max-w-md items-center justify-between gap-3 rounded-lg border py-2 pr-2 pl-4 text-white">
