@@ -193,7 +193,7 @@ function PackagesMenu({ data }: { data: NavData }) {
             Lihat semua paket <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         </div>
-        <ul className="mt-1 grid grid-cols-4 gap-5">
+        <ul className="mt-1 grid grid-cols-5 gap-4">
           {NEEDS.map((n) => {
             const price = data.needPrices[n.key] ?? null;
             return (
@@ -298,7 +298,7 @@ function ProvidersMenu({ data }: { data: NavData }) {
             Belum ada provider terverifikasi.
           </p>
         ) : (
-          <ul className="mt-1 grid grid-cols-4 gap-5">
+          <ul className="mt-1 grid grid-cols-5 gap-4">
             {featured.map((p) => {
               // Tolerate a stale server payload during dev hot reloads.
               const technologies = p.technologies ?? [];
