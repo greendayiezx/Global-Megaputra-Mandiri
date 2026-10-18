@@ -43,17 +43,17 @@ Legenda prioritas: **P1** = menghalangi peluncuran · **P2** = penting · **P3**
 
 ## C. Modul sistem (roadmap STEP)
 
-| STEP / Fase | Modul                                                                             | Halaman yang masih "Modul ini belum aktif"                                  |
-| ----------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| STEP 3      | Penyimpanan provider, paket & coverage di database; review/persetujuan oleh admin | Provider: Coverage · Admin: Provider (approve), Paket (approve), Pengaturan |
-| STEP 5      | Pesanan (checkout, konfirmasi provider)                                           | Admin & Provider: Pesanan · angka dashboard "—"                             |
-| STEP 6      | Pembayaran (payment gateway)                                                      | Admin: Pembayaran · Pelanggan: Pembayaran                                   |
-| STEP 7      | Instalasi (jadwal teknisi)                                                        | Admin & Provider: Instalasi                                                 |
-| STEP 8      | Portal pelanggan                                                                  | Pelanggan: Langganan                                                        |
-| STEP 9      | Pelanggan & pengaturan provider                                                   | Provider: Pelanggan, Pengaturan                                             |
-| STEP 11     | Bantuan / tiket                                                                   | Admin: Tiket · Pelanggan: Bantuan                                           |
-| Fase 2      | Ulasan, notifikasi, promo, CMS                                                    | Pelanggan: Ulasan, Notifikasi                                               |
-| Fase 3      | Leads, analitik, referral & komisi, tagihan berulang                              | Provider: Leads, Analitik · Pelanggan: Tagihan                              |
+| STEP / Fase | Modul                                                                                           | Halaman yang masih "Modul ini belum aktif"      |
+| ----------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| ~~STEP 3~~  | ✅ Selesai — lihat bagian F. Sisa: unggah dokumen legal (B6), peta poligon, pengaturan (STEP 5) | Admin: Pengaturan                               |
+| STEP 5      | Pesanan (checkout, konfirmasi provider)                                                         | Admin & Provider: Pesanan · angka dashboard "—" |
+| STEP 6      | Pembayaran (payment gateway)                                                                    | Admin: Pembayaran · Pelanggan: Pembayaran       |
+| STEP 7      | Instalasi (jadwal teknisi)                                                                      | Admin & Provider: Instalasi                     |
+| STEP 8      | Portal pelanggan                                                                                | Pelanggan: Langganan                            |
+| STEP 9      | Pelanggan & pengaturan provider                                                                 | Provider: Pelanggan, Pengaturan                 |
+| STEP 11     | Bantuan / tiket                                                                                 | Admin: Tiket · Pelanggan: Bantuan               |
+| Fase 2      | Ulasan, notifikasi, promo, CMS                                                                  | Pelanggan: Ulasan, Notifikasi                   |
+| Fase 3      | Leads, analitik, referral & komisi, tagihan berulang                                            | Provider: Leads, Analitik · Pelanggan: Tagihan  |
 
 ## D. Keputusan bisnis yang masih terbuka (`TODO_BUSINESS_DECISION`)
 
@@ -110,7 +110,29 @@ pemasangan di [docs/10-staging-vercel.md](10-staging-vercel.md).
 
 ---
 
+## F. STEP 3 — Katalog di database (selesai)
+
+- [x] Tabel `providers`, `provider_status_history`, `internet_packages`, `package_price_history`,
+      `coverage_zones` (migrasi `0001_catalog`); katalog publik dibaca dari database. Data demo
+      hanya diisi otomatis di dev/staging, tidak pernah di production.
+- [x] **Admin**: tinjau provider (profil, kelengkapan, riwayat keputusan) → mulai tinjau /
+      setujui / tolak / kembalikan / tangguhkan; antrean review paket → terbitkan / kembalikan ke
+      draf / tangguhkan / arsipkan. Alasan wajib untuk jalur pengecualian; semua tercatat di audit log.
+- [x] **Provider**: ubah profil (nama badan usaha & NIB terkunci setelah diverifikasi), ajukan ulang
+      setelah ditolak; buat paket (draf → ajukan), ubah paket (perubahan harga/spesifikasi paket yang
+      sedang tampil → turun & review ulang, harga lama tersimpan di riwayat); area layanan radius.
+- [ ] Unggah dokumen legal + pemeriksaan dokumen di admin (B6, butuh penyimpanan file privat).
+- [ ] Editor peta untuk poligon; pencocokan kode pos / wilayah administratif (butuh geocoding).
+- [ ] Audit log per-akun di Portal Provider; undangan staf provider (STEP 9).
+- [ ] Pindah geometri ke PostGIS saat jumlah area besar (sekarang JSON, cukup untuk ratusan area).
+- Keputusan yang dibutuhkan: lihat [docs/11-konfirmasi-pm.md](11-konfirmasi-pm.md).
+
 ## Sudah selesai (sesi ini)
+
+- [x] Konsultasi WhatsApp (0853-9707-4845): tombol melayang di halaman publik (pesan berisi halaman
+      yang sedang dilihat), bagian "Masih bingung memilih paket?" di beranda, halaman `/konsultasi`
+      (form → pesan WhatsApp, tanpa menyimpan data), tombol di hasil cek coverage "belum ada
+      provider/perlu survei" dan di detail paket. Foto: `public/images/Konsultasi_GMM.png`.
 
 - [x] Perbaikan error PGlite di Windows
 - [x] Logo GMM baru di header, footer

@@ -3,6 +3,7 @@ import {
   CircleHelp,
   FileText,
   Handshake,
+  MessagesSquare,
   Newspaper,
   ShieldCheck,
   TicketPercent,
@@ -68,6 +69,12 @@ export const MORE_GROUPS: readonly { title: string; links: readonly MoreLink[] }
   {
     title: 'Bantuan',
     links: [
+      {
+        href: '/konsultasi',
+        label: 'Konsultasi',
+        body: 'Dibantu memilih lewat WhatsApp',
+        icon: MessagesSquare,
+      },
       {
         href: '/faq',
         label: 'Pertanyaan Umum',

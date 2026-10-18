@@ -1,5 +1,6 @@
 import { ArrowLeft, CalendarClock, MapPinned, Package } from 'lucide-react';
 import type { Metadata } from 'next';
+import { ConsultPrompt } from '@/components/consult/consult-prompt';
 import Link from 'next/link';
 import { CoverageLocator } from '@/components/coverage/coverage-search-form';
 import {
@@ -167,6 +168,18 @@ export default async function CoveragePage({
                   )}
                 </div>
                 <CoverageNotice className="mt-3" />
+                {(orderable.length === 0 || rows.some((r) => r.status === 'REQUIRES_SURVEY')) && (
+                  <ConsultPrompt
+                    className="mt-4"
+                    title={
+                      orderable.length === 0
+                        ? 'Butuh bantuan mencari internet di lokasi ini?'
+                        : 'Ada provider yang perlu survei di lokasi ini'
+                    }
+                    body="Tim GMM bisa membantu mengecek pilihan lain atau menjadwalkan survei."
+                    message={`Halo GMM, saya mengecek ketersediaan internet di ${address ?? 'lokasi saya'} (titik ${result.point.lat.toFixed(5)}, ${result.point.lng.toFixed(5)}). ${orderable.length === 0 ? 'Hasilnya belum ada provider. Apakah ada pilihan lain?' : 'Ada provider yang perlu survei. Bisa dibantu?'}`}
+                  />
+                )}
 
                 {orderable.length === 0 && !forPackage && (
                   <Alert tone="warning" className="mt-4">
