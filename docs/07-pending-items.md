@@ -25,21 +25,21 @@ Legenda prioritas: **P1** = menghalangi peluncuran · **P2** = penting · **P3**
 
 ## B. Fitur website yang belum dibangun
 
-| #   | Item                                    | Keterangan                                                                                           | Prioritas |
-| --- | --------------------------------------- | ---------------------------------------------------------------------------------------------------- | --------- |
-| B1  | **Lupa password / reset password**      | Butuh halaman reset + pengiriman email (butuh layanan email, mis. SMTP).                             | P1        |
-| B2  | **Login dengan nomor telepon**          | Server saat ini hanya menerima email. Butuh keputusan: telepon + password, atau OTP SMS (biaya SMS). | P3        |
-| B3  | **Daftar dengan Google** di form daftar | Tombol baru ada di halaman Masuk (login Google otomatis membuat akun baru).                          | P3        |
-| B4  | **Verifikasi email**                    | Akun daftar manual belum diverifikasi lewat email (akun Google sudah otomatis terverifikasi).        | P2        |
-| B5  | **Bahasa Inggris**                      | Menu bahasa menampilkan "English — Segera hadir".                                                    | P3        |
-| B6  | **Pendaftaran mitra online**            | Formulir daftar provider + unggah dokumen (`/mitra` masih "segera dibuka").                          | P1        |
-| B7  | **Pemesanan online**                    | Tombol pesan di detail paket masih "Pemesanan online segera dibuka" (lihat STEP 5).                  | P1        |
-| B8  | **Ulasan & rating**                     | Filter Rating & urutan "Rating Terbaik" nonaktif sampai ada ulasan terverifikasi (Fase 2).           | P2        |
-| B9  | **Teknologi 4G/5G**                     | Belum ada di pilihan teknologi; ditambahkan bila ada paket 4G/5G.                                    | P3        |
-| B10 | **Blog / CMS**                          | Konten blog & FAQ masih statis di kode (Fase 2).                                                     | P3        |
-| B11 | **Halaman Kontak**                      | `/contact` dengan formulir (rate-limited) belum dibuat.                                              | P2        |
-| B13 | **Grafik & angka dashboard portal**     | Total pesanan/transaksi/pendapatan dan grafiknya tampil "—" sampai STEP 5–6.                         | P1        |
-| B14 | **Notifikasi portal**                   | Lonceng notifikasi masih kosong (Fase 2).                                                            | P2        |
+| #   | Item                                    | Keterangan                                                                                              | Prioritas |
+| --- | --------------------------------------- | ------------------------------------------------------------------------------------------------------- | --------- |
+| B1  | **Lupa password / reset password**      | Butuh halaman reset + pengiriman email (butuh layanan email, mis. SMTP).                                | P1        |
+| B2  | **Login dengan nomor telepon**          | Server saat ini hanya menerima email. Butuh keputusan: telepon + password, atau OTP SMS (biaya SMS).    | P3        |
+| B3  | **Daftar dengan Google** di form daftar | Tombol baru ada di halaman Masuk (login Google otomatis membuat akun baru).                             | P3        |
+| B4  | **Verifikasi email**                    | Akun daftar manual belum diverifikasi lewat email (akun Google sudah otomatis terverifikasi).           | P2        |
+| B5  | **Bahasa Inggris**                      | Menu bahasa menampilkan "English — Segera hadir".                                                       | P3        |
+| B6  | **Unggah dokumen mitra**                | Pendaftaran `/mitra/daftar` sudah jalan; unggah dokumen legal menyusul (butuh penyimpanan file privat). | P1        |
+| B7  | **Pemesanan online**                    | Tombol pesan di detail paket masih "Pemesanan online segera dibuka" (lihat STEP 5).                     | P1        |
+| B8  | **Ulasan & rating**                     | Filter Rating & urutan "Rating Terbaik" nonaktif sampai ada ulasan terverifikasi (Fase 2).              | P2        |
+| B9  | **Teknologi 4G/5G**                     | Belum ada di pilihan teknologi; ditambahkan bila ada paket 4G/5G.                                       | P3        |
+| B10 | **Blog / CMS**                          | Konten blog & FAQ masih statis di kode (Fase 2).                                                        | P3        |
+| B11 | **Halaman Kontak**                      | `/contact` dengan formulir (rate-limited) belum dibuat.                                                 | P2        |
+| B13 | **Grafik & angka dashboard portal**     | Total pesanan/transaksi/pendapatan dan grafiknya tampil "—" sampai STEP 5–6.                            | P1        |
+| B14 | **Notifikasi portal**                   | Lonceng notifikasi masih kosong (Fase 2).                                                               | P2        |
 
 ## C. Modul sistem (roadmap STEP)
 
@@ -51,7 +51,7 @@ Legenda prioritas: **P1** = menghalangi peluncuran · **P2** = penting · **P3**
 | STEP 7      | Instalasi (jadwal teknisi)                                                                      | Admin & Provider: Instalasi                     |
 | STEP 8      | Portal pelanggan                                                                                | Pelanggan: Langganan                            |
 | STEP 9      | Pelanggan & pengaturan provider                                                                 | Provider: Pelanggan, Pengaturan                 |
-| STEP 11     | Bantuan / tiket                                                                                 | Admin: Tiket · Pelanggan: Bantuan               |
+| ~~STEP 11~~ | ✅ Tiket bantuan dasar selesai (lihat bagian G). Sisa: notifikasi email, target SLA (D8)        | —                                               |
 | Fase 2      | Ulasan, notifikasi, promo, CMS                                                                  | Pelanggan: Ulasan, Notifikasi                   |
 | Fase 3      | Leads, analitik, referral & komisi, tagihan berulang                                            | Provider: Leads, Analitik · Pelanggan: Tagihan  |
 
@@ -126,6 +126,25 @@ pemasangan di [docs/10-staging-vercel.md](10-staging-vercel.md).
 - [ ] Audit log per-akun di Portal Provider; undangan staf provider (STEP 9).
 - [ ] Pindah geometri ke PostGIS saat jumlah area besar (sekarang JSON, cukup untuk ratusan area).
 - Keputusan yang dibutuhkan: lihat [docs/11-konfirmasi-pm.md](11-konfirmasi-pm.md).
+
+## G. Paket saran reviewer (selesai)
+
+- [x] **Pendaftaran mitra** `/mitra/daftar`: akun pemilik + provider "Menunggu dokumen" + masuk antrean
+      admin; langsung ke Panduan Provider.
+- [x] **Permintaan survei/pemasangan** `/permintaan` (dari hasil coverage & detail paket) dengan
+      persetujuan tersimpan (versi `permintaan-v1`), kode `GMM-XXXXXX`, cek status `/permintaan/cek`
+      (kode + 4 digit ponsel). Admin: menu **Permintaan**. Data pribadi: masa simpan menunggu D9.
+- [x] **Pilih wilayah** provinsi → kelurahan (Kepmendagri 2025, `public/data/wilayah`, dibangun ulang
+      dengan `node scripts/build-wilayah.mjs <wilayah.sql> <wilayah_level_1_2.sql>` dari
+      github.com/cahyadsn/wilayah). Provider bisa mendaftarkan area per kecamatan/kelurahan.
+- [x] **Tiket bantuan**: pelanggan `/dashboard/support`, admin **Bantuan & Tiket** (catatan internal,
+      status, ambil tiket). Kode `TKT-XXXXXX`.
+- [x] **SEO dasar**: `robots.txt` (staging diblokir), `sitemap.xml`, canonical, Open Graph.
+- [x] Kategori kebutuhan **Kos** (≥75 Mbps).
+- [x] **Perbaikan keamanan**: aksi khusus staf kini mewajibkan izin cakupan `any`
+      (`authorizePlatform`), sehingga pelanggan/provider tidak bisa memanggilnya langsung.
+- [ ] Notifikasi (email/WhatsApp) saat status permintaan/tiket berubah — butuh layanan email (L2).
+- [ ] Provider melihat permintaan yang diteruskan kepadanya (keputusan model bisnis, lihat docs/11).
 
 ## Sudah selesai (sesi ini)
 

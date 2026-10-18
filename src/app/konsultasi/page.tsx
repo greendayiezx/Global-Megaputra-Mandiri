@@ -52,7 +52,8 @@ export default function KonsultasiPage() {
     <>
       <PageHero
         image={consultImage('hero')}
-        imagePosition="object-[70%_center]"
+        // Banner 2240×702: the support agent sits just right of centre; keep her in frame on phones.
+        imagePosition="object-[56%_center] lg:object-center"
         crumb="Konsultasi"
         eyebrow="Konsultasi"
         title="Bingung memilih internet? Tanya tim GMM"

@@ -3,7 +3,7 @@ import type { Db } from '@/db/client';
 import { internetPackages, packagePriceHistory, providers, users } from '@/db/schema';
 import { audit } from '@/lib/audit';
 import { AppError } from '@/lib/errors';
-import { authorize, type Actor } from '@/modules/auth/domain/rbac';
+import { authorizePlatform, type Actor } from '@/modules/auth/domain/rbac';
 import { hmacIdentifier } from '@/modules/auth/infrastructure/crypto';
 import {
   canProviderPublishPackage,
@@ -18,7 +18,7 @@ import { toPackageRecord } from '../infrastructure/db-catalog';
 const PUBLISH_MOVES = new Set<PackageStatus>(['PUBLISHED', 'SUSPENDED', 'EXPIRED']);
 
 function deny(actor: Actor, action: 'package.publish' | 'package.manage' | 'provider.read') {
-  const d = authorize(actor, action);
+  const d = authorizePlatform(actor, action);
   if (!d.ok) throw new AppError(d.code, 'Akses ditolak.');
 }
 

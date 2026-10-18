@@ -25,6 +25,7 @@ const COLUMNS = [
     title: 'Bantuan',
     links: [
       { href: '/konsultasi', label: 'Konsultasi via WhatsApp' },
+      { href: '/permintaan/cek', label: 'Cek status permintaan' },
       { href: '/faq', label: 'Pertanyaan umum' },
       { href: '/dashboard/support', label: 'Tiket bantuan' },
       { href: '/how-it-works#urutan', label: 'Cara kami mengurutkan paket' },

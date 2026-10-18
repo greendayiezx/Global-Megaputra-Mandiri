@@ -1,4 +1,5 @@
 import { ArrowRight, MessageSquareText } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ConsultBand } from '@/components/consult/consult-band';
 import { GmmHero } from '@/components/marketplace/gmm-hero';
@@ -15,7 +16,11 @@ import { Faq } from '@/components/ui/faq';
 import { FAQ } from '@/content/faq';
 import { NEEDS } from '@/content/needs';
 import { formatRupiah } from '@/lib/format';
+import { cn } from '@/lib/utils';
 import { searchPackages, searchProviders } from '@/modules/packages/application/catalog';
+import { absoluteUrl, siteUrl } from '@/lib/site-url';
+
+export const metadata: Metadata = { alternates: { canonical: absoluteUrl('/') } };
 
 const emptySearch = {
   point: null,
@@ -63,6 +68,20 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Who runs the site, for search engines. Only facts that are true today. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Global Megaputra Mandiri',
+            alternateName: 'GMM',
+            url: siteUrl(),
+            logo: `${siteUrl()}/icon.png`,
+          }),
+        }}
+      />
       {/* 1. Full-bleed hero (includes the trust strip) */}
       <GmmHero />
       <StickyLocationBar heroId="hero-title" />
@@ -131,12 +150,21 @@ export default async function HomePage() {
             description="Mulai dari cara Anda memakai internet; kami saring paket yang cocok."
           />
         </Reveal>
-        <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <ul className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
           {NEEDS.map(({ icon: Icon, title, body, href, image, imageAlt }, i) => (
-            <Reveal as="li" key={title} delay={i * 90}>
+            <Reveal
+              as="li"
+              key={title}
+              delay={i * 90}
+              // Odd count on a two-column phone grid: the last card takes the full row.
+              className={i === NEEDS.length - 1 ? 'col-span-2 sm:col-span-1' : undefined}
+            >
               <Link
                 href={href}
-                className="group bg-navy shadow-card focus-visible:outline-primary relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl p-4 text-white focus-visible:outline-2 focus-visible:outline-offset-2 sm:p-5 lg:aspect-[3/4]"
+                className={cn(
+                  'group bg-navy shadow-card focus-visible:outline-primary relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl p-4 text-white focus-visible:outline-2 focus-visible:outline-offset-2 sm:p-5 lg:aspect-[3/4]',
+                  i === NEEDS.length - 1 && 'aspect-[16/9] sm:aspect-[4/5]',
+                )}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- remote stock photo, sized by CSS */}
                 <img

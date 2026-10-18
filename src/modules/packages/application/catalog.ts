@@ -85,9 +85,16 @@ export async function getPublicPackagesByIds(ids: readonly string[]) {
   return ids.flatMap((id) => all.filter((v) => v.pkg.id === id));
 }
 
-export async function checkCoverage(point: GeoPoint): Promise<CoverageResult> {
+/**
+ * `regionCodes` = the visitor's chosen Kemendagri chain (province → village), so zones a
+ * provider declared per kecamatan/kelurahan match as well as drawn areas.
+ */
+export async function checkCoverage(
+  point: GeoPoint,
+  regionCodes: readonly string[] = [],
+): Promise<CoverageResult> {
   const [providers, zones] = await Promise.all([publicProviders(), repo.listActiveZones()]);
-  const location = { point, regionCodes: [], postalCode: null };
+  const location = { point, regionCodes, postalCode: null };
   const resolved = isValidPoint(point);
   const now = new Date();
 

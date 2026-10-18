@@ -1,5 +1,6 @@
 import { BadgeCheck, MessageSquareText } from 'lucide-react';
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/site-url';
 import { notFound } from 'next/navigation';
 import { PackageCard } from '@/components/marketplace/package-card';
 import { ProviderAvatar } from '@/components/marketplace/provider-avatar';
@@ -19,6 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? {
         title: `${data.provider.displayName} — Paket & Coverage`,
         description: data.provider.description,
+        alternates: { canonical: absoluteUrl(`/provider/${data.provider.slug}`) },
       }
     : { title: 'Provider tidak ditemukan' };
 }

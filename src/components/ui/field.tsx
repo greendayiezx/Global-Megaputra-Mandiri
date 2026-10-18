@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 const control =
-  'w-full rounded-md border border-line-strong bg-surface px-3 text-[15px] text-fg placeholder:text-fg-muted/80 transition-colors hover:border-fg-muted focus:border-primary focus:ring-3 focus:ring-primary/15 focus:outline-none disabled:cursor-not-allowed disabled:bg-subtle disabled:text-fg-muted read-only:bg-subtle read-only:text-fg-muted read-only:focus:ring-0 aria-invalid:border-danger-fg aria-invalid:focus:ring-danger/15';
+  'w-full rounded-md border border-line-strong bg-surface px-3 text-[15px] text-fg placeholder:text-fg-muted/80 transition-colors hover:border-fg-muted focus:border-primary focus:ring-3 focus:ring-primary/15 focus:outline-none disabled:cursor-not-allowed disabled:bg-subtle disabled:text-fg-muted aria-invalid:border-danger-fg aria-invalid:focus:ring-danger/15';
 
 export function Label({
   required,
@@ -26,12 +26,15 @@ export function Label({
   );
 }
 
+/** Locked text fields look locked; <select> also matches :read-only, so it is not styled here. */
+const lockedText = 'read-only:bg-subtle read-only:text-fg-muted read-only:focus:ring-0';
+
 export function Input({ className, ...props }: ComponentProps<'input'>) {
-  return <input className={cn(control, 'h-11', className)} {...props} />;
+  return <input className={cn(control, lockedText, 'h-11', className)} {...props} />;
 }
 
 export function Textarea({ className, ...props }: ComponentProps<'textarea'>) {
-  return <textarea className={cn(control, 'min-h-24 py-2.5', className)} {...props} />;
+  return <textarea className={cn(control, lockedText, 'min-h-24 py-2.5', className)} {...props} />;
 }
 
 export function Select({ className, children, ...props }: ComponentProps<'select'>) {

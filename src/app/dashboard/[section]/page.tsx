@@ -18,11 +18,6 @@ const SECTIONS: Record<string, { title: string; step: string; description: strin
     step: 'STEP 6 (Payment)',
     description: 'Riwayat pembayaran pesanan.',
   },
-  support: {
-    title: 'Bantuan',
-    step: 'STEP 11 (Support)',
-    description: 'Buat dan pantau tiket gangguan atau pertanyaan.',
-  },
   reviews: {
     title: 'Ulasan',
     step: 'Fase 2',

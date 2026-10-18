@@ -5,9 +5,12 @@ import { auditLogs, internetPackages, packagePriceHistory, providers, users } fr
 import { syncRbac } from '@/modules/auth/application/bootstrap';
 import type { Actor } from '@/modules/auth/domain/rbac';
 import {
+  addOwnAdminAreaZone,
   addOwnRadiusZone,
   setOwnZoneStatus,
 } from '@/modules/coverage/application/zone-self-service';
+import { zoneMatches } from '@/modules/coverage/domain/coverage';
+import { regionChain } from '@/lib/wilayah/codes';
 import {
   createOwnPackage,
   submitOwnPackage,
@@ -232,6 +235,35 @@ describe('provider coverage zones', () => {
       .from(auditLogs)
       .where(and(eq(auditLogs.entityId, id), eq(auditLogs.action, 'coverage_changed')));
     expect(logs).toHaveLength(2);
+  });
+
+  it('matches a kecamatan zone for an address in one of its kelurahan', async () => {
+    const repo = createDbCatalogRepository(async () => db);
+    const { id } = await addOwnAdminAreaZone(
+      db,
+      owner,
+      { regionCode: '32.73.01', name: 'Kec. Sukasari, Kota Bandung', result: 'REQUIRES_SURVEY' },
+      ctx,
+    );
+    const zone = (await repo.listActiveZones()).find((z) => z.id === id)!;
+    const at = (code: string) => ({
+      point: { lat: -6.87, lng: 107.59 },
+      regionCodes: regionChain(code),
+      postalCode: null,
+    });
+    expect(zoneMatches(zone, at('32.73.01.1001'))).toBe(true);
+    expect(zoneMatches(zone, at('32.73.02.1001'))).toBe(false);
+  });
+
+  it('only accepts a kecamatan or kelurahan for area zones', async () => {
+    await expect(
+      addOwnAdminAreaZone(
+        db,
+        owner,
+        { regionCode: '32', name: 'Jawa Barat', result: 'AVAILABLE' },
+        ctx,
+      ),
+    ).rejects.toMatchObject({ code: 'VALIDATION_ERROR' });
   });
 
   it('rejects points outside Indonesia', async () => {

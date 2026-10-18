@@ -1,4 +1,11 @@
-import { Building2, Gamepad2, GraduationCap, House, type LucideIcon } from 'lucide-react';
+import {
+  BedDouble,
+  Building2,
+  Gamepad2,
+  GraduationCap,
+  House,
+  type LucideIcon,
+} from 'lucide-react';
 
 const unsplash = (id: string) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=640&h=400&q=70`;
@@ -28,6 +35,17 @@ export const NEEDS: readonly Need[] = [
     href: '/packages?minDownload=30',
     image: unsplash('photo-1609220136736-443140cffec6'),
     imageAlt: 'Ilustrasi: ayah bersama dua anaknya di depan rumah',
+  },
+  {
+    key: 'kos',
+    icon: BedDouble,
+    title: 'Untuk Kos',
+    body: 'Satu jaringan untuk banyak kamar penghuni.',
+    // Shared by many tenants at once, so more headroom than a single household.
+    minDownload: 75,
+    href: '/packages?minDownload=75',
+    image: unsplash('photo-1595526114035-0d45ed16cfbf'),
+    imageAlt: 'Ilustrasi: kamar sewa dengan tempat tidur dan jendela',
   },
   {
     key: 'bisnis',

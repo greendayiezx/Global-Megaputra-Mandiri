@@ -5,6 +5,7 @@ import { errorState, type ActionState } from '@/lib/action-state';
 import { getSession, requestContext } from '@/lib/auth/session';
 import { getReadyDb } from '@/modules/auth/application/bootstrap';
 import {
+  addOwnAdminAreaZone,
   addOwnRadiusZone,
   setOwnZoneStatus,
   type RadiusZoneInput,
@@ -15,12 +16,23 @@ export async function addZoneAction(_prev: ActionState, formData: FormData): Pro
   const session = await getSession();
   if (!session) return { status: 'error', message: 'Sesi berakhir. Silakan masuk lagi.' };
   try {
-    await addOwnRadiusZone(
-      await getReadyDb(),
-      session.actor,
-      Object.fromEntries(formData) as unknown as RadiusZoneInput,
-      await requestContext(),
-    );
+    const db = await getReadyDb();
+    const ctx = await requestContext();
+    const raw = Object.fromEntries(formData) as Record<string, string>;
+    if (raw.strategy === 'ADMIN_AREA') {
+      await addOwnAdminAreaZone(
+        db,
+        session.actor,
+        {
+          regionCode: raw.regionCode ?? '',
+          name: raw.regionLabel ?? '',
+          result: raw.result as 'AVAILABLE',
+        },
+        ctx,
+      );
+    } else {
+      await addOwnRadiusZone(db, session.actor, raw as unknown as RadiusZoneInput, ctx);
+    }
   } catch (err) {
     return errorState(err, 'zone add');
   }

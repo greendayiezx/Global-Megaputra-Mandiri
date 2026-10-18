@@ -1,6 +1,8 @@
 import { ArrowLeft, CalendarClock, MapPinned, Package } from 'lucide-react';
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/site-url';
 import { ConsultPrompt } from '@/components/consult/consult-prompt';
+import { regionChain } from '@/lib/wilayah/codes';
 import Link from 'next/link';
 import { CoverageLocator } from '@/components/coverage/coverage-search-form';
 import {
@@ -26,6 +28,7 @@ import { DEMO_LOCATIONS } from '@/modules/packages/infrastructure/demo-catalog';
 export const metadata: Metadata = {
   title: 'Cek Coverage Internet di Lokasi Anda',
   description: 'Tandai titik pemasangan dan lihat provider internet yang menjangkau lokasi Anda.',
+  alternates: { canonical: absoluteUrl('/coverage') },
 };
 
 export default async function CoveragePage({
@@ -37,11 +40,12 @@ export default async function CoveragePage({
   const pt = point(params);
   const address = str(params, 'address');
   const packageSlug = str(params, 'package');
+  const regions = regionChain(str(params, 'region'));
   const forPackage = packageSlug ? await getPublicPackage(packageSlug) : null;
   const hadCoords = str(params, 'lat') !== null || str(params, 'lng') !== null;
 
   const [result, packages] = await Promise.all([
-    pt ? checkCoverage(pt) : Promise.resolve(null),
+    pt ? checkCoverage(pt, regions) : Promise.resolve(null),
     listPublicPackages(),
   ]);
   const rows = (result?.providers ?? [])
@@ -86,7 +90,12 @@ export default async function CoveragePage({
             )}
 
             <Card className="p-5">
-              <CoverageLocator defaultAddress={address ?? ''} defaultPoint={pt} carry={carry} />
+              <CoverageLocator
+                defaultAddress={address ?? ''}
+                defaultPoint={pt}
+                defaultRegion={regions.at(-1) ?? null}
+                carry={carry}
+              />
             </Card>
             {appConfig.showDemoData && (
               <Card className="p-5">
@@ -176,7 +185,11 @@ export default async function CoveragePage({
                         ? 'Butuh bantuan mencari internet di lokasi ini?'
                         : 'Ada provider yang perlu survei di lokasi ini'
                     }
-                    body="Tim GMM bisa membantu mengecek pilihan lain atau menjadwalkan survei."
+                    body="Ajukan survei dan dapatkan kode untuk memantau statusnya, atau tanya langsung tim GMM."
+                    action={{
+                      href: `/permintaan${qs({ lat: result.point.lat, lng: result.point.lng, address: address ?? undefined })}`,
+                      label: 'Ajukan survei',
+                    }}
                     message={`Halo GMM, saya mengecek ketersediaan internet di ${address ?? 'lokasi saya'} (titik ${result.point.lat.toFixed(5)}, ${result.point.lng.toFixed(5)}). ${orderable.length === 0 ? 'Hasilnya belum ada provider. Apakah ada pilihan lain?' : 'Ada provider yang perlu survei. Bisa dibantu?'}`}
                   />
                 )}

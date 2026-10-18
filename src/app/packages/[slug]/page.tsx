@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, BadgeCheck, CalendarClock, MapPin } from 'lucide-react';
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/site-url';
 import { WhatsAppIcon } from '@/components/consult/whatsapp-icon';
 import { whatsappLink } from '@/config/contact';
 import Link from 'next/link';
@@ -29,6 +30,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${view.pkg.name} ${view.pkg.downloadMbps} Mbps — ${view.provider.displayName}`,
     description: view.pkg.description,
+    // Location query params (?lat=…) describe the visitor, not a different page.
+    alternates: { canonical: absoluteUrl(`/packages/${view.pkg.slug}`) },
   };
 }
 
@@ -189,6 +192,13 @@ export default async function PackageDetailPage({ params, searchParams }: Props)
                     Cek Ketersediaan Dulu
                   </ButtonLink>
                 )}
+                <ButtonLink
+                  href={`/permintaan${qs({ kind: 'INSTALLATION', package: pkg.slug, lat: pt?.lat, lng: pt?.lng })}`}
+                  variant="outline"
+                  size="lg"
+                >
+                  Minta dihubungi untuk pemasangan
+                </ButtonLink>
                 <CompareToggle packageId={pkg.id} name={pkg.name} className="w-full" />
                 <a
                   href={whatsappLink(

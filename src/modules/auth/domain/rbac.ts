@@ -325,6 +325,17 @@ export function can(actor: Actor | null, action: Action, resource?: ResourceRef)
   return false;
 }
 
+/**
+ * For GMM staff use cases that act across all providers/customers (review queues,
+ * moderation). Requires the platform-wide `any` scope: holding the same action at
+ * `provider` or `own` scope (a provider's own packages, a customer's own tickets) is
+ * NOT enough, even though `can(actor, action)` without a resource would say yes.
+ */
+export function authorizePlatform(actor: Actor | null, action: Action): Decision {
+  if (!actor) return { ok: false, code: 'AUTH_REQUIRED', reasons: ['login required'] };
+  return decide('FORBIDDEN', scopeFor(actor, action) === 'any' ? [] : [`needs ${action}.any`]);
+}
+
 export function authorize(actor: Actor | null, action: Action, resource?: ResourceRef): Decision {
   if (!actor) return { ok: false, code: 'AUTH_REQUIRED', reasons: ['login required'] };
   return decide('FORBIDDEN', can(actor, action, resource) ? [] : [`missing permission ${action}`]);
