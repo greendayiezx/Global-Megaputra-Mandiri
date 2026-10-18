@@ -71,10 +71,10 @@ export const REQUEST_CONSENT_TEXT =
 
 const REF_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
-/** GMM-XXXXXX without look-alike characters (0/O, 1/I/L). */
-export function newRefCode(random: (n: number) => Uint8Array): string {
+/** PREFIX-XXXXXX without look-alike characters (0/O, 1/I/L). */
+export function newRefCode(random: (n: number) => Uint8Array, prefix = 'GMM'): string {
   const bytes = random(6);
-  return `GMM-${Array.from(bytes, (b) => REF_ALPHABET[b % REF_ALPHABET.length]).join('')}`;
+  return `${prefix}-${Array.from(bytes, (b) => REF_ALPHABET[b % REF_ALPHABET.length]).join('')}`;
 }
 
 export function normalizeRefCode(raw: string): string {

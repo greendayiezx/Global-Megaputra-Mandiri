@@ -121,6 +121,15 @@ describe('service requests', () => {
 
   it('is limited to staff with lead permissions', async () => {
     await expect(listServiceRequests(db, support)).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    // Provider sales hold lead.read for their own provider only; GMM's queue is off limits.
+    const providerSales: Actor = {
+      userId: admin.userId,
+      roles: ['PROVIDER_SALES'],
+      providerId: 'demo-prov-001',
+    };
+    await expect(listServiceRequests(db, providerSales)).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    });
     expect((await listServiceRequests(db, admin)).length).toBe(1);
   });
 

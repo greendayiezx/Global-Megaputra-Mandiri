@@ -13,7 +13,7 @@ import { audit } from '@/lib/audit';
 import { AppError } from '@/lib/errors';
 import type { RateLimiter } from '@/lib/rate-limit';
 import { normalizeIndonesianPhone } from '@/modules/auth/domain/credentials';
-import { authorize, type Actor } from '@/modules/auth/domain/rbac';
+import { authorizePlatform, type Actor } from '@/modules/auth/domain/rbac';
 import { hmacIdentifier } from '@/modules/auth/infrastructure/crypto';
 import type { RequestCtx } from '@/modules/providers/application/provider-review';
 import {
@@ -187,7 +187,8 @@ export async function lookupServiceRequest(
 }
 
 function guard(actor: Actor, action: 'lead.read' | 'lead.manage') {
-  const d = authorize(actor, action);
+  // Platform-wide only: a provider's sales staff hold lead.read for their own provider.
+  const d = authorizePlatform(actor, action);
   if (!d.ok) throw new AppError(d.code, 'Akses ditolak.');
 }
 

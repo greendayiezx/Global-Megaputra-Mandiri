@@ -18,11 +18,6 @@ const SECTIONS: Record<string, { title: string; step: string; description: strin
     step: 'STEP 7',
     description: 'Jadwal, progres, dan QC instalasi lintas provider.',
   },
-  tickets: {
-    title: 'Tiket',
-    step: 'STEP 11',
-    description: 'Tiket pelanggan dengan SLA, penugasan, dan catatan internal.',
-  },
   settings: {
     title: 'Pengaturan',
     step: 'STEP 5',

@@ -155,4 +155,23 @@ describe('package review by GMM staff', () => {
       ),
     ).rejects.toMatchObject({ code: 'FORBIDDEN' });
   });
+
+  it("a provider cannot use the admin review action on another provider's package", async () => {
+    const owner: Actor = {
+      userId: admin.userId,
+      roles: ['PROVIDER_OWNER'],
+      providerId: 'demo-prov-001',
+    };
+    await expect(
+      changePackageStatus(db, owner, { packageId: 'demo-pkg-201', to: 'ARCHIVED' }, ctx),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    await expect(
+      changeProviderStatus(
+        db,
+        owner,
+        { providerId: 'demo-prov-002', to: 'SUSPENDED', reason: 'x' },
+        ctx,
+      ),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' });
+  });
 });

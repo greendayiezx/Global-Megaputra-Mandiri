@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   authorize,
+  authorizePlatform,
   can,
   homePathFor,
   PERMISSIONS,
@@ -132,5 +133,20 @@ describe('homePathFor', () => {
     expect(homePathFor(actor(['PROVIDER_OWNER'], 'p1'))).toBe('/provider-dashboard');
     expect(homePathFor(actor(['CUSTOMER']))).toBe('/dashboard');
     expect(homePathFor(null)).toBe('/dashboard');
+  });
+});
+
+describe('authorizePlatform', () => {
+  const as = (roles: Actor['roles'], providerId: string | null = null): Actor => ({
+    userId: 'u1',
+    roles,
+    providerId,
+  });
+  it('accepts only the platform-wide scope', () => {
+    expect(authorizePlatform(as(['ADMIN']), 'package.manage').ok).toBe(true);
+    expect(authorizePlatform(as(['PROVIDER_OWNER'], 'p1'), 'package.manage').ok).toBe(false);
+    expect(authorizePlatform(as(['CUSTOMER']), 'ticket.read').ok).toBe(false);
+    expect(authorizePlatform(as(['PROVIDER_SALES'], 'p1'), 'lead.read').ok).toBe(false);
+    expect(authorizePlatform(null, 'ticket.read').ok).toBe(false);
   });
 });

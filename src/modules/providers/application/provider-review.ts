@@ -3,7 +3,7 @@ import type { Db } from '@/db/client';
 import { providers, providerStatusHistory, users } from '@/db/schema';
 import { audit } from '@/lib/audit';
 import { AppError } from '@/lib/errors';
-import { authorize, type Actor } from '@/modules/auth/domain/rbac';
+import { authorizePlatform, type Actor } from '@/modules/auth/domain/rbac';
 import { hmacIdentifier } from '@/modules/auth/infrastructure/crypto';
 import {
   checkVerificationReadiness,
@@ -46,7 +46,7 @@ export function readinessOf(p: typeof providers.$inferSelect, now = new Date()) 
 }
 
 function deny(actor: Actor, action: 'provider.verify' | 'provider.suspend' | 'provider.read') {
-  const d = authorize(actor, action);
+  const d = authorizePlatform(actor, action);
   if (!d.ok) throw new AppError(d.code, 'Akses ditolak.');
 }
 
