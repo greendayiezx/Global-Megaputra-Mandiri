@@ -19,7 +19,7 @@ export function ConsultBand() {
       <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-14">
         <Reveal className="relative aspect-[4/3] overflow-hidden rounded-2xl">
           <Image
-            src={consultImage()}
+            src={consultImage('card')}
             alt="Tim konsultasi GMM membantu pelanggan memilih paket internet"
             fill
             sizes="(min-width: 1024px) 600px, 100vw"

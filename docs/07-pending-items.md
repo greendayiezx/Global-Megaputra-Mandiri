@@ -132,7 +132,8 @@ pemasangan di [docs/10-staging-vercel.md](10-staging-vercel.md).
 - [x] Konsultasi WhatsApp (0853-9707-4845): tombol melayang di halaman publik (pesan berisi halaman
       yang sedang dilihat), bagian "Masih bingung memilih paket?" di beranda, halaman `/konsultasi`
       (form → pesan WhatsApp, tanpa menyimpan data), tombol di hasil cek coverage "belum ada
-      provider/perlu survei" dan di detail paket. Foto: `public/images/Konsultasi_GMM.png`.
+      provider/perlu survei" dan di detail paket. Foto: `public/images/Konsultasi_GMM.png` (banner
+      2880×900) dan opsional `Konsultasi_GMM_Card.png` (beranda, 1600×1200). Nomor tidak ditampilkan.
 
 - [x] Perbaikan error PGlite di Windows
 - [x] Logo GMM baru di header, footer

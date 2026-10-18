@@ -1,4 +1,4 @@
-import { Clock, MapPinned, MessagesSquare, ReceiptText, Sparkles } from 'lucide-react';
+import { MapPinned, MessagesSquare, ReceiptText, Sparkles } from 'lucide-react';
 import type { Metadata } from 'next';
 import { consultImage } from '@/components/consult/consult-image';
 import { ConsultForm } from '@/components/consult/consult-form';
@@ -6,7 +6,7 @@ import { WhatsAppIcon } from '@/components/consult/whatsapp-icon';
 import { PageHero } from '@/components/layout/page-hero';
 import { Reveal } from '@/components/motion/reveal';
 import { Card } from '@/components/ui/primitives';
-import { WHATSAPP_DISPLAY, whatsappLink } from '@/config/contact';
+import { whatsappLink } from '@/config/contact';
 
 export const metadata: Metadata = {
   title: 'Konsultasi',
@@ -28,7 +28,7 @@ export default function KonsultasiPage() {
   return (
     <>
       <PageHero
-        image={consultImage()}
+        image={consultImage('hero')}
         imagePosition="object-[70%_center]"
         crumb="Konsultasi"
         eyebrow="Konsultasi"
@@ -68,7 +68,10 @@ export default function KonsultasiPage() {
           </Card>
           <aside className="space-y-4">
             <Card className="p-5">
-              <h2 className="font-semibold">Lebih suka langsung chat?</h2>
+              <h2 className="font-semibold">Tanpa isi form, langsung tanya</h2>
+              <p className="text-fg-muted mt-1 text-sm">
+                Ceritakan kebutuhan Anda dengan bahasa sendiri, tim GMM yang merangkumnya.
+              </p>
               <a
                 href={whatsappLink('Halo GMM, saya ingin konsultasi memilih paket internet.')}
                 target="_blank"
@@ -77,9 +80,9 @@ export default function KonsultasiPage() {
               >
                 <WhatsAppIcon className="size-7 shrink-0" />
                 <span>
-                  <span className="block text-sm font-semibold">Chat WhatsApp</span>
-                  <span className="block text-sm text-white/90 tabular-nums">
-                    {WHATSAPP_DISPLAY}
+                  <span className="block text-sm font-semibold">Mulai chat di WhatsApp</span>
+                  <span className="block text-[13px] text-white/90">
+                    Dibalas tim GMM pada jam kerja
                   </span>
                 </span>
               </a>
@@ -88,10 +91,6 @@ export default function KonsultasiPage() {
               <p className="flex items-start gap-2.5">
                 <ReceiptText className="text-primary mt-0.5 size-4 shrink-0" aria-hidden="true" />
                 Kami menjelaskan semua biaya (bulanan, instalasi, aktivasi) sebelum Anda memesan.
-              </p>
-              <p className="flex items-start gap-2.5">
-                <Clock className="text-primary mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                Pesan dibalas pada jam kerja tim GMM.
               </p>
             </Card>
           </aside>
