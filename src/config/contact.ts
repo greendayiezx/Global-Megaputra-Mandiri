@@ -12,9 +12,11 @@ export function whatsappLink(message: string): string {
 }
 
 /**
- * Consultation photos in public/images. Hero: wide banner for /konsultasi (2880×900).
- * Card: homepage block (1600×1200, 4:3); falls back to the hero photo, then a stock one.
+ * Consultation photos in public/images.
+ * - Banner on /konsultasi: CONSULT_HERO_IMAGE (wide, ~2880×900), else CONSULT_IMAGE.
+ * - Homepage block: CONSULT_CARD_IMAGE if added (4:3), else CONSULT_IMAGE.
  */
+export const CONSULT_HERO_IMAGE = '/images/Friendly Tech Support Consultation.png';
 export const CONSULT_IMAGE = '/images/Konsultasi_GMM.png';
 export const CONSULT_CARD_IMAGE = '/images/Konsultasi_GMM_Card.png';
 export const CONSULT_IMAGE_FALLBACK = '/images/Hub%20Konektivitas%20Digital%20Modern.png';

@@ -1,4 +1,12 @@
-import { MapPinned, MessagesSquare, ReceiptText, Sparkles } from 'lucide-react';
+import {
+  Clock,
+  LockKeyhole,
+  MapPinned,
+  MessagesSquare,
+  ReceiptText,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import type { Metadata } from 'next';
 import { consultImage } from '@/components/consult/consult-image';
 import { ConsultForm } from '@/components/consult/consult-form';
@@ -22,6 +30,21 @@ const STEPS = [
   },
   { icon: MapPinned, title: 'Kami cek lokasi', body: 'Provider mana yang menjangkau alamat Anda.' },
   { icon: Sparkles, title: 'Terima rekomendasi', body: 'Paket yang cocok beserta semua biayanya.' },
+];
+
+/** Only what the product actually does today. */
+const PROMISES = [
+  {
+    icon: ReceiptText,
+    text: 'Semua biaya dijelaskan di awal: bulanan, instalasi, dan aktivasi.',
+  },
+  { icon: ShieldCheck, text: 'Rekomendasi hanya dari provider yang sudah diverifikasi GMM.' },
+  {
+    icon: MapPinned,
+    text: 'Ketersediaan di alamat Anda dipastikan provider sebelum pemasangan.',
+  },
+  { icon: Clock, text: 'Pesan dibalas tim GMM pada jam kerja.' },
+  { icon: LockKeyhole, text: 'Isian form tidak disimpan di server GMM.' },
 ];
 
 export default function KonsultasiPage() {
@@ -87,11 +110,16 @@ export default function KonsultasiPage() {
                 </span>
               </a>
             </Card>
-            <Card className="space-y-3 p-5 text-sm">
-              <p className="flex items-start gap-2.5">
-                <ReceiptText className="text-primary mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                Kami menjelaskan semua biaya (bulanan, instalasi, aktivasi) sebelum Anda memesan.
-              </p>
+            <Card className="p-5">
+              <h2 className="font-semibold">Yang Anda dapatkan</h2>
+              <ul className="mt-4 space-y-3.5 text-sm">
+                {PROMISES.map(({ icon: Icon, text }) => (
+                  <li key={text} className="flex items-start gap-2.5">
+                    <Icon className="text-primary mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                    {text}
+                  </li>
+                ))}
+              </ul>
             </Card>
           </aside>
         </div>
