@@ -10,6 +10,7 @@ import { NavigationProgress } from '@/components/layout/navigation-progress';
 import { SiteChrome } from '@/components/layout/site-chrome';
 import { SiteHeader } from '@/components/layout/site-header';
 import { appConfig } from '@/config/app';
+import { siteUrl } from '@/lib/site-url';
 import { getSession } from '@/lib/auth/session';
 
 export const metadata: Metadata = {
@@ -20,6 +21,12 @@ export const metadata: Metadata = {
   description:
     'Bandingkan provider, pilih paket yang sesuai, dan pesan layanan internet dengan mudah di Global Megaputra Mandiri.',
   applicationName: 'GMM',
+  metadataBase: new URL(siteUrl()),
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    siteName: 'GMM — Global Megaputra Mandiri',
+  },
 };
 
 export const viewport: Viewport = {

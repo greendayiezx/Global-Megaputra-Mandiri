@@ -1,5 +1,6 @@
 import { ArrowLeft, CalendarClock, MapPinned, Package } from 'lucide-react';
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/site-url';
 import { ConsultPrompt } from '@/components/consult/consult-prompt';
 import { regionChain } from '@/lib/wilayah/codes';
 import Link from 'next/link';
@@ -27,6 +28,7 @@ import { DEMO_LOCATIONS } from '@/modules/packages/infrastructure/demo-catalog';
 export const metadata: Metadata = {
   title: 'Cek Coverage Internet di Lokasi Anda',
   description: 'Tandai titik pemasangan dan lihat provider internet yang menjangkau lokasi Anda.',
+  alternates: { canonical: absoluteUrl('/coverage') },
 };
 
 export default async function CoveragePage({

@@ -1,4 +1,5 @@
 import { ArrowRight, MessageSquareText } from 'lucide-react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ConsultBand } from '@/components/consult/consult-band';
 import { GmmHero } from '@/components/marketplace/gmm-hero';
@@ -16,6 +17,9 @@ import { FAQ } from '@/content/faq';
 import { NEEDS } from '@/content/needs';
 import { formatRupiah } from '@/lib/format';
 import { searchPackages, searchProviders } from '@/modules/packages/application/catalog';
+import { absoluteUrl, siteUrl } from '@/lib/site-url';
+
+export const metadata: Metadata = { alternates: { canonical: absoluteUrl('/') } };
 
 const emptySearch = {
   point: null,
@@ -63,6 +67,20 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Who runs the site, for search engines. Only facts that are true today. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Global Megaputra Mandiri',
+            alternateName: 'GMM',
+            url: siteUrl(),
+            logo: `${siteUrl()}/icon.png`,
+          }),
+        }}
+      />
       {/* 1. Full-bleed hero (includes the trust strip) */}
       <GmmHero />
       <StickyLocationBar heroId="hero-title" />

@@ -1,5 +1,6 @@
 import { Building } from 'lucide-react';
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/site-url';
 import Link from 'next/link';
 import { CoverageNotice } from '@/components/coverage/coverage-status';
 import { FilterPanel } from '@/components/marketplace/filter-panel';
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
   title: 'Daftar Provider Internet Terverifikasi',
   description:
     'Bandingkan provider internet terverifikasi berdasarkan lokasi, teknologi, harga, dan kecepatan.',
+  alternates: { canonical: absoluteUrl('/provider') },
 };
 
 export default async function ProvidersPage({

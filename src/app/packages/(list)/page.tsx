@@ -1,5 +1,6 @@
 import { MapPin, PackageSearch } from 'lucide-react';
 import type { Metadata } from 'next';
+import { absoluteUrl } from '@/lib/site-url';
 import Link from 'next/link';
 import { CoverageNotice } from '@/components/coverage/coverage-status';
 import { FilterPanel } from '@/components/marketplace/filter-panel';
@@ -35,6 +36,8 @@ export const metadata: Metadata = {
   title: 'Daftar Paket Internet',
   description:
     'Temukan paket internet terbaik sesuai kebutuhan Anda. Filter harga, kecepatan, provider, dan teknologi.',
+  // Filter combinations are views of one list, not separate pages.
+  alternates: { canonical: absoluteUrl('/packages') },
 };
 
 /** A slider value sitting at (or beyond) its bound is no limit at all. */
