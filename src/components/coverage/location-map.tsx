@@ -17,10 +17,13 @@ const PIN_HTML =
 export function LocationMap({
   value,
   onChange,
+  focus,
   className,
 }: {
   value: GeoPoint | null;
   onChange: (p: GeoPoint) => void;
+  /** Pan/zoom without placing the pin (e.g. after choosing a city). */
+  focus?: (GeoPoint & { zoom: number }) | null;
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -86,6 +89,10 @@ export function LocationMap({
     };
     // Map is created once; later value changes are applied by the effect below.
   }, []);
+
+  useEffect(() => {
+    if (focus && mapRef.current) mapRef.current.setView([focus.lat, focus.lng], focus.zoom);
+  }, [focus]);
 
   useEffect(() => {
     const el = containerRef.current as

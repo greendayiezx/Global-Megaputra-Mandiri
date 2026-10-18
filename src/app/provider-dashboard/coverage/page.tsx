@@ -28,7 +28,12 @@ const STRATEGY = {
 } as const;
 
 function describe(geometry: unknown): string {
-  const g = geometry as { center?: { lat: number; lng: number }; radiusM?: number };
+  const g = geometry as {
+    center?: { lat: number; lng: number };
+    radiusM?: number;
+    regionCode?: string;
+  };
+  if (g.regionCode) return `kode wilayah ${g.regionCode}`;
   if (g.center && g.radiusM) {
     const r =
       g.radiusM >= 1000 ? `${(g.radiusM / 1000).toLocaleString('id-ID')} km` : `${g.radiusM} m`;
@@ -135,9 +140,10 @@ export default async function ProviderCoveragePage() {
           )}
         </Card>
         <Card className="p-5">
-          <h2 className="mb-1 font-semibold">Tambah area (radius)</h2>
+          <h2 className="mb-1 font-semibold">Tambah area</h2>
           <p className="text-fg-muted mb-4 text-sm">
-            Lingkaran dari satu titik tengah. Gambar poligon di peta menyusul.
+            Radius dari satu titik, atau seluruh kecamatan/kelurahan. Gambar poligon di peta
+            menyusul.
           </p>
           <ZoneForm />
         </Card>

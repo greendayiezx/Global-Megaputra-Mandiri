@@ -1,6 +1,7 @@
 import { ArrowLeft, CalendarClock, MapPinned, Package } from 'lucide-react';
 import type { Metadata } from 'next';
 import { ConsultPrompt } from '@/components/consult/consult-prompt';
+import { regionChain } from '@/lib/wilayah/codes';
 import Link from 'next/link';
 import { CoverageLocator } from '@/components/coverage/coverage-search-form';
 import {
@@ -37,11 +38,12 @@ export default async function CoveragePage({
   const pt = point(params);
   const address = str(params, 'address');
   const packageSlug = str(params, 'package');
+  const regions = regionChain(str(params, 'region'));
   const forPackage = packageSlug ? await getPublicPackage(packageSlug) : null;
   const hadCoords = str(params, 'lat') !== null || str(params, 'lng') !== null;
 
   const [result, packages] = await Promise.all([
-    pt ? checkCoverage(pt) : Promise.resolve(null),
+    pt ? checkCoverage(pt, regions) : Promise.resolve(null),
     listPublicPackages(),
   ]);
   const rows = (result?.providers ?? [])
@@ -86,7 +88,12 @@ export default async function CoveragePage({
             )}
 
             <Card className="p-5">
-              <CoverageLocator defaultAddress={address ?? ''} defaultPoint={pt} carry={carry} />
+              <CoverageLocator
+                defaultAddress={address ?? ''}
+                defaultPoint={pt}
+                defaultRegion={regions.at(-1) ?? null}
+                carry={carry}
+              />
             </Card>
             {appConfig.showDemoData && (
               <Card className="p-5">

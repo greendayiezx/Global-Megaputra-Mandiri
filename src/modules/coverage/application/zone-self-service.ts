@@ -6,6 +6,7 @@ import { audit } from '@/lib/audit';
 import { AppError } from '@/lib/errors';
 import { authorize, type Actor } from '@/modules/auth/domain/rbac';
 import { hmacIdentifier } from '@/modules/auth/infrastructure/crypto';
+import { REGION_CODE } from '@/lib/wilayah/codes';
 import type { RequestCtx } from '@/modules/providers/application/provider-review';
 
 /**
@@ -93,6 +94,69 @@ export async function addOwnRadiusZone(
       entity: 'coverage_zone',
       entityId: row!.id,
       after: { name: z0.name, strategy: 'RADIUS', radiusM: z0.radiusM, result: z0.result },
+    });
+    return { id: row!.id };
+  });
+}
+
+export const adminAreaZoneSchema = z.object({
+  regionCode: z
+    .string()
+    .regex(REGION_CODE, { error: 'Pilih wilayah.' })
+    .refine((c) => c.split('.').length >= 3, { error: 'Pilih sampai kecamatan atau kelurahan.' }),
+  name: z.string().trim().min(2).max(160),
+  result: z.enum(['AVAILABLE', 'LIMITED', 'REQUIRES_SURVEY', 'EXCLUDED'], {
+    error: 'Pilih status layanan.',
+  }),
+});
+export type AdminAreaZoneInput = z.input<typeof adminAreaZoneSchema>;
+
+/**
+ * A whole kecamatan or kelurahan. Broad by nature: a drawn or radius zone of the same
+ * provider wins over it at the same location (coverage engine specificity).
+ */
+export async function addOwnAdminAreaZone(
+  db: Db,
+  actor: Actor,
+  raw: AdminAreaZoneInput,
+  ctx: RequestCtx,
+  now = new Date(),
+) {
+  const providerId = own(actor);
+  const parsed = adminAreaZoneSchema.safeParse(raw);
+  if (!parsed.success) {
+    const fieldErrors: Record<string, string> = {};
+    for (const i of parsed.error.issues) fieldErrors[String(i.path[0])] ??= i.message;
+    throw new AppError('VALIDATION_ERROR', 'Periksa kembali isian yang ditandai.', {
+      fieldErrors,
+    });
+  }
+  const z0 = parsed.data;
+  return db.transaction(async (tx) => {
+    const [row] = await tx
+      .insert(coverageZones)
+      .values({
+        providerId,
+        name: z0.name,
+        strategy: 'ADMIN_AREA',
+        geometry: { regionCode: z0.regionCode },
+        result: z0.result,
+        lastVerifiedAt: now,
+        source: 'PROVIDER',
+        createdBy: actor.userId,
+      })
+      .returning({ id: coverageZones.id });
+    await audit(tx, {
+      ...meta(actor, ctx),
+      action: 'coverage_changed',
+      entity: 'coverage_zone',
+      entityId: row!.id,
+      after: {
+        name: z0.name,
+        strategy: 'ADMIN_AREA',
+        regionCode: z0.regionCode,
+        result: z0.result,
+      },
     });
     return { id: row!.id };
   });

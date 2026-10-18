@@ -11,6 +11,8 @@ import { SpinningCircle } from '@/components/ui/spinning-circle';
 import { cn } from '@/lib/utils';
 import type { GeoPoint } from '@/modules/coverage/domain/coverage';
 
+import { RegionPicker, type RegionSelection } from './region-picker';
+
 const LocationMap = dynamic(() => import('./location-map').then((m) => m.LocationMap), {
   ssr: false,
   // Skeleton fills the map's box (no layout shift); the spinner says the map itself is coming.
@@ -75,13 +77,32 @@ type GeoState = { kind: 'idle' } | { kind: 'locating' } | { kind: 'error'; messa
 export function CoverageLocator({
   defaultAddress = '',
   defaultPoint = null,
+  defaultRegion = null,
   carry = {},
 }: {
   defaultAddress?: string;
   defaultPoint?: GeoPoint | null;
+  defaultRegion?: string | null;
   carry?: Record<string, string>;
 }) {
   const [point, setPoint] = useState<GeoPoint | null>(defaultPoint);
+  const [focus, setFocus] = useState<(GeoPoint & { zoom: number }) | null>(null);
+  const addressRef = useRef<HTMLInputElement>(null);
+  // The address text we filled from the region picker (so we never overwrite typing).
+  const autoAddress = useRef<string | null>(null);
+
+  function onRegion(sel: RegionSelection | null) {
+    if (!sel) return;
+    const input = addressRef.current;
+    if (input && (!input.value.trim() || input.value === autoAddress.current)) {
+      input.value = sel.label;
+      autoAddress.current = sel.label;
+    }
+    if (sel.city?.lat !== undefined && sel.city.lng !== undefined) {
+      const deep = sel.code.split('.').length >= 3;
+      setFocus({ lat: sel.city.lat, lng: sel.city.lng, zoom: deep ? 13 : 12 });
+    }
+  }
   const [geo, setGeo] = useState<GeoState>({ kind: 'idle' });
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -140,9 +161,21 @@ export function CoverageLocator({
       <input type="hidden" name="lat" value={point ? point.lat.toFixed(6) : ''} />
       <input type="hidden" name="lng" value={point ? point.lng.toFixed(6) : ''} />
 
+      <fieldset>
+        <legend className="mb-1.5 text-sm font-medium">Wilayah</legend>
+        <RegionPicker
+          name="region"
+          initialCode={defaultRegion}
+          onChange={onRegion}
+          idPrefix="cov-region"
+        />
+        <FieldHint>Pilih wilayah untuk mengarahkan peta, lalu tandai rumah Anda di peta.</FieldHint>
+      </fieldset>
+
       <div>
         <Label htmlFor="cov-address">Alamat pemasangan</Label>
         <Input
+          ref={addressRef}
           id="cov-address"
           name="address"
           defaultValue={defaultAddress}
@@ -184,6 +217,7 @@ export function CoverageLocator({
         >
           <LocationMap
             value={point}
+            focus={focus}
             onChange={(p) => {
               setPoint(p);
               setSubmitError(null);
