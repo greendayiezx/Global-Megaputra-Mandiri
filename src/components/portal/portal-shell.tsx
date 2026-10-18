@@ -89,7 +89,8 @@ export function PortalShell({
             </div>
           </div>
         </header>
-        <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
+        {/* The root layout already provides <main id="konten">; one main landmark per page. */}
+        <div className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</div>
       </div>
     </div>
   );
