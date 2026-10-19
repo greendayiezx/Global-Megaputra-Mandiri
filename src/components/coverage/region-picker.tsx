@@ -99,7 +99,9 @@ export function RegionPicker({
         disabled={disabled || !options}
         className="h-10 text-sm"
       >
-        <option value="">{options ? label : 'Memuat…'}</option>
+        <option value="" hidden>
+          {options ? label : 'Memuat…'}
+        </option>
         {options?.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}

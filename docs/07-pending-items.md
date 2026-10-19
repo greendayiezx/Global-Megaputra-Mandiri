@@ -159,6 +159,7 @@ pemasangan di [docs/10-staging-vercel.md](10-staging-vercel.md).
 - [x] Header: bar atas, menu di bawah pencarian, mega menu Paket/Provider/Lainnya (klik), animasi ikon
 - [x] Banner beranda tanpa logo; bar demo disembunyikan
 - [x] Filter paket (slider harga, checkbox) & dropdown premium (filter provider, urutkan)
+- [x] Semua dropdown form memakai satu komponen premium (`ui/listbox.tsx`): popover di desktop, bottom sheet di HP, pencarian otomatis untuk daftar >10 (wilayah), keyboard & screen reader; select asli tetap tersembunyi di form agar server action, `required`, dan reset form tetap jalan. Menu header (bahasa, akun) tertutup saat klik di luar / Escape.
 - [x] Halaman Cara Kerja dengan timeline animasi
 - [x] FAQ accordion di beranda
 - [x] Tampilan Bandingkan diperbaiki

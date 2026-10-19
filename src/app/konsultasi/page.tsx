@@ -102,8 +102,6 @@ export default function KonsultasiPage() {
                 <WhatsAppIcon className="size-7 shrink-0" />
                 <span>
                   <span className="block text-sm font-semibold">Mulai chat di WhatsApp</span>
-                  <span className="block text-[13px] text-white/90">
-                  </span>
                 </span>
               </a>
             </Card>
