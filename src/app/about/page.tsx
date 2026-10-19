@@ -56,8 +56,8 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        image="/images/GMM%20Login.png"
-        imagePosition="object-[70%_center]"
+        image="/images/Tentang_Kami.png"
+        imagePosition="object-[68%_center] lg:object-center"
         crumb="Tentang Kami"
         eyebrow="Tentang GMM"
         title="Tentang Global Megaputra Mandiri"
@@ -153,14 +153,15 @@ export default function AboutPage() {
         aria-labelledby="ab-cta"
       >
         <ParallaxImage
-          src="/images/Smart%20Home%20Wi-Fi%20Network%20at%20Dusk.png"
+          src="/images/Siap%20cek%20internet%20di%20lokasi%20Anda.png"
           strength={0.1}
+          imageClassName="object-[30%_center] md:object-left"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,18,43,0.94)_0%,rgba(5,28,65,0.75)_55%,rgba(5,28,65,0.3)_100%)]"
+          className="absolute inset-0 -z-10 bg-[rgba(5,18,43,0.72)] md:bg-[linear-gradient(270deg,rgba(5,18,43,0.94)_0%,rgba(5,28,65,0.78)_45%,rgba(5,28,65,0.1)_80%)]"
         />
-        <Reveal className="container-page py-20 md:py-24">
+        <Reveal className="container-page flex flex-col py-20 md:items-end md:py-24 md:text-right">
           <h2
             id="ab-cta"
             className="max-w-xl text-3xl leading-tight font-bold text-white md:text-[40px]"
