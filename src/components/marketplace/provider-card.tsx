@@ -44,7 +44,7 @@ export function ProviderCard({
       </div>
 
       <dl className="border-line mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t pt-4 text-sm">
-        <div className ="min-h-14">
+        <div className="min-h-14">
           <dt className="text-fg-muted text-xs">Teknologi</dt>
           <dd className="font-medium">
             {p.technologies.map((t) => TECHNOLOGY_LABEL[t]).join(', ')}
