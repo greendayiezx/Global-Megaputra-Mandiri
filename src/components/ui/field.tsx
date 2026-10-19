@@ -1,4 +1,4 @@
-import { AlertCircle, CheckCircle2, ChevronDown } from 'lucide-react';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import type { ComponentProps, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
@@ -37,19 +37,7 @@ export function Textarea({ className, ...props }: ComponentProps<'textarea'>) {
   return <textarea className={cn(control, lockedText, 'min-h-24 py-2.5', className)} {...props} />;
 }
 
-export function Select({ className, children, ...props }: ComponentProps<'select'>) {
-  return (
-    <div className="relative">
-      <select className={cn(control, 'h-11 appearance-none pr-9', className)} {...props}>
-        {children}
-      </select>
-      <ChevronDown
-        aria-hidden="true"
-        className="text-fg-muted pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2"
-      />
-    </div>
-  );
-}
+export { Select } from './select';
 
 export function Checkbox({
   className,

@@ -19,6 +19,7 @@ import { logoutAction } from '@/modules/auth/api/actions';
 import { isPlatformStaff, isProviderMember } from '@/modules/auth/domain/rbac';
 import { NEEDS } from '@/content/needs';
 import { DesktopNav } from './desktop-nav';
+import { DismissMenus } from './dismiss-menus';
 import { HeaderShell } from './header-shell';
 import { MAIN_NAV, MORE_LINKS, type NavMenu } from './nav-config';
 import { getNavData } from './nav-data';
@@ -78,6 +79,7 @@ export async function SiteHeader({ session }: { session: Session | null }) {
 
   return (
     <HeaderShell>
+      <DismissMenus scope=".site-header" />
       {/* Main bar */}
       <div>
         <div className="container-header flex h-16 items-center gap-4 lg:h-auto lg:gap-6 lg:py-2 xl:gap-8">
@@ -109,12 +111,14 @@ export async function SiteHeader({ session }: { session: Session | null }) {
                   />
                 </span>
               </summary>
-              <ul className="border-line bg-surface text-fg shadow-pop absolute right-0 z-40 mt-2 w-52 rounded-lg border p-1.5 text-sm">
-                <li className="flex items-center justify-between rounded-md px-3 py-2 font-medium">
+              <ul className="border-line bg-surface/95 text-fg animate-select-in absolute right-0 z-40 mt-2 w-56 origin-top-right rounded-xl border p-1.5 text-sm shadow-[0_12px_32px_-4px_rgba(15,23,42,0.16),0_2px_6px_rgba(15,23,42,0.06)] backdrop-blur-md">
+                <li className="bg-primary-soft/60 text-primary flex items-center justify-between rounded-lg px-3 py-2.5 font-semibold">
                   Bahasa Indonesia · IDR
-                  <Check className="text-primary size-4" aria-hidden="true" />
+                  <span className="bg-primary grid size-5 place-items-center rounded-full text-white">
+                    <Check className="size-3" strokeWidth={3} aria-hidden="true" />
+                  </span>
                 </li>
-                <li className="text-fg-muted flex items-center justify-between px-3 py-2">
+                <li className="text-fg-muted flex items-center justify-between px-3 py-2.5">
                   English <span className="text-[11px]">Segera hadir</span>
                 </li>
               </ul>
@@ -129,21 +133,21 @@ export async function SiteHeader({ session }: { session: Session | null }) {
                   />
                   <span className="text-[11px] font-medium">Akun</span>
                 </summary>
-                <div className="border-line bg-surface shadow-pop absolute right-0 z-40 mt-2 w-56 rounded-lg border p-1.5">
-                  <p className="text-fg-muted truncate px-3 py-2 text-xs">
+                <div className="border-line bg-surface/95 animate-select-in absolute right-0 z-40 mt-2 w-60 origin-top-right rounded-xl border p-1.5 shadow-[0_12px_32px_-4px_rgba(15,23,42,0.16),0_2px_6px_rgba(15,23,42,0.06)] backdrop-blur-md">
+                  <p className="border-line text-fg-muted mb-1 truncate border-b px-3 pt-1.5 pb-2.5 text-xs">
                     {session.user.fullName}
                   </p>
                   <Link
                     href={home!.href}
                     transitionTypes={isPortalPath(home!.href) ? PORTAL_ENTER : undefined}
-                    className="hover:bg-subtle block rounded-md px-3 py-2 text-sm font-medium"
+                    className="hover:bg-primary-soft/70 hover:text-primary block rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
                   >
                     {home!.label}
                   </Link>
                   <form action={logoutAction}>
                     <button
                       type="submit"
-                      className="hover:bg-subtle flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm"
+                      className="hover:bg-danger-soft hover:text-danger-fg flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition-colors"
                     >
                       <LogOut className="size-4" aria-hidden="true" /> Keluar
                     </button>
