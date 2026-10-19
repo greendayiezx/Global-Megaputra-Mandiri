@@ -58,8 +58,8 @@ export default function MitraPage() {
   return (
     <>
       <PageHero
-        image="/images/Futuristic%20Telecom%20Facility%20at%20Dusk.png"
-        imagePosition="object-[65%_center]"
+        image="/images/DaftarMitra_Banner.png"
+        imagePosition="object-[58%_center] lg:object-center"
         crumb="Jadi Mitra"
         eyebrow="Kemitraan provider"
         title="Jadi Mitra Provider"
