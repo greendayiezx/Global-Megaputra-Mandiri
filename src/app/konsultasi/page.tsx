@@ -56,7 +56,7 @@ export default function KonsultasiPage() {
         imagePosition="object-[56%_center] lg:object-center"
         crumb="Konsultasi"
         eyebrow="Konsultasi"
-        title="Bingung memilih internet? Tanya tim GMM."
+        title="Bingung memilih internet? Tanya tim GMM"
         description="Ceritakan kebutuhan dan lokasi Anda. Kami bantu bandingkan provider dan biaya, lewat WhatsApp."
         compact
       />
@@ -92,21 +92,17 @@ export default function KonsultasiPage() {
           </Card>
           <aside className="space-y-4">
             <Card className="p-5">
-              <h2 className="font-semibold">Tanpa isi form, langsung tanya</h2>
-              <p className="text-fg-muted mt-1 text-sm">
-                Ceritakan kebutuhan Anda dengan bahasa sendiri, tim GMM yang merangkumnya.
-              </p>
+              <h2 className="font-semibold">Hubungi WhatsApp</h2>
               <a
                 href={whatsappLink('Halo GMM, saya ingin konsultasi memilih paket internet.')}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 flex items-center gap-3 rounded-lg bg-[#25D366] px-4 py-3 text-white transition-colors hover:bg-[#1ebe5b]"
+                className="mt-2 flex items-center gap-3 rounded-lg bg-[#25D366] px-4 py-3 text-white transition-colors hover:bg-[#1ebe5b]"
               >
                 <WhatsAppIcon className="size-7 shrink-0" />
                 <span>
                   <span className="block text-sm font-semibold">Mulai chat di WhatsApp</span>
                   <span className="block text-[13px] text-white/90">
-                    Dibalas tim GMM pada jam kerja
                   </span>
                 </span>
               </a>

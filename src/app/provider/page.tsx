@@ -177,7 +177,7 @@ export default async function ProvidersPage({
               }
             />
           ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
               {results.map((s) => (
                 <ProviderCard
                   key={s.provider.id}

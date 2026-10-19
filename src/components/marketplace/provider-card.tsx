@@ -20,7 +20,7 @@ export function ProviderCard({
   const href = `/provider/${p.slug}${query}`;
 
   return (
-    <Card className="hover:border-line-strong flex flex-col p-5 transition-colors">
+    <Card className="hover:border-line-strong flex h-full flex-col p-5 transition-colors">
       <div className="flex items-start gap-3">
         <ProviderAvatar name={p.displayName} />
         <div className="min-w-0 flex-1">
@@ -44,13 +44,13 @@ export function ProviderCard({
       </div>
 
       <dl className="border-line mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t pt-4 text-sm">
-        <div>
+        <div className ="min-h-14">
           <dt className="text-fg-muted text-xs">Teknologi</dt>
           <dd className="font-medium">
             {p.technologies.map((t) => TECHNOLOGY_LABEL[t]).join(', ')}
           </dd>
         </div>
-        <div>
+        <div className="min-h-14">
           <dt className="text-fg-muted text-xs">Jumlah paket</dt>
           <dd className="font-medium">{packageCount} paket</dd>
         </div>
